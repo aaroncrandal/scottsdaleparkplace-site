@@ -122,8 +122,14 @@ being investigated or scheduled.
 </div>
 
 <footer>
-Scottsdale Park Place HOA
+Scottsdale Park Place HOA<br>
+Last updated: <span id="lastUpdated"></span>
 </footer>
+
+<script>
+document.getElementById("lastUpdated").textContent =
+new Date(document.lastModified).toLocaleDateString();
+</script>
 
 </body>
 </html>
