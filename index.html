@@ -1,103 +1,186 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Scottsdale Park Place</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scottsdale Park Place</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #0f1115;
+      color: #f2f2f2;
+    }
 
-<style>
-body{
-    font-family: Arial, sans-serif;
-    margin:0;
-    background:#111;
-    color:#eee;
-}
+    header {
+      background: #1a1d24;
+      padding: 28px 20px 22px;
+      text-align: center;
+      border-bottom: 1px solid #2c313a;
+    }
 
-header{
-    background:#1f1f1f;
-    padding:20px;
-    text-align:center;
-    border-bottom:1px solid #333;
-}
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
 
-h1{
-    margin:0;
-}
+    .subtitle {
+      margin-top: 6px;
+      font-size: 1.1rem;
+      color: #c8ced8;
+    }
 
-nav{
-    background:#181818;
-    padding:10px;
-    text-align:center;
-}
+    nav {
+      background: #15181e;
+      padding: 14px 10px;
+      text-align: center;
+      border-bottom: 1px solid #2c313a;
+    }
 
-nav a{
-    color:#ccc;
-    margin:0 15px;
-    text-decoration:none;
-}
+    nav a {
+      color: #d7dce3;
+      margin: 0 14px;
+      text-decoration: none;
+      font-size: 1rem;
+    }
 
-nav a:hover{
-    color:white;
-}
+    nav a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
 
-.container{
-    max-width:900px;
-    margin:auto;
-    padding:40px 20px;
-}
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+    }
 
-.card{
-    background:#1b1b1b;
-    border:1px solid #333;
-    padding:20px;
-    margin-bottom:20px;
-}
+    .intro {
+      background: #171b22;
+      border: 1px solid #2c313a;
+      padding: 28px;
+      margin-bottom: 22px;
+    }
 
-footer{
-    text-align:center;
-    padding:20px;
-    border-top:1px solid #333;
-    margin-top:40px;
-}
-</style>
+    .intro h2 {
+      margin-top: 0;
+      font-size: 2rem;
+    }
+
+    .intro p {
+      margin-bottom: 0;
+      line-height: 1.6;
+      color: #d7dce3;
+    }
+
+    .card {
+      background: #171b22;
+      border: 1px solid #2c313a;
+      padding: 24px;
+      margin-bottom: 22px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 1.8rem;
+    }
+
+    .card p, .card li {
+      color: #d7dce3;
+      line-height: 1.6;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-bottom: 0;
+    }
+
+    .status-list li {
+      margin-bottom: 10px;
+    }
+
+    .note {
+      color: #aeb6c2;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px 20px;
+      border-top: 1px solid #2c313a;
+      background: #12151a;
+      color: #c8ced8;
+    }
+  </style>
 </head>
-
 <body>
 
-<header>
-<h1>Scottsdale Park Place</h1>
-<div>Community Information Portal</div>
-</header>
+  <header>
+    <h1>Scottsdale Park Place</h1>
+    <div class="subtitle">Community Information Portal</div>
+  </header>
 
-<nav>
-<a href="#">Announcements</a>
-<a href="#">Issue Tracker</a>
-<a href="#">Documents</a>
-<a href="#">Board</a>
-<a href="#">Contact</a>
-</nav>
+  <nav>
+    <a href="#">Announcements</a>
+    <a href="#">Issue Tracker</a>
+    <a href="#">Documents</a>
+    <a href="#">Board</a>
+    <a href="#">Contact</a>
+  </nav>
 
-<div class="container">
+  <div class="container">
 
-<div class="card">
-<h2>Community Updates</h2>
-<p>This website provides updates, documentation, and issue tracking for the Scottsdale Park Place community.</p>
-</div>
+    <section class="intro">
+      <h2>Clear information. Visible priorities. Better continuity.</h2>
+      <p>
+        This website is intended to make community information easier to find,
+        reduce reliance on scattered communication, and create a more durable record
+        of what the association is actively working on.
+      </p>
+    </section>
 
-<div class="card">
-<h2>Association Issue Tracker</h2>
-<p>The community issue tracker will list known property issues, work in progress, and maintenance items.</p>
-</div>
+    <section class="card">
+      <h3>Latest Updates</h3>
+      <ul>
+        <li>Website foundation is now live.</li>
+        <li>Initial structure for updates, issue visibility, and documents is being established.</li>
+        <li>Additional sections and records will be added in phases.</li>
+      </ul>
+    </section>
 
-<div class="card">
-<h2>Transparency</h2>
-<p>Meeting notes, maintenance plans, and community documentation will be posted here as they become available.</p>
-</div>
+    <section class="card">
+      <h3>Active Issues</h3>
+      <ul class="status-list">
+        <li><strong>Laundry room card payment:</strong> Open</li>
+        <li><strong>Water shutoff valve inspection protocol:</strong> In progress</li>
+        <li><strong>Contractor / vendor access process:</strong> Under development</li>
+      </ul>
+      <p class="note">A fuller issue tracker will be added as this site develops.</p>
+    </section>
 
-</div>
+    <section class="card">
+      <h3>Meetings & Documents</h3>
+      <p>
+        Meeting information, summaries, governing documents, and other important association
+        records will be organized here so they are easier to access and less dependent on
+        informal handoffs.
+      </p>
+    </section>
 
-<footer>
-Scottsdale Park Place HOA
-</footer>
+    <section class="card">
+      <h3>How to Report an Issue</h3>
+      <p>
+        Residents should use official communication channels for maintenance concerns,
+        property issues, and requests. This site is intended to support more consistent
+        communication and reduce confusion about where items stand.
+      </p>
+    </section>
+
+  </div>
+
+  <footer>
+    Scottsdale Park Place HOA
+  </footer>
 
 </body>
 </html>
