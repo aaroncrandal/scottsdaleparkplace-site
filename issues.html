@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Capital Projects | Scottsdale Park Place</title>
+<title>Scottsdale Park Place | Community Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -12,21 +12,12 @@
   --surface2: #1e2330;
   --border: #2a2f3d;
   --accent: #c8a96e;
-  --accent-dim: rgba(200,169,110,0.18);
+  --accent-dim: rgba(200,169,110,0.15);
   --text: #e8e4dc;
   --muted: #7a8090;
-  --red: #c05050;
-  --red-dim: rgba(192,80,80,0.13);
-  --yellow: #c8a030;
-  --yellow-dim: rgba(200,160,48,0.13);
-  --blue: #5a8ab0;
-  --blue-dim: rgba(90,138,176,0.13);
-  --green: #5a9e7a;
-  --green-dim: rgba(90,158,122,0.13);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
@@ -39,180 +30,61 @@ nav a { color: #b0b8c8; padding: 6px 16px; border-radius: 4px; font-size: 0.85re
 nav a:hover { background: var(--surface2); color: var(--text); text-decoration: none; }
 nav a.active { color: var(--accent); }
 
-/* INTRO */
-.intro { max-width: 860px; margin: 32px auto 0; padding: 0 24px; }
-.intro-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 22px 28px; margin-bottom: 24px; }
-.intro-card p { color: #c0c6d0; font-size: 0.88rem; line-height: 1.65; }
-.intro-card p + p { margin-top: 8px; }
-.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
-.stat-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 12px 14px; text-align: center; }
-.stat-val { font-family: 'DM Serif Display', serif; font-size: 1.4rem; display: block; }
-.stat-lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); display: block; margin-top: 2px; }
+.container { max-width: 860px; margin: 36px auto; padding: 0 20px; }
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 28px 32px; margin-bottom: 20px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+.section-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; font-weight: 400; }
 
-/* LEGEND */
-.legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 24px 24px; max-width: 860px; margin-left: auto; margin-right: auto; align-items: center; }
-.legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--muted); }
-.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.quick-link { display: block; background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 14px 18px; color: var(--text); transition: border-color 0.15s, background 0.15s; }
+.quick-link:hover { border-color: var(--accent); background: var(--accent-dim); text-decoration: none; }
+.quick-link .ql-label { font-weight: 500; font-size: 0.92rem; display: block; }
+.quick-link .ql-desc { font-size: 0.78rem; color: var(--muted); margin-top: 3px; display: block; }
 
-/* TIMELINE WRAPPER - horizontal scroll */
-.timeline-outer {
-  overflow-x: auto;
-  padding: 0 24px 40px;
-  cursor: grab;
-  user-select: none;
-  -webkit-overflow-scrolling: touch;
-}
-.timeline-outer:active { cursor: grabbing; }
-.timeline-outer::-webkit-scrollbar { height: 6px; }
-.timeline-outer::-webkit-scrollbar-track { background: var(--surface2); border-radius: 3px; }
-.timeline-outer::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.board-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.board-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 14px 18px; }
+.board-role { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 4px; }
+.board-name { font-weight: 500; font-size: 0.97rem; }
 
-.timeline-inner {
-  display: inline-flex;
-  align-items: flex-start;
-  padding: 20px 40px 10px;
-  min-width: max-content;
-  position: relative;
-}
+.pm-block { background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 20px 24px; }
+.pm-name { font-weight: 600; font-size: 1.05rem; }
+.pm-title { font-size: 0.82rem; color: var(--accent); margin-top: 2px; margin-bottom: 14px; }
+.pm-details { display: flex; flex-direction: column; gap: 6px; }
+.pm-detail { font-size: 0.85rem; color: #c0c6d0; }
+.pm-detail .label { color: var(--muted); font-size: 0.78rem; display: inline-block; width: 52px; }
 
-/* HORIZONTAL LINE */
-.timeline-track {
-  position: absolute;
-  top: 96px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--border);
-  z-index: 0;
-}
+.login-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.login-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 22px 22px 18px; text-align: center; transition: border-color 0.2s; }
+.login-card:hover { border-color: var(--accent); }
+.login-icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+.login-label { font-weight: 600; font-size: 0.92rem; display: block; margin-bottom: 6px; }
+.login-desc { font-size: 0.78rem; color: var(--muted); display: block; margin-bottom: 14px; }
+.login-btn { display: inline-block; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; padding: 7px 22px; border-radius: 4px; cursor: pointer; transition: border-color 0.15s, background 0.15s; width: 100%; }
+.login-btn:hover { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.login-btn.primary { background: var(--accent-dim); border-color: rgba(200,169,110,0.4); color: var(--accent); }
+.login-btn.primary:hover { background: rgba(200,169,110,0.25); }
 
-/* YEAR GROUP */
-.year-group {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  margin-right: 12px;
-  position: relative;
-}
-.year-label {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1rem;
-  color: var(--accent);
-  margin-bottom: 14px;
-  letter-spacing: 0.04em;
-  position: relative;
-  z-index: 1;
-}
-.year-projects {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  position: relative;
-}
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 32px 36px; width: 100%; max-width: 380px; position: relative; }
+.modal-close { position: absolute; top: 14px; right: 18px; background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; line-height: 1; }
+.modal-close:hover { color: var(--text); }
+.modal-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 4px; }
+.modal-subtitle { font-size: 0.82rem; color: var(--muted); margin-bottom: 22px; }
+.modal label { display: block; font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+.modal input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 9px 12px; margin-bottom: 16px; outline: none; transition: border-color 0.15s; }
+.modal input:focus { border-color: var(--accent); }
+.modal-submit { width: 100%; background: var(--accent-dim); border: 1px solid rgba(200,169,110,0.4); color: var(--accent); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; padding: 10px; border-radius: 4px; cursor: pointer; }
+.modal-submit:hover { background: rgba(200,169,110,0.25); }
+.modal-note { font-size: 0.75rem; color: var(--muted); margin-top: 12px; text-align: center; }
 
-/* PROJECT NODE */
-.project-node {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100px;
-  position: relative;
-  cursor: pointer;
-}
-.node-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  border: 2px solid;
-  position: relative;
-  z-index: 2;
-  transition: transform 0.18s, box-shadow 0.18s;
-  flex-shrink: 0;
-}
-.project-node:hover .node-icon {
-  transform: scale(1.13);
-  box-shadow: 0 0 0 4px rgba(200,169,110,0.15);
-}
-.node-icon.overdue { background: var(--red-dim); border-color: var(--red); }
-.node-icon.urgent { background: var(--yellow-dim); border-color: var(--yellow); }
-.node-icon.planned { background: var(--blue-dim); border-color: var(--blue); }
-.node-icon.longterm { background: var(--green-dim); border-color: var(--green); }
-
-.node-connector {
-  width: 2px;
-  height: 22px;
-  background: var(--border);
-  z-index: 1;
-}
-.node-label {
-  font-size: 0.7rem;
-  text-align: center;
-  color: #a0a8b8;
-  line-height: 1.3;
-  max-width: 90px;
-  margin-top: 4px;
-}
-.node-cost {
-  font-size: 0.68rem;
-  color: var(--muted);
-  margin-top: 2px;
-  text-align: center;
-}
-
-/* YEAR SEPARATOR */
-.year-sep {
-  width: 1px;
-  height: 180px;
-  background: var(--border);
-  margin: 0 16px;
-  align-self: center;
-  opacity: 0.4;
-  flex-shrink: 0;
-}
-
-/* POPUP */
-.popup {
-  position: fixed;
-  z-index: 200;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 18px 22px;
-  width: 280px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s;
-  top: 0; left: 0;
-}
-.popup.visible { opacity: 1; }
-.popup-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.popup-icon { font-size: 1.4rem; }
-.popup-title { font-weight: 600; font-size: 0.92rem; line-height: 1.3; }
-.popup-year { font-size: 0.72rem; color: var(--muted); }
-.popup-status { display: inline-block; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; margin-bottom: 8px; }
-.popup-status.overdue { background: var(--red-dim); color: var(--red); border: 1px solid rgba(192,80,80,0.3); }
-.popup-status.urgent { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(200,160,48,0.3); }
-.popup-status.planned { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(90,138,176,0.3); }
-.popup-status.longterm { background: var(--green-dim); color: var(--green); border: 1px solid rgba(90,158,122,0.3); }
-.popup-cost { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--text); margin-bottom: 8px; }
-.popup-desc { font-size: 0.8rem; color: #b0b8c4; line-height: 1.5; }
-.popup-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
-.popup-note { font-size: 0.75rem; color: var(--muted); font-style: italic; }
-
-/* SCROLL HINT */
-.scroll-hint { text-align: center; font-size: 0.75rem; color: var(--muted); padding: 0 24px 12px; letter-spacing: 0.04em; }
-
-footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); }
+footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 10px; }
 .footer-inner { max-width: 860px; margin: 0 auto; padding: 0 20px; }
 
 @media (max-width: 600px) {
-  .stat-row { grid-template-columns: repeat(2,1fr); }
+  .section { padding: 20px 18px; }
   .site-title { font-size: 1.5rem; }
+  .modal { margin: 16px; padding: 24px 20px; }
 }
 </style>
 </head>
@@ -224,609 +96,147 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
 </header>
 
 <nav>
-  <a href="index.html">Home</a>
-  <a href="issues.html" class="active">Capital Projects</a>
+  <a href="index.html" class="active">Home</a>
+  <a href="issues.html">Capital Projects</a>
   <a href="#">Documents</a>
-  <a href="#">Board</a>
+  <a href="board.html">Board</a>
   <a href="#">Contact</a>
 </nav>
 
-<div class="intro">
-  <div class="intro-card">
-    <p>The following projects are drawn from the May 2024 Reserve Study prepared by FDReserve Studies, LLC. Several items are past their originally scheduled replacement dates. The board is currently reviewing the financial model with the study's authors to develop a realistic execution timeline, which will include phased assessment increases and potential financing. This timeline will be updated as the plan is finalized.</p>
-    <div class="stat-row">
-      <div class="stat-box">
-        <span class="stat-val" style="color:var(--accent);">$641K</span>
-        <span class="stat-lbl">Reserve Balance (Jan 2024)</span>
+<div class="container">
+
+  <div class="section">
+    <h2 style="font-family:'DM Serif Display',serif; font-size:1.25rem; font-weight:400;">Community Updates</h2>
+    <p style="color:#c0c6d0; font-size:0.88rem; margin-top:14px;">Scottsdale Park Place is a 164-unit condominium community at 4354 N 54th St, Scottsdale. This site is maintained by the board to keep residents informed about community operations, active issues, and important documents.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Site Sections</h2>
+    </div>
+    <div class="quick-links">
+      <a href="issues.html" class="quick-link">
+        <span class="ql-label">Capital Projects</span>
+        <span class="ql-desc">Reserve study timeline, project status, and financial planning</span>
+      </a>
+      <a href="#" class="quick-link">
+        <span class="ql-label">Documents</span>
+        <span class="ql-desc">Meeting minutes, budgets, CC&Rs, and association records</span>
+      </a>
+      <a href="board.html" class="quick-link">
+        <span class="ql-desc">Vendor contacts, credentials, and operational documentation</span>
+      </a>
+      <a href="#" class="quick-link">
+        <span class="ql-label">Contact</span>
+        <span class="ql-desc">Submit a concern or request to the board or property manager</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Board of Directors</h2>
+    </div>
+    <div class="board-grid">
+      <div class="board-card">
+        <div class="board-role">President</div>
+        <div class="board-name">Aaron Crandal</div>
       </div>
-      <div class="stat-box">
-        <span class="stat-val" style="color:var(--red);">25%</span>
-        <span class="stat-lbl">Percent Fully Funded</span>
+      <div class="board-card">
+        <div class="board-role">Treasurer</div>
+        <div class="board-name">Marilyn</div>
       </div>
-      <div class="stat-box">
-        <span class="stat-val">$117K</span>
-        <span class="stat-lbl">Current Annual Contribution</span>
+      <div class="board-card">
+        <div class="board-role">Secretary</div>
+        <div class="board-name">Anna</div>
       </div>
-      <div class="stat-box">
-        <span class="stat-val" style="color:var(--yellow);">$300K+</span>
-        <span class="stat-lbl">Recommended Annual Contribution</span>
+      <div class="board-card">
+        <div class="board-role">Board Member</div>
+        <div class="board-name">James Erway</div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="legend">
-  <span style="font-size:0.78rem; color:var(--muted); margin-right:4px;">Status:</span>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--red);"></div>Past Due</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--yellow);"></div>Urgent (2025)</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--blue);"></div>Planned</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--green);"></div>Long-Term</div>
-  <span style="font-size:0.75rem; color:var(--muted); margin-left:auto;">Hover nodes for details</span>
-</div>
-
-<div class="scroll-hint">&#8592; Scroll to explore the full project timeline &#8594;</div>
-
-<div class="timeline-outer" id="timelineOuter">
-  <div class="timeline-inner" id="timelineInner">
-    <div class="timeline-track"></div>
-
-    <!-- 2024 OVERDUE -->
-    <div class="year-group">
-      <div class="year-label">2024 &mdash; Past Due</div>
-      <div class="year-projects">
-
-        <div class="project-node"
-          data-icon="🚧"
-          data-title="Balcony Railings"
-          data-year="2024"
-          data-status="overdue"
-          data-cost="$37,820"
-          data-desc="Replace existing railings with metal railings per ADA code. All residential buildings."
-          data-note="Scheduled 2024. Status unconfirmed with Brown Mgmt.">
-          <div class="node-icon overdue">🚧</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Balcony Railings</div>
-          <div class="node-cost">$37,820</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🏋️"
-          data-title="Fitness Equipment (Set A)"
-          data-year="2024"
-          data-status="overdue"
-          data-cost="$14,000"
-          data-desc="Replace treadmill and elliptical in clubhouse fitness room."
-          data-note="Scheduled 2024. Status unconfirmed.">
-          <div class="node-icon overdue">🏋️</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Fitness Equip A</div>
-          <div class="node-cost">$14,000</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="❄️"
-          data-title="HVAC Clubhouse (Unit C)"
-          data-year="2024"
-          data-status="overdue"
-          data-cost="$3,500"
-          data-desc="Replace 2.0 split system with heat pump in clubhouse."
-          data-note="Scheduled 2024. Status unconfirmed.">
-          <div class="node-icon overdue">❄️</div>
-          <div class="node-connector"></div>
-          <div class="node-label">HVAC Unit C</div>
-          <div class="node-cost">$3,500</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🏊"
-          data-title="Pool &amp; Spa Equipment"
-          data-year="2024"
-          data-status="overdue"
-          data-cost="$12,920"
-          data-desc="Pool filter, pool heater, spa filter, and spa heater replacement. Recreation area."
-          data-note="Multiple units due in 2024. Access was limited during inspection.">
-          <div class="node-icon overdue">🏊</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Pool &amp; Spa Equip</div>
-          <div class="node-cost">$12,920</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🚿"
-          data-title="Laundry Water Heaters"
-          data-year="2024"
-          data-status="overdue"
-          data-cost="$5,000"
-          data-desc="Replace 2 x 75-gallon gas water heaters in laundry facility."
-          data-note="Scheduled 2024. Budget covers one unit per 6-year cycle.">
-          <div class="node-icon overdue">🚿</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Water Heaters</div>
-          <div class="node-cost">$5,000</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="💧"
-          data-title="Irrigation Controllers"
-          data-year="2024"
-          data-status="overdue"
-          data-cost="$990"
-          data-desc="Replace one of three irrigation controllers. Buildings A, D, and G."
-          data-note="Scheduled 2024. One unit replaced per 5-year cycle.">
-          <div class="node-icon overdue">💧</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Irrigation Controllers</div>
-          <div class="node-cost">$990</div>
-        </div>
-
-      </div>
+  <div class="section">
+    <div class="section-header">
+      <h2>Property Manager</h2>
     </div>
-
-    <div class="year-sep"></div>
-
-    <!-- 2025 URGENT -->
-    <div class="year-group">
-      <div class="year-label">2025 &mdash; Urgent</div>
-      <div class="year-projects">
-
-        <div class="project-node"
-          data-icon="🛣️"
-          data-title="Asphalt Remove &amp; Replace — Phase 1"
-          data-year="2025"
-          data-status="urgent"
-          data-cost="$169,378"
-          data-desc="Phase 1 of 3-year full pavement replacement. 94,563 SF total paved area per Frank Civil Consulting."
-          data-note="Phase 1 of 3. Phases 2 and 3 follow in 2026 and 2027.">
-          <div class="node-icon urgent">🛣️</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Asphalt Phase 1</div>
-          <div class="node-cost">$169,378</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🚗"
-          data-title="Carport Replacement — Phase 1"
-          data-year="2025"
-          data-status="urgent"
-          data-cost="$171,667"
-          data-desc="Replace 164 covered carport spaces. Supports and roofs. To run concurrently with asphalt work."
-          data-note="Phase 1 of 3. Budget of $500K total for all phases.">
-          <div class="node-icon urgent">🚗</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Carports Phase 1</div>
-          <div class="node-cost">$171,667</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="⚡"
-          data-title="EV Charging Stations"
-          data-year="2025"
-          data-status="urgent"
-          data-cost="$74,160"
-          data-desc="Install 6 EV charging stations. To be performed during asphalt replacement. WAV Electric LLC bid $71,984 in 2023."
-          data-note="Planned alongside asphalt work for efficiency.">
-          <div class="node-icon urgent">⚡</div>
-          <div class="node-connector"></div>
-          <div class="node-label">EV Charging</div>
-          <div class="node-cost">$74,160</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🌧️"
-          data-title="Gutters &amp; Downspouts"
-          data-year="2025"
-          data-status="urgent"
-          data-cost="$61,800"
-          data-desc="Replace gutters and downspouts. Est. 1,700 LF downspout and 5,500 LF gutter. Various conditions noted, some falling off."
-          data-note="Not quantified in prior 2015 reserve study. First full replacement budget.">
-          <div class="node-icon urgent">🌧️</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Gutters &amp; Downspouts</div>
-          <div class="node-cost">$61,800</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🔵"
-          data-title="Pool Deck Resurface"
-          data-year="2025"
-          data-status="urgent"
-          data-cost="$20,600"
-          data-desc="Resurface 2,500 SF pool deck. Extensive cracking noted around entire pool and spa. Cracking travels through coping and tiles."
-          data-note="Condition rated poor. Originally resurfaced in 2014.">
-          <div class="node-icon urgent">🔵</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Pool Deck Resurface</div>
-          <div class="node-cost">$20,600</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🔧"
-          data-title="Backflow Preventer"
-          data-year="2025"
-          data-status="urgent"
-          data-cost="$3,347"
-          data-desc="Replace 2 of 6 backflow preventers. 2-inch units in caged enclosures throughout grounds."
-          data-note="Metering Services installed one in 2023 for $1,621.">
-          <div class="node-icon urgent">🔧</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Backflow Preventers</div>
-          <div class="node-cost">$3,347</div>
-        </div>
-
+    <div class="pm-block">
+      <div class="pm-name">Madison Garrison</div>
+      <div class="pm-title">Community Manager &mdash; Brown Community Management</div>
+      <div class="pm-details">
+        <div class="pm-detail"><span class="label">Office</span>(480) 539-1396</div>
+        <div class="pm-detail"><span class="label">Direct</span>(480) 889-0259</div>
+        <div class="pm-detail"><span class="label">Email</span><a href="mailto:Madison.Garrison@brownmanagement.com">Madison.Garrison@brownmanagement.com</a></div>
+        <div class="pm-detail"><span class="label">Web</span><a href="https://brownmanagement.com" target="_blank">brownmanagement.com</a></div>
       </div>
-    </div>
-
-    <div class="year-sep"></div>
-
-    <!-- 2026 PLANNED -->
-    <div class="year-group">
-      <div class="year-label">2026</div>
-      <div class="year-projects">
-
-        <div class="project-node"
-          data-icon="🎨"
-          data-title="Community Exterior Paint"
-          data-year="2026"
-          data-status="planned"
-          data-cost="$350,097"
-          data-desc="Paint all residential buildings, trash enclosures, perimeter walls, clubhouse exteriors. Minor stucco repairs included. Last painted 2016 for ~$175,000."
-          data-note="8-year paint cycle. Condition currently rated fair.">
-          <div class="node-icon planned">🎨</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Community Paint</div>
-          <div class="node-cost">$350,097</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🛣️"
-          data-title="Asphalt Phase 2"
-          data-year="2026"
-          data-status="planned"
-          data-cost="$174,459"
-          data-desc="Phase 2 of 3-year pavement replacement. Continuation of full property asphalt program."
-          data-note="Must follow Phase 1. Concurrent with Carports Phase 2.">
-          <div class="node-icon planned">🛣️</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Asphalt Phase 2</div>
-          <div class="node-cost">$174,459</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🚗"
-          data-title="Carports Phase 2"
-          data-year="2026"
-          data-status="planned"
-          data-cost="$176,817"
-          data-desc="Phase 2 carport replacement. Concurrent with asphalt work for efficiency."
-          data-note="Phase 2 of 3.">
-          <div class="node-icon planned">🚗</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Carports Phase 2</div>
-          <div class="node-cost">$176,817</div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="year-sep"></div>
-
-    <!-- 2027 PLANNED -->
-    <div class="year-group">
-      <div class="year-label">2027</div>
-      <div class="year-projects">
-
-        <div class="project-node"
-          data-icon="🛣️"
-          data-title="Asphalt Phase 3"
-          data-year="2027"
-          data-status="planned"
-          data-cost="$179,693"
-          data-desc="Final phase of full property pavement replacement."
-          data-note="Completion of 3-year program initiated in 2025.">
-          <div class="node-icon planned">🛣️</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Asphalt Phase 3</div>
-          <div class="node-cost">$179,693</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🚗"
-          data-title="Carports Phase 3"
-          data-year="2027"
-          data-status="planned"
-          data-cost="$182,121"
-          data-desc="Final phase of carport replacement. Completion of full 164-space program."
-          data-note="Phase 3 of 3. Total carport budget: $500,000.">
-          <div class="node-icon planned">🚗</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Carports Phase 3</div>
-          <div class="node-cost">$182,121</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="⛽"
-          data-title="Lift Station Pump"
-          data-year="2027"
-          data-status="planned"
-          data-cost="$7,103"
-          data-desc="Replace Grundfos Heavy Duty 1 HP sewer lift station pump. Currently working, per maintenance company."
-          data-note="Original 2012 unit. Scheduled replacement 2027.">
-          <div class="node-icon planned">⛽</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Lift Station Pump</div>
-          <div class="node-cost">$7,103</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="❄️"
-          data-title="HVAC Clubhouse (Unit B)"
-          data-year="2027"
-          data-status="planned"
-          data-cost="$7,507"
-          data-desc="Replace Goodman 5.0 split system with heat pump. Currently working."
-          data-note="10-year useful life. Installed 2017.">
-          <div class="node-icon planned">❄️</div>
-          <div class="node-connector"></div>
-          <div class="node-label">HVAC Unit B</div>
-          <div class="node-cost">$7,507</div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="year-sep"></div>
-
-    <!-- 2028 PLANNED -->
-    <div class="year-group">
-      <div class="year-label">2028</div>
-      <div class="year-projects">
-
-        <div class="project-node"
-          data-icon="🌱"
-          data-title="Irrigation System — Phase 1"
-          data-year="2028"
-          data-status="planned"
-          data-cost="$337,653"
-          data-desc="Phase 1 of 3-phase overhaul of the original 1978 irrigation system. Board rated condition as poor. Total replacement estimated at $900K."
-          data-note="Phase 1 of 3. Poor condition flagged by board. Infrastructure dates to original 1978 construction.">
-          <div class="node-icon planned">🌱</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Irrigation Phase 1</div>
-          <div class="node-cost">$337,653</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🪨"
-          data-title="Granite Replenish"
-          data-year="2028"
-          data-status="planned"
-          data-cost="$18,571"
-          data-desc="Replenish 150 tons of granite landscaping. 10-year cycle beginning 2028."
-          data-note="Currently fair condition.">
-          <div class="node-icon planned">🪨</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Granite</div>
-          <div class="node-cost">$18,571</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🛣️"
-          data-title="Asphalt Surface Treatment"
-          data-year="2028"
-          data-status="planned"
-          data-cost="$31,929"
-          data-desc="Surface treatment (HA5) on new asphalt following 2025-2027 replacement. Extends pavement life."
-          data-note="Standard treatment applied after new asphalt installation.">
-          <div class="node-icon planned">🛣️</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Asphalt Treatment</div>
-          <div class="node-cost">$31,929</div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="year-sep"></div>
-
-    <!-- 2029-2030 -->
-    <div class="year-group">
-      <div class="year-label">2029–2030</div>
-      <div class="year-projects">
-
-        <div class="project-node"
-          data-icon="🌱"
-          data-title="Irrigation Phase 2 &amp; 3"
-          data-year="2029-2030"
-          data-status="planned"
-          data-cost="$705,998"
-          data-desc="Phases 2 and 3 of the full irrigation system overhaul. Spread across 2029 and 2030 to manage cash flow."
-          data-note="Total 3-phase program: $1.02M. Original system dates to 1978.">
-          <div class="node-icon planned">🌱</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Irrigation Ph 2–3</div>
-          <div class="node-cost">$705,998</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🏛️"
-          data-title="Clubhouse Remodel"
-          data-year="2030"
-          data-status="planned"
-          data-cost="$89,554"
-          data-desc="Full clubhouse remodel including counters, fixtures, plumbing, electrical, doors, windows, blinds, flooring, AV equipment. Includes bike room."
-          data-note="Clubhouse and restrooms currently in good condition.">
-          <div class="node-icon planned">🏛️</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Clubhouse Remodel</div>
-          <div class="node-cost">$89,554</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🎨"
-          data-title="Community Paint (2nd Cycle)"
-          data-year="2030"
-          data-status="planned"
-          data-cost="~$362K est."
-          data-desc="Second scheduled exterior paint cycle. Approximately 8-year interval from 2026 painting."
-          data-note="Cost projected with 3% annual inflation from 2026 budget.">
-          <div class="node-icon planned">🎨</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Community Paint</div>
-          <div class="node-cost">~$362K est.</div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="year-sep"></div>
-
-    <!-- LONG TERM -->
-    <div class="year-group">
-      <div class="year-label">2032–2035</div>
-      <div class="year-projects">
-
-        <div class="project-node"
-          data-icon="🏠"
-          data-title="Roof Replacement"
-          data-year="2033"
-          data-status="longterm"
-          data-cost="$429,727"
-          data-desc="Replace asphalt shingle roofs on all residential buildings. 94,100 SF. Originally installed 2013, 20-year shingles assumed."
-          data-note="Largest single project in the 30-year study window.">
-          <div class="node-icon longterm">🏠</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Roof Replacement</div>
-          <div class="node-cost">$429,727</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="⚡"
-          data-title="Electrical Panel Replacements"
-          data-year="2033"
-          data-status="longterm"
-          data-cost="$61,324"
-          data-desc="Replace clubhouse and pool electrical panels. 1200A main load center, two 200A panels, one 200A pool panel. All original 1978 equipment."
-          data-note="Useful life extended by 20 years per inspector assessment.">
-          <div class="node-icon longterm">⚡</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Electrical Panels</div>
-          <div class="node-cost">$61,324</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="🏊"
-          data-title="Pool Resurface &amp; Deck"
-          data-year="2032"
-          data-status="longterm"
-          data-cost="$30,238"
-          data-desc="Resurface pool (pebble finish, 1,470 SF) and recoat deck (2,500 SF). Pool currently in good condition."
-          data-note="Pool last resurfaced 2007. Good condition, useful life 25 years.">
-          <div class="node-icon longterm">🏊</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Pool Resurface</div>
-          <div class="node-cost">$30,238</div>
-        </div>
-
-        <div class="project-node"
-          data-icon="📬"
-          data-title="Mailbox Replacement"
-          data-year="2033"
-          data-status="longterm"
-          data-cost="$23,538"
-          data-desc="Replace all 164 mailboxes in covered alcoves on buildings A, B, and G."
-          data-note="Original 1978 units, useful life extended 15 years due to protected location.">
-          <div class="node-icon longterm">📬</div>
-          <div class="node-connector"></div>
-          <div class="node-label">Mailboxes</div>
-          <div class="node-cost">$23,538</div>
-        </div>
-
-      </div>
-    </div>
-
-  </div><!-- end timeline-inner -->
-</div><!-- end timeline-outer -->
-
-<!-- POPUP -->
-<div class="popup" id="popup">
-  <div class="popup-header">
-    <div class="popup-icon" id="popupIcon"></div>
-    <div>
-      <div class="popup-title" id="popupTitle"></div>
-      <div class="popup-year" id="popupYear"></div>
     </div>
   </div>
-  <div class="popup-status" id="popupStatus"></div>
-  <div class="popup-cost" id="popupCost"></div>
-  <div class="popup-desc" id="popupDesc"></div>
-  <hr class="popup-divider">
-  <div class="popup-note" id="popupNote"></div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Portal Access</h2>
+    </div>
+    <div class="login-grid">
+      <div class="login-card">
+        <span class="login-icon">🔐</span>
+        <span class="login-label">Board / Management</span>
+        <span class="login-desc">Operational docs, credentials, vendor records, infrastructure notes</span>
+        <button class="login-btn primary" onclick="openModal('board')">Sign In</button>
+      </div>
+      <div class="login-card">
+        <span class="login-icon">🏠</span>
+        <span class="login-label">Owners</span>
+        <span class="login-desc">Assessment history, community documents, forms, and meeting records</span>
+        <button class="login-btn" onclick="openModal('owner')">Sign In</button>
+      </div>
+      <div class="login-card">
+        <span class="login-icon">🗝️</span>
+        <span class="login-label">Renters</span>
+        <span class="login-desc">Community rules, amenity info, maintenance requests, and notices</span>
+        <button class="login-btn" onclick="openModal('renter')">Sign In</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-title" id="modalTitle">Sign In</div>
+    <div class="modal-subtitle" id="modalSubtitle">Enter your credentials to continue.</div>
+    <label>Email</label>
+    <input type="email" placeholder="your@email.com" />
+    <label>Password</label>
+    <input type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+    <button class="modal-submit">Sign In</button>
+    <div class="modal-note">Portal access is being implemented. Contact the board to request credentials.</div>
+  </div>
 </div>
 
 <footer>
   <div class="footer-inner">
-    Data source: FDReserve Studies, LLC &mdash; Reserve Study Update, May 25, 2024<br>
-    <span style="margin-top:6px;display:block;"><a href="index.html">Back to Home</a> &nbsp;&bull;&nbsp; Last updated: <span id="lastUpdated"></span></span>
+    Scottsdale Park Place HOA &nbsp;&bull;&nbsp; 4354 N 54th St, Scottsdale AZ 85251<br>
+    <span style="margin-top:6px;display:block;">Last updated: <span id="lastUpdated"></span></span>
   </div>
 </footer>
 
 <script>
 document.getElementById("lastUpdated").textContent =
   new Date(document.lastModified).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-
-// Popup
-const popup = document.getElementById('popup');
-const statusLabels = { overdue:'Past Due', urgent:'Urgent', planned:'Planned', longterm:'Long-Term' };
-
-function positionPopup(e) {
-  const pw = 280, ph = 240;
-  let x = e.clientX + 16;
-  let y = e.clientY - 60;
-  if (x + pw > window.innerWidth - 8) x = e.clientX - pw - 16;
-  if (y + ph > window.innerHeight - 8) y = window.innerHeight - ph - 8;
-  if (y < 8) y = 8;
-  popup.style.left = x + 'px';
-  popup.style.top = y + 'px';
+const titles = {
+  board: ['Board / Management','Access operational records and governance documentation.'],
+  owner: ['Owner Portal','Access your account, documents, and community resources.'],
+  renter: ['Renter Portal','Access community information and submit requests.']
+};
+function openModal(type) {
+  document.getElementById('modalTitle').textContent = titles[type][0];
+  document.getElementById('modalSubtitle').textContent = titles[type][1];
+  document.getElementById('loginModal').classList.add('open');
 }
-
-document.querySelectorAll('.project-node').forEach(node => {
-  node.addEventListener('mouseenter', function(e) {
-    const d = this.dataset;
-    document.getElementById('popupIcon').textContent = d.icon;
-    document.getElementById('popupTitle').textContent = d.title;
-    document.getElementById('popupYear').textContent = 'Scheduled: ' + d.year;
-    const st = document.getElementById('popupStatus');
-    st.textContent = statusLabels[d.status];
-    st.className = 'popup-status ' + d.status;
-    document.getElementById('popupCost').textContent = d.cost;
-    document.getElementById('popupDesc').textContent = d.desc;
-    document.getElementById('popupNote').textContent = d.note;
-    positionPopup(e);
-    popup.classList.add('visible');
-  });
-  node.addEventListener('mousemove', positionPopup);
-  node.addEventListener('mouseleave', function() {
-    popup.classList.remove('visible');
-  });
-});
-
-// Drag to scroll
-const outer = document.getElementById('timelineOuter');
-let isDown = false, startX, scrollLeft;
-outer.addEventListener('mousedown', e => {
-  isDown = true;
-  outer.style.cursor = 'grabbing';
-  startX = e.pageX - outer.offsetLeft;
-  scrollLeft = outer.scrollLeft;
-});
-outer.addEventListener('mouseleave', () => { isDown = false; outer.style.cursor = 'grab'; });
-outer.addEventListener('mouseup', () => { isDown = false; outer.style.cursor = 'grab'; });
-outer.addEventListener('mousemove', e => {
-  if (!isDown) return;
-  e.preventDefault();
-  const x = e.pageX - outer.offsetLeft;
-  outer.scrollLeft = scrollLeft - (x - startX) * 1.2;
-});
+function closeModal() { document.getElementById('loginModal').classList.remove('open'); }
+document.getElementById('loginModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
 </script>
 </body>
 </html>
