@@ -3,133 +3,240 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scottsdale Park Place</title>
-
+<title>Scottsdale Park Place | Community Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
-body{
-font-family:Arial, sans-serif;
-background:#0f1115;
-color:#f2f2f2;
-margin:0;
+:root {
+  --bg: #0f1115;
+  --surface: #181c23;
+  --surface2: #1e2330;
+  --border: #2a2f3d;
+  --accent: #c8a96e;
+  --accent-dim: rgba(200,169,110,0.15);
+  --text: #e8e4dc;
+  --muted: #7a8090;
 }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
 
-header{
-background:#1a1d24;
-padding:28px 20px 22px;
-text-align:center;
-border-bottom:1px solid #2c313a;
-}
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 28px 24px 20px; text-align: center; }
+.site-title { font-family: 'DM Serif Display', serif; font-size: 2rem; letter-spacing: 0.02em; }
+.site-subtitle { margin-top: 4px; font-size: 0.8rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
 
-h1{
-margin:0;
-font-size:2.2rem;
-}
+nav { background: #13161d; border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; gap: 4px; padding: 10px 16px; }
+nav a { color: #b0b8c8; padding: 6px 16px; border-radius: 4px; font-size: 0.85rem; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s; }
+nav a:hover { background: var(--surface2); color: var(--text); text-decoration: none; }
+nav a.active { color: var(--accent); }
 
-.subtitle{
-margin-top:6px;
-color:#c8ced8;
-}
+.container { max-width: 860px; margin: 36px auto; padding: 0 20px; }
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 28px 32px; margin-bottom: 20px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+.section-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; font-weight: 400; }
 
-nav{
-background:#15181e;
-text-align:center;
-padding:14px;
-}
+.quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.quick-link { display: block; background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 14px 18px; color: var(--text); transition: border-color 0.15s, background 0.15s; }
+.quick-link:hover { border-color: var(--accent); background: var(--accent-dim); text-decoration: none; }
+.quick-link .ql-label { font-weight: 500; font-size: 0.92rem; display: block; }
+.quick-link .ql-desc { font-size: 0.78rem; color: var(--muted); margin-top: 3px; display: block; }
 
-nav a{
-color:#e0e0e0;
-margin:0 14px;
-text-decoration:none;
-}
+.board-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.board-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 14px 18px; }
+.board-role { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 4px; }
+.board-name { font-weight: 500; font-size: 0.97rem; }
 
-nav a:hover{
-text-decoration:underline;
-}
+.pm-block { background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 20px 24px; }
+.pm-name { font-weight: 600; font-size: 1.05rem; }
+.pm-title { font-size: 0.82rem; color: var(--accent); margin-top: 2px; margin-bottom: 14px; }
+.pm-details { display: flex; flex-direction: column; gap: 6px; }
+.pm-detail { font-size: 0.85rem; color: #c0c6d0; }
+.pm-detail .label { color: var(--muted); font-size: 0.78rem; display: inline-block; width: 52px; }
 
-.container{
-max-width:900px;
-margin:40px auto;
-padding:0 20px;
-}
+.login-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.login-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 22px 22px 18px; text-align: center; transition: border-color 0.2s; }
+.login-card:hover { border-color: var(--accent); }
+.login-icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+.login-label { font-weight: 600; font-size: 0.92rem; display: block; margin-bottom: 6px; }
+.login-desc { font-size: 0.78rem; color: var(--muted); display: block; margin-bottom: 14px; }
+.login-btn { display: inline-block; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; padding: 7px 22px; border-radius: 4px; cursor: pointer; transition: border-color 0.15s, background 0.15s; width: 100%; }
+.login-btn:hover { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.login-btn.primary { background: var(--accent-dim); border-color: rgba(200,169,110,0.4); color: var(--accent); }
+.login-btn.primary:hover { background: rgba(200,169,110,0.25); }
 
-.section{
-background:#181c22;
-padding:28px;
-margin-bottom:24px;
-border:1px solid #2c313a;
-}
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 32px 36px; width: 100%; max-width: 380px; position: relative; }
+.modal-close { position: absolute; top: 14px; right: 18px; background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; line-height: 1; }
+.modal-close:hover { color: var(--text); }
+.modal-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 4px; }
+.modal-subtitle { font-size: 0.82rem; color: var(--muted); margin-bottom: 22px; }
+.modal label { display: block; font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+.modal input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 9px 12px; margin-bottom: 16px; outline: none; transition: border-color 0.15s; }
+.modal input:focus { border-color: var(--accent); }
+.modal-submit { width: 100%; background: var(--accent-dim); border: 1px solid rgba(200,169,110,0.4); color: var(--accent); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; padding: 10px; border-radius: 4px; cursor: pointer; }
+.modal-submit:hover { background: rgba(200,169,110,0.25); }
+.modal-note { font-size: 0.75rem; color: var(--muted); margin-top: 12px; text-align: center; }
 
-footer{
-text-align:center;
-padding:40px 0;
-color:#9aa3ad;
+footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 10px; }
+.footer-inner { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+
+@media (max-width: 600px) {
+  .section { padding: 20px 18px; }
+  .site-title { font-size: 1.5rem; }
+  .modal { margin: 16px; padding: 24px 20px; }
 }
 </style>
 </head>
-
 <body>
 
 <header>
-<h1>Scottsdale Park Place</h1>
-<div class="subtitle">Community Information Portal</div>
+  <div class="site-title">Scottsdale Park Place</div>
+  <div class="site-subtitle">Community Information Portal &nbsp;|&nbsp; 4354 N 54th St, Scottsdale AZ 85251</div>
 </header>
 
 <nav>
-<a href="index.html">Home</a>
-<a href="issues.html">Issue Tracker</a>
-<a href="#">Documents</a>
-<a href="#">Board</a>
-<a href="#">Contact</a>
+  <a href="index.html" class="active">Home</a>
+  <a href="issues.html">Capital Projects</a>
+  <a href="#">Documents</a>
+  <a href="#">Board</a>
+  <a href="#">Contact</a>
 </nav>
 
 <div class="container">
 
-<div class="section">
-<h2>Community Updates</h2>
-<p>
-Clear information. Visible priorities. Better continuity.
-This site is intended to keep Scottsdale Park Place residents informed
-about active issues, ongoing work, and important documents.
-</p>
+  <div class="section">
+    <h2 style="font-family:'DM Serif Display',serif; font-size:1.25rem; font-weight:400;">Community Updates</h2>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Site Sections</h2>
+    </div>
+    <div class="quick-links">
+      <a href="issues.html" class="quick-link">
+        <span class="ql-label">Capital Projects</span>
+        <span class="ql-desc">Reserve study timeline, project status, and financial planning</span>
+      </a>
+      <a href="#" class="quick-link">
+        <span class="ql-label">Documents</span>
+        <span class="ql-desc">Meeting minutes, budgets, CC&Rs, and association records</span>
+      </a>
+      <a href="#" class="quick-link">
+        <span class="ql-label">Board Portal</span>
+        <span class="ql-desc">Vendor contacts, credentials, and operational documentation</span>
+      </a>
+      <a href="#" class="quick-link">
+        <span class="ql-label">Contact</span>
+        <span class="ql-desc">Submit a concern or request to the board or property manager</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Board of Directors</h2>
+    </div>
+    <div class="board-grid">
+      <div class="board-card">
+        <div class="board-role">President</div>
+        <div class="board-name">Aaron Crandal</div>
+      </div>
+      <div class="board-card">
+        <div class="board-role">Treasurer</div>
+        <div class="board-name">Marilyn</div>
+      </div>
+      <div class="board-card">
+        <div class="board-role">Secretary</div>
+        <div class="board-name">Anna</div>
+      </div>
+      <div class="board-card">
+        <div class="board-role">Board Member</div>
+        <div class="board-name">James Erway</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Property Manager</h2>
+    </div>
+    <div class="pm-block">
+      <div class="pm-name">Madison Garrison</div>
+      <div class="pm-title">Community Manager &mdash; Brown Community Management</div>
+      <div class="pm-details">
+        <div class="pm-detail"><span class="label">Office</span>(480) 539-1396</div>
+        <div class="pm-detail"><span class="label">Direct</span>(480) 889-0259</div>
+        <div class="pm-detail"><span class="label">Email</span><a href="mailto:Madison.Garrison@brownmanagement.com">Madison.Garrison@brownmanagement.com</a></div>
+        <div class="pm-detail"><span class="label">Web</span><a href="https://brownmanagement.com" target="_blank">brownmanagement.com</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Portal Access</h2>
+    </div>
+    <div class="login-grid">
+      <div class="login-card">
+        <span class="login-icon">🔐</span>
+        <span class="login-label">Board / Management</span>
+        <span class="login-desc">Operational docs, credentials, vendor records, infrastructure notes</span>
+        <button class="login-btn primary" onclick="openModal('board')">Sign In</button>
+      </div>
+      <div class="login-card">
+        <span class="login-icon">🏠</span>
+        <span class="login-label">Owners</span>
+        <span class="login-desc">Assessment history, community documents, forms, and meeting records</span>
+        <button class="login-btn" onclick="openModal('owner')">Sign In</button>
+      </div>
+      <div class="login-card">
+        <span class="login-icon">🗝️</span>
+        <span class="login-label">Renters</span>
+        <span class="login-desc">Community rules, amenity info, maintenance requests, and notices</span>
+        <button class="login-btn" onclick="openModal('renter')">Sign In</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div class="section">
-<h2>Active Issues</h2>
-<p>
-A running list of building issues, maintenance items, and work in progress
-so residents can see what is known, what is being addressed,
-and what still requires attention.
-</p>
-</div>
-
-<div class="section">
-<h2>Meetings & Documents</h2>
-<p>
-Meeting notes, budgets, maintenance plans, and association documentation
-will be posted here so information remains accessible over time.
-</p>
-</div>
-
-<div class="section">
-<h2>How to Report an Issue</h2>
-<p>
-Residents should report maintenance concerns through the official
-management channels. The issue tracker will reflect confirmed items
-being investigated or scheduled.
-</p>
-</div>
-
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-title" id="modalTitle">Sign In</div>
+    <div class="modal-subtitle" id="modalSubtitle">Enter your credentials to continue.</div>
+    <label>Email</label>
+    <input type="email" placeholder="your@email.com" />
+    <label>Password</label>
+    <input type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+    <button class="modal-submit">Sign In</button>
+    <div class="modal-note">Portal access is being implemented. Contact the board to request credentials.</div>
+  </div>
 </div>
 
 <footer>
-Scottsdale Park Place HOA<br>
-Last updated: <span id="lastUpdated"></span>
+  <div class="footer-inner">
+    Scottsdale Park Place HOA &nbsp;&bull;&nbsp; 4354 N 54th St, Scottsdale AZ 85251<br>
+    <span style="margin-top:6px;display:block;">Last updated: <span id="lastUpdated"></span></span>
+  </div>
 </footer>
 
 <script>
 document.getElementById("lastUpdated").textContent =
-new Date(document.lastModified).toLocaleDateString();
+  new Date(document.lastModified).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+const titles = {
+  board: ['Board / Management','Access operational records and governance documentation.'],
+  owner: ['Owner Portal','Access your account, documents, and community resources.'],
+  renter: ['Renter Portal','Access community information and submit requests.']
+};
+function openModal(type) {
+  document.getElementById('modalTitle').textContent = titles[type][0];
+  document.getElementById('modalSubtitle').textContent = titles[type][1];
+  document.getElementById('loginModal').classList.add('open');
+}
+function closeModal() { document.getElementById('loginModal').classList.remove('open'); }
+document.getElementById('loginModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
 </script>
-
 </body>
 </html>
