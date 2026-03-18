@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact | Scottsdale Park Place HOA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1115;
+  --surface: #181c23;
+  --surface2: #1e2330;
+  --border: #2a2f3d;
+  --accent: #c8a96e;
+  --accent-dim: rgba(200,169,110,0.15);
+  --text: #e8e4dc;
+  --muted: #7a8090;
+  --red: #c05050;
+  --red-dim: rgba(192,80,80,0.15);
+  --green: #5a9e7a;
+  --green-dim: rgba(90,158,122,0.15);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 32px 32px 24px; text-align: center; }
+.site-title { font-family: 'DM Serif Display', serif; font-size: 2.1rem; letter-spacing: 0.02em; }
+.site-subtitle { margin-top: 5px; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; }
+
+nav { background: #13161d; border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
+nav a { padding: 13px 22px; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; }
+nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+
+.main { max-width: 700px; margin: 0 auto; padding: 48px 32px 72px; }
+
+.page-header { margin-bottom: 36px; }
+.page-header h1 { font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: var(--accent); margin-bottom: 8px; }
+.page-header p { color: var(--muted); font-size: 0.9rem; max-width: 520px; }
+
+/* ── CATEGORY GRID ── */
+.section-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin-bottom: 36px; }
+.cat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 16px 16px 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, background 0.15s;
+  text-align: left;
+}
+.cat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.cat-card.selected { border-color: var(--accent); background: var(--accent-dim); }
+.cat-card.emergency { border-color: rgba(192,80,80,0.35); }
+.cat-card.emergency:hover, .cat-card.emergency.selected { border-color: var(--red); background: var(--red-dim); }
+.cat-icon { font-size: 1.3rem; margin-bottom: 6px; display: block; }
+.cat-title { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.cat-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.35; }
+
+/* ── EMERGENCY PANEL ── */
+.emergency-panel {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--red);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.emergency-panel.visible { display: block; }
+.emergency-panel h3 { color: var(--red); font-size: 1rem; margin-bottom: 14px; }
+.em-row { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+.em-row:last-child { border-bottom: none; }
+.em-label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.em-value { color: var(--text); }
+.em-value a { color: var(--accent); }
+.em-note { margin-top: 14px; font-size: 0.8rem; color: var(--red); background: var(--red-dim); border-radius: 6px; padding: 10px 14px; }
+
+/* ── ARC REDIRECT ── */
+.arc-panel {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.arc-panel.visible { display: block; }
+.arc-panel h3 { color: var(--accent); font-size: 1rem; margin-bottom: 10px; }
+.arc-panel p { font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+.arc-btn {
+  display: inline-block;
+  background: var(--accent);
+  color: #0f1115;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.arc-btn:hover { opacity: 0.85; text-decoration: none; }
+
+/* ── FORM ── */
+.form-panel { display: none; }
+.form-panel.visible { display: block; }
+
+.form-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+  color: var(--accent);
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.field-group { margin-bottom: 18px; }
+.field-group label { display: block; font-size: 0.78rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+.field-group input,
+.field-group select,
+.field-group textarea {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 10px 13px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+}
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus { border-color: var(--accent); }
+.field-group textarea { min-height: 110px; resize: vertical; line-height: 1.55; }
+.field-group select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a8090' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 34px; cursor: pointer; }
+
+.two-col-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 500px) { .two-col-fields { grid-template-columns: 1fr; } }
+
+/* dynamic extra fields */
+.extra-fields { margin-bottom: 4px; }
+
+.form-note { font-size: 0.78rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; margin-bottom: 20px; line-height: 1.5; }
+
+.submit-row { display: flex; align-items: center; gap: 14px; margin-top: 24px; }
+.submit-btn {
+  background: var(--accent);
+  color: #0f1115;
+  border: none;
+  border-radius: 7px;
+  padding: 12px 28px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.submit-btn:hover { opacity: 0.85; }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.submit-status { font-size: 0.82rem; color: var(--muted); }
+.submit-status.success { color: var(--green); }
+.submit-status.error { color: var(--red); }
+
+/* ── SUCCESS ── */
+.success-panel {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--green);
+  border-radius: 10px;
+  padding: 28px 24px;
+  text-align: center;
+}
+.success-panel.visible { display: block; }
+.success-panel .success-icon { font-size: 2rem; margin-bottom: 12px; }
+.success-panel h3 { color: var(--green); font-size: 1.1rem; margin-bottom: 8px; }
+.success-panel p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+.success-panel .back-link { display: inline-block; margin-top: 18px; font-size: 0.82rem; color: var(--accent); cursor: pointer; }
+
+footer { border-top: 1px solid var(--border); background: var(--surface); padding: 24px 32px; text-align: center; font-size: 0.78rem; color: var(--muted); }
+@media (max-width: 600px) { .main { padding: 32px 16px 48px; } header { padding: 24px 16px 18px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="site-title">Scottsdale Park Place</div>
+  <div class="site-subtitle">Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251</div>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="issues.html">Capital Projects</a>
+  <a href="documents.html">Documents</a>
+  <a href="contact.html" class="active">Contact</a>
+  <a href="board.html">Board Portal</a>
+</nav>
+
+<div class="main">
+
+  <div class="page-header">
+    <h1>Contact &amp; Requests</h1>
+    <p>Select a category below. All submissions are sent directly to the property manager and you will receive a confirmation email.</p>
+  </div>
+
+  <!-- CATEGORY SELECTOR -->
+  <div class="section-label">What can we help you with?</div>
+  <div class="category-grid" id="categoryGrid">
+
+    <div class="cat-card" data-cat="Maintenance Request" onclick="selectCategory(this)">
+      <span class="cat-icon">🔧</span>
+      <div class="cat-title">Maintenance Request</div>
+      <div class="cat-desc">Common areas, building systems, shared utilities</div>
+    </div>
+
+    <div class="cat-card" data-cat="Report a Violation" onclick="selectCategory(this)">
+      <span class="cat-icon">⚠️</span>
+      <div class="cat-title">Report a Violation</div>
+      <div class="cat-desc">CC&R or rules violations by residents or guests</div>
+    </div>
+
+    <div class="cat-card" data-cat="Noise / Nuisance Complaint" onclick="selectCategory(this)">
+      <span class="cat-icon">🔊</span>
+      <div class="cat-title">Noise / Nuisance Complaint</div>
+      <div class="cat-desc">Excessive noise, odors, or disturbances</div>
+    </div>
+
+    <div class="cat-card" data-cat="Parking Complaint" onclick="selectCategory(this)">
+      <span class="cat-icon">🚗</span>
+      <div class="cat-title">Parking Complaint</div>
+      <div class="cat-desc">Unauthorized vehicles, blocked access, abandoned cars</div>
+    </div>
+
+    <div class="cat-card" data-cat="Architectural Request (ARC)" onclick="selectCategory(this)">
+      <span class="cat-icon">🏗️</span>
+      <div class="cat-title">Architectural Request</div>
+      <div class="cat-desc">Modifications, renovations, exterior changes</div>
+    </div>
+
+    <div class="cat-card" data-cat="Move-In / Move-Out Notice" onclick="selectCategory(this)">
+      <span class="cat-icon">📦</span>
+      <div class="cat-title">Move-In / Move-Out</div>
+      <div class="cat-desc">Notify the HOA of a unit transfer or tenant change</div>
+    </div>
+
+    <div class="cat-card" data-cat="Pet Registration" onclick="selectCategory(this)">
+      <span class="cat-icon">🐾</span>
+      <div class="cat-title">Pet Registration</div>
+      <div class="cat-desc">Register a pet as required by community rules</div>
+    </div>
+
+    <div class="cat-card" data-cat="Amenity Reservation" onclick="selectCategory(this)">
+      <span class="cat-icon">🏊</span>
+      <div class="cat-title">Amenity Reservation</div>
+      <div class="cat-desc">Reserve the clubhouse or other shared spaces</div>
+    </div>
+
+    <div class="cat-card" data-cat="General Inquiry" onclick="selectCategory(this)">
+      <span class="cat-icon">💬</span>
+      <div class="cat-title">General Inquiry</div>
+      <div class="cat-desc">Questions, feedback, or anything else</div>
+    </div>
+
+    <div class="cat-card emergency" data-cat="Emergency" onclick="selectCategory(this)">
+      <span class="cat-icon">🚨</span>
+      <div class="cat-title">Emergency</div>
+      <div class="cat-desc">Immediate safety or property hazard</div>
+    </div>
+
+  </div>
+
+  <!-- EMERGENCY PANEL -->
+  <div class="emergency-panel" id="emergencyPanel">
+    <h3>🚨 Emergency Contact Information</h3>
+    <div class="em-row">
+      <div class="em-label">Life / Safety Emergency</div>
+      <div class="em-value"><strong>Call 911 immediately</strong></div>
+    </div>
+    <div class="em-row">
+      <div class="em-label">Property Manager — After Hours</div>
+      <div class="em-value">Madison Garrison &mdash; <a href="mailto:Madison.Garrison@brownmanagement.com">Madison.Garrison@brownmanagement.com</a></div>
+    </div>
+    <div class="em-row">
+      <div class="em-label">Brown Community Management Office</div>
+      <div class="em-value"><a href="https://www.brownmanagement.com" target="_blank">brownmanagement.com</a></div>
+    </div>
+    <div class="em-row">
+      <div class="em-label">Water Main Shutoffs</div>
+      <div class="em-value">Buildings A–G shutoffs documented in the Operations Manual. Contact the board or property manager for access.</div>
+    </div>
+    <div class="em-row">
+      <div class="em-label">Sewer Lift Station</div>
+      <div class="em-value">Contact property manager immediately for alarm or backup. Do not attempt to service without authorization.</div>
+    </div>
+    <div class="em-note">For non-life-threatening property emergencies, email the board at <a href="mailto:board@scottsdaleparkplace.com" style="color:inherit;text-decoration:underline;">board@scottsdaleparkplace.com</a> and contact Madison directly.</div>
+  </div>
+
+  <!-- ARC REDIRECT PANEL -->
+  <div class="arc-panel" id="arcPanel">
+    <h3>🏗️ Architectural Review Request (ARC)</h3>
+    <p>Arizona law and the Scottsdale Park Place CC&Rs require board approval before any exterior modification, structural change, or significant interior work visible from common areas. This includes patios, windows, doors, HVAC equipment, satellite dishes, and paint color changes.</p>
+    <p>The ARC Request form is on the Documents page. Complete and submit the form there — it will be routed directly to the property manager and board.</p>
+    <a href="documents.html#arc" class="arc-btn">Go to ARC Request Form →</a>
+  </div>
+
+  <!-- MAIN FORM PANEL -->
+  <div class="form-panel" id="formPanel">
+    <div class="form-title" id="formTitle">Maintenance Request</div>
+
+    <!-- Base fields (always shown) -->
+    <div class="two-col-fields">
+      <div class="field-group">
+        <label>Full Name *</label>
+        <input type="text" id="fieldName" placeholder="Your name" required>
+      </div>
+      <div class="field-group">
+        <label>Unit Number *</label>
+        <input type="text" id="fieldUnit" placeholder="e.g. 204">
+      </div>
+    </div>
+    <div class="two-col-fields">
+      <div class="field-group">
+        <label>Email Address *</label>
+        <input type="email" id="fieldEmail" placeholder="your@email.com" required>
+      </div>
+      <div class="field-group">
+        <label>Phone (optional)</label>
+        <input type="tel" id="fieldPhone" placeholder="(480) 555-0000">
+      </div>
+    </div>
+
+    <!-- Dynamic extra fields injected here -->
+    <div class="extra-fields" id="extraFields"></div>
+
+    <!-- Message -->
+    <div class="field-group">
+      <label id="messageLabel">Description *</label>
+      <textarea id="fieldMessage" placeholder="Please describe the issue in detail..."></textarea>
+    </div>
+
+    <div class="form-note" id="formNote"></div>
+
+    <div class="submit-row">
+      <button class="submit-btn" id="submitBtn" onclick="submitForm()">Send Submission</button>
+      <span class="submit-status" id="submitStatus"></span>
+    </div>
+  </div>
+
+  <!-- SUCCESS PANEL -->
+  <div class="success-panel" id="successPanel">
+    <div class="success-icon">✅</div>
+    <h3>Submission Received</h3>
+    <p>Your submission has been forwarded to the property manager. A confirmation email has been sent to the address you provided. Expect a response within 2 business days.</p>
+    <span class="back-link" onclick="resetForm()">← Submit another request</span>
+  </div>
+
+</div><!-- end main -->
+
+<footer>
+  Scottsdale Park Place Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251<br>
+  <span style="margin-top:6px;display:block;color:#4a5060;">Questions? Email <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a></span>
+</footer>
+
+<script>
+// ── REPLACE THIS with your deployed Cloudflare Worker URL ──
+const WORKER_URL = "https://spp-contact.aaroncrandal.workers.dev";
+
+// Extra fields config per category
+const CATEGORY_CONFIG = {
+  "Maintenance Request": {
+    note: "Maintenance requests for common areas and shared building systems are handled by the property manager. For urgent issues, contact Madison Garrison directly.",
+    messageLabel: "Describe the issue *",
+    messagePlaceholder: "What needs attention? Include the location (building, floor, area) and how long the issue has been present.",
+    fields: [
+      { id: "location", label: "Location / Area", type: "text", placeholder: "e.g. Building B stairwell, Pool deck, Parking lot" },
+      { id: "urgency", label: "Urgency", type: "select", options: ["Routine — within 2 weeks", "Soon — within 3 days", "Urgent — within 24 hours"] },
+    ]
+  },
+  "Report a Violation": {
+    note: "Violation reports are confidential. The board and property manager will investigate before any action is taken. Please do not confront the resident directly.",
+    messageLabel: "Describe the violation *",
+    messagePlaceholder: "What rule or CC&R provision is being violated? Include dates, times, and any relevant details.",
+    fields: [
+      { id: "violationLocation", label: "Location of Violation", type: "text", placeholder: "e.g. Unit 312 patio, Parking area C" },
+      { id: "violationType", label: "Violation Type", type: "select", options: ["Unauthorized modification", "Nuisance / noise", "Parking violation", "Pet violation", "Trash / debris", "Rental violation", "Other"] },
+      { id: "ongoingOrOnetime", label: "Is this ongoing?", type: "select", options: ["Ongoing / recurring", "One-time incident"] },
+    ]
+  },
+  "Noise / Nuisance Complaint": {
+    note: "Quiet hours at Scottsdale Park Place are 10:00 PM to 8:00 AM. For immediate disturbances during quiet hours, you may also contact Scottsdale PD non-emergency at (480) 312-5000.",
+    messageLabel: "Describe the disturbance *",
+    messagePlaceholder: "What kind of noise or nuisance? Include dates and times.",
+    fields: [
+      { id: "noiseSource", label: "Source Unit or Area", type: "text", placeholder: "e.g. Unit 218, Parking lot near Building D" },
+      { id: "noiseTime", label: "When does it occur?", type: "text", placeholder: "e.g. Weeknights after 11 PM" },
+    ]
+  },
+  "Parking Complaint": {
+    note: "Each unit is assigned designated parking. Unauthorized vehicles in reserved spaces may be towed at owner's expense per community rules. Include as much detail as possible.",
+    messageLabel: "Describe the parking issue *",
+    messagePlaceholder: "What is the problem? Include space number or location if known.",
+    fields: [
+      { id: "vehicleDesc", label: "Vehicle Description", type: "text", placeholder: "Make, model, color, license plate if visible" },
+      { id: "parkingLocation", label: "Parking Space / Location", type: "text", placeholder: "e.g. Space 47, Guest lot near Building A" },
+      { id: "parkingDuration", label: "How long has it been there?", type: "select", options: ["Less than 24 hours", "1–3 days", "More than 3 days", "Ongoing / recurring"] },
+    ]
+  },
+  "Move-In / Move-Out Notice": {
+    note: "Arizona law and HOA rules require advance notice of unit transfers and new tenants. Please notify the board at least 5 business days before a move when possible. Elevator and loading dock scheduling may apply.",
+    messageLabel: "Additional notes",
+    messagePlaceholder: "Any other details the board or property manager should know.",
+    fields: [
+      { id: "moveType", label: "Type", type: "select", options: ["Move-In (new owner)", "Move-In (new tenant)", "Move-Out (owner selling)", "Move-Out (tenant leaving)"] },
+      { id: "moveDate", label: "Planned Move Date", type: "text", placeholder: "e.g. April 15, 2026" },
+      { id: "newOccupantName", label: "New Occupant Name (if known)", type: "text", placeholder: "Full name" },
+    ]
+  },
+  "Pet Registration": {
+    note: "The CC&Rs require all pets to be registered with the HOA. Approved pets must be leashed in common areas. Weight and breed restrictions apply per community rules. Registration is required within 30 days of acquiring a pet.",
+    messageLabel: "Additional notes",
+    messagePlaceholder: "Any additional information about your pet.",
+    fields: [
+      { id: "petName", label: "Pet Name", type: "text", placeholder: "e.g. Max" },
+      { id: "petType", label: "Type of Pet", type: "select", options: ["Dog", "Cat", "Bird", "Other"] },
+      { id: "petBreed", label: "Breed", type: "text", placeholder: "e.g. Labrador Retriever" },
+      { id: "petWeight", label: "Weight (approximate)", type: "text", placeholder: "e.g. 45 lbs" },
+      { id: "petVaccinated", label: "Vaccinations Current?", type: "select", options: ["Yes", "No", "In progress"] },
+    ]
+  },
+  "Amenity Reservation": {
+    note: "The clubhouse is available to residents for private events with advance notice. A refundable deposit may be required. Reservations are subject to availability and board approval.",
+    messageLabel: "Event details *",
+    messagePlaceholder: "What is the event? Approximate number of guests?",
+    fields: [
+      { id: "amenity", label: "Amenity", type: "select", options: ["Clubhouse", "Pool / Spa area", "BBQ area", "Other"] },
+      { id: "reservationDate", label: "Requested Date", type: "text", placeholder: "e.g. Saturday, May 10, 2026" },
+      { id: "reservationTime", label: "Requested Time", type: "text", placeholder: "e.g. 2:00 PM – 6:00 PM" },
+      { id: "guestCount", label: "Estimated Guest Count", type: "text", placeholder: "e.g. 12" },
+    ]
+  },
+  "General Inquiry": {
+    note: "General inquiries go to the board. For property management questions, you can also contact Madison Garrison at Brown Community Management directly.",
+    messageLabel: "Your message *",
+    messagePlaceholder: "What would you like to ask or share?",
+    fields: []
+  },
+};
+
+let currentCategory = null;
+
+function selectCategory(card) {
+  // Deselect all
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+
+  const cat = card.dataset.cat;
+  currentCategory = cat;
+
+  // Hide all panels
+  document.getElementById('emergencyPanel').classList.remove('visible');
+  document.getElementById('arcPanel').classList.remove('visible');
+  document.getElementById('formPanel').classList.remove('visible');
+  document.getElementById('successPanel').classList.remove('visible');
+
+  if (cat === 'Emergency') {
+    document.getElementById('emergencyPanel').classList.add('visible');
+    scrollToPanel('emergencyPanel');
+    return;
+  }
+
+  if (cat === 'Architectural Request (ARC)') {
+    document.getElementById('arcPanel').classList.add('visible');
+    scrollToPanel('arcPanel');
+    return;
+  }
+
+  // Build the form for this category
+  buildForm(cat);
+  document.getElementById('formPanel').classList.add('visible');
+  scrollToPanel('formPanel');
+}
+
+function buildForm(cat) {
+  const config = CATEGORY_CONFIG[cat] || {};
+  document.getElementById('formTitle').textContent = cat;
+  document.getElementById('messageLabel').textContent = config.messageLabel || 'Description *';
+  document.getElementById('fieldMessage').placeholder = config.messagePlaceholder || 'Please describe...';
+
+  const noteEl = document.getElementById('formNote');
+  if (config.note) {
+    noteEl.textContent = config.note;
+    noteEl.style.display = 'block';
+  } else {
+    noteEl.style.display = 'none';
+  }
+
+  // Build extra fields
+  const container = document.getElementById('extraFields');
+  container.innerHTML = '';
+
+  const fields = config.fields || [];
+  fields.forEach(f => {
+    const group = document.createElement('div');
+    group.className = 'field-group';
+    const label = document.createElement('label');
+    label.textContent = f.label;
+    group.appendChild(label);
+
+    let el;
+    if (f.type === 'select') {
+      el = document.createElement('select');
+      el.id = 'extra_' + f.id;
+      const blank = document.createElement('option');
+      blank.value = '';
+      blank.textContent = '— Select —';
+      el.appendChild(blank);
+      f.options.forEach(opt => {
+        const o = document.createElement('option');
+        o.value = opt;
+        o.textContent = opt;
+        el.appendChild(o);
+      });
+    } else {
+      el = document.createElement('input');
+      el.type = f.type || 'text';
+      el.id = 'extra_' + f.id;
+      el.placeholder = f.placeholder || '';
+    }
+    group.appendChild(el);
+    container.appendChild(group);
+  });
+
+  // Reset fields
+  document.getElementById('fieldName').value = '';
+  document.getElementById('fieldUnit').value = '';
+  document.getElementById('fieldEmail').value = '';
+  document.getElementById('fieldPhone').value = '';
+  document.getElementById('fieldMessage').value = '';
+  document.getElementById('submitStatus').textContent = '';
+  document.getElementById('submitBtn').disabled = false;
+}
+
+function scrollToPanel(id) {
+  setTimeout(() => {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 80);
+}
+
+async function submitForm() {
+  const name = document.getElementById('fieldName').value.trim();
+  const unit = document.getElementById('fieldUnit').value.trim();
+  const email = document.getElementById('fieldEmail').value.trim();
+  const phone = document.getElementById('fieldPhone').value.trim();
+  const message = document.getElementById('fieldMessage').value.trim();
+
+  const statusEl = document.getElementById('submitStatus');
+  const btn = document.getElementById('submitBtn');
+
+  if (!name || !email || !message) {
+    statusEl.textContent = 'Please fill in all required fields.';
+    statusEl.className = 'submit-status error';
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    statusEl.textContent = 'Please enter a valid email address.';
+    statusEl.className = 'submit-status error';
+    return;
+  }
+
+  // Collect extra fields
+  const config = CATEGORY_CONFIG[currentCategory] || {};
+  const fields = {};
+  (config.fields || []).forEach(f => {
+    const el = document.getElementById('extra_' + f.id);
+    if (el && el.value) fields[f.label] = el.value;
+  });
+
+  btn.disabled = true;
+  statusEl.textContent = 'Sending…';
+  statusEl.className = 'submit-status';
+
+  try {
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category: currentCategory, name, email, unit, phone, message, fields }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      document.getElementById('formPanel').classList.remove('visible');
+      document.getElementById('successPanel').classList.add('visible');
+      scrollToPanel('successPanel');
+    } else {
+      throw new Error(data.error || 'Unknown error');
+    }
+  } catch (err) {
+    statusEl.textContent = 'Something went wrong. Please try again or email board@scottsdaleparkplace.com directly.';
+    statusEl.className = 'submit-status error';
+    btn.disabled = false;
+  }
+}
+
+function resetForm() {
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('successPanel').classList.remove('visible');
+  document.getElementById('formPanel').classList.remove('visible');
+  currentCategory = null;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
