@@ -3,144 +3,310 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Board Portal | Scottsdale Park Place</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<title>Scottsdale Park Place HOA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0f1115; --surface: #181c23; --surface2: #1e2330; --border: #2a2f3d;
-  --accent: #c8a96e; --accent-dim: rgba(200,169,110,0.15); --text: #e8e4dc; --muted: #7a8090;
-  --red: #c05050; --red-dim: rgba(192,80,80,0.12);
-  --yellow: #c8a030; --yellow-dim: rgba(200,160,48,0.12);
-  --green: #5a9e7a; --green-dim: rgba(90,158,122,0.12);
-  --blue: #5a8ab0; --blue-dim: rgba(90,138,176,0.12);
+  --bg: #0f1115;
+  --surface: #181c23;
+  --surface2: #1e2330;
+  --border: #2a2f3d;
+  --accent: #c8a96e;
+  --accent-dim: rgba(200,169,110,0.15);
+  --text: #e8e4dc;
+  --muted: #7a8090;
+  --red: #c05050;
+  --blue: #5a8ab0;
+  --green: #5a9e7a;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 28px 24px 20px; text-align: center; }
-.site-title { font-family: 'DM Serif Display', serif; font-size: 2rem; letter-spacing: 0.02em; }
-.site-subtitle { margin-top: 4px; font-size: 0.8rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
-nav { background: #13161d; border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; gap: 4px; padding: 10px 16px; }
-nav a { color: #b0b8c8; padding: 6px 16px; border-radius: 4px; font-size: 0.85rem; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s; }
-nav a:hover { background: var(--surface2); color: var(--text); text-decoration: none; }
-nav a.active { color: var(--accent); }
-.restricted-bar { background: var(--red-dim); border-bottom: 1px solid rgba(192,80,80,0.25); text-align: center; padding: 10px 20px; font-size: 0.78rem; color: #d08080; letter-spacing: 0.06em; }
-.tab-bar { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; justify-content: center; overflow-x: auto; }
-.tab-btn { background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; padding: 14px 22px; cursor: pointer; white-space: nowrap; transition: color 0.15s, border-color 0.15s; }
-.tab-btn:hover { color: var(--text); }
-.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-.container { max-width: 900px; margin: 32px auto; padding: 0 20px; }
-.page-header { margin-bottom: 24px; }
-.page-header h1 { font-family: 'DM Serif Display', serif; font-size: 1.7rem; font-weight: 400; }
-.page-header p { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
-.ops-section { margin-bottom: 32px; }
-.ops-section-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-.ops-section-title span { font-size: 1rem; }
-.entry-grid { display: flex; flex-direction: column; gap: 10px; }
-.entry-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 18px 22px; }
-.entry-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
-.entry-fields { display: grid; grid-template-columns: 120px 1fr; gap: 6px 12px; }
-.field-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; align-self: center; }
-.field-value { font-size: 0.88rem; color: #d0d8e4; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 5px 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; }
-.field-value.empty { color: var(--muted); font-style: italic; font-size: 0.8rem; }
-.field-value.notes-field { font-size: 0.83rem; line-height: 1.5; white-space: pre-wrap; align-items: flex-start; }
-.copy-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.75rem; padding: 0 2px; flex-shrink: 0; transition: color 0.15s; }
-.copy-btn:hover { color: var(--accent); }
-.status-tag { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; }
-.tag-active { background: var(--green-dim); color: var(--green); border: 1px solid rgba(90,158,122,0.3); }
-.tag-unknown { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(200,160,48,0.3); }
-.placeholder-card { background: var(--surface); border: 1px dashed var(--border); border-radius: 6px; padding: 18px 22px; color: var(--muted); font-size: 0.85rem; display: flex; align-items: center; gap: 10px; }
-.note-box { background: var(--yellow-dim); border: 1px solid rgba(200,160,48,0.2); border-radius: 5px; padding: 12px 16px; font-size: 0.82rem; color: #d4bb70; margin-top: 10px; }
-.tally-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-.tally-box { background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 12px 16px; display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 80px; cursor: pointer; transition: border-color 0.15s; }
-.tally-box:hover { border-color: #3a3f50; }
-.tally-box.t-open { border-top: 2px solid var(--red); }
-.tally-box.t-progress { border-top: 2px solid var(--yellow); }
-.tally-box.t-resolved { border-top: 2px solid var(--green); }
-.tally-box.t-knowledge { border-top: 2px solid var(--blue); }
-.tally-box.t-all { border-top: 2px solid var(--accent); }
-.tally-val { font-family: 'DM Serif Display', serif; font-size: 1.5rem; line-height: 1; }
-.tally-lbl { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 3px; text-align: center; }
-.board-controls { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
-.filter-row { display: flex; gap: 6px; flex-wrap: wrap; }
-.filter-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; padding: 5px 14px; border-radius: 20px; cursor: pointer; transition: all 0.15s; }
-.filter-btn:hover, .filter-btn.active { background: var(--accent-dim); border-color: rgba(200,169,110,0.4); color: var(--accent); }
-.cat-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-.cat-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.75rem; padding: 4px 12px; border-radius: 4px; cursor: pointer; transition: all 0.15s; }
-.cat-btn:hover { color: var(--text); border-color: #3a3f50; }
-.cat-btn.active { background: var(--surface); border-color: #4a4f60; color: var(--text); font-weight: 500; }
-.new-issue-btn { background: var(--accent-dim); border: 1px solid rgba(200,169,110,0.4); color: var(--accent); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 8px 18px; border-radius: 5px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
-.new-issue-btn:hover { background: rgba(200,169,110,0.25); }
-.issue-list { display: flex; flex-direction: column; gap: 10px; }
-.issue-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 16px 20px; cursor: pointer; transition: border-color 0.15s; }
-.issue-card:hover { border-color: #3a3f50; }
-.issue-card.open-issue { border-left: 3px solid var(--red); }
-.issue-card.in-progress { border-left: 3px solid var(--yellow); }
-.issue-card.resolved { border-left: 3px solid var(--green); opacity: 0.75; }
-.issue-card.knowledge { border-left: 3px solid var(--blue); }
-.issue-title { font-weight: 600; font-size: 0.95rem; }
-.issue-meta { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
-.issue-preview { font-size: 0.83rem; color: #a0a8b8; line-height: 1.5; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.issue-footer { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-.issue-tag { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; }
-.tag-open { background: var(--red-dim); color: var(--red); border: 1px solid rgba(192,80,80,0.3); }
-.tag-progress { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(200,160,48,0.3); }
-.tag-resolved { background: var(--green-dim); color: var(--green); border: 1px solid rgba(90,158,122,0.3); }
-.tag-knowledge { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(90,138,176,0.3); }
-.cat-pill { font-size: 0.68rem; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 2px 8px; border-radius: 3px; }
-.reply-count { font-size: 0.75rem; color: var(--muted); margin-left: auto; }
-.loading-state, .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 0.88rem; }
-.empty-state .ei { font-size: 2rem; display: block; margin-bottom: 10px; opacity: 0.4; }
-.error-state { background: var(--red-dim); border: 1px solid rgba(192,80,80,0.25); border-radius: 5px; padding: 14px 18px; font-size: 0.85rem; color: #d08080; margin-bottom: 16px; }
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
+
+/* ── HEADER ── */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 32px 32px 24px;
+  text-align: center;
+}
+.site-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.1rem;
+  letter-spacing: 0.02em;
+}
+.site-subtitle {
+  margin-top: 5px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ── NAV ── */
+nav {
+  background: #13161d;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+nav a {
+  padding: 13px 22px;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+nav a:hover, nav a.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+/* ── MAIN CONTENT ── */
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 48px 32px 64px;
+}
+
+/* ── COMMUNITY INTRO ── */
+.intro-section {
+  margin-bottom: 48px;
+}
+.intro-section h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.intro-section p {
+  color: #b0b8c8;
+  font-size: 0.92rem;
+  max-width: 680px;
+  line-height: 1.7;
+}
+
+/* ── NAV CARDS ── */
+.section-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.nav-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 48px;
+}
+.nav-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px 20px;
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  display: block;
+}
+.nav-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  text-decoration: none;
+}
+.nav-card-icon { font-size: 1.6rem; margin-bottom: 10px; display: block; }
+.nav-card-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.nav-card-desc {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ── TWO COLUMN ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+@media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ── INFO BOX ── */
+.info-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px 22px;
+}
+.info-box h3 {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.board-member {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.board-member:last-child { border-bottom: none; }
+.member-name { color: var(--text); font-weight: 500; }
+.member-role { color: var(--muted); font-size: 0.78rem; }
+
+.contact-row {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.contact-row:last-child { border-bottom: none; }
+.contact-label { color: var(--muted); font-size: 0.74rem; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 2px; }
+.contact-value { color: var(--text); }
+.contact-value a { color: var(--accent); }
+
+/* ── PORTAL ACCESS ── */
+.portal-section { margin-bottom: 48px; }
+.portal-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.portal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px 20px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.portal-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.portal-card-icon { font-size: 1.5rem; margin-bottom: 10px; display: block; }
+.portal-card-title { font-weight: 600; font-size: 0.92rem; color: var(--text); margin-bottom: 4px; }
+.portal-card-desc { font-size: 0.78rem; color: var(--muted); }
+.portal-lock {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  background: rgba(200,169,110,0.12);
+  color: var(--accent);
+  border-radius: 20px;
+  padding: 2px 8px;
+  margin-top: 8px;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
 .modal-overlay.open { display: flex; }
-.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px 32px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; position: relative; }
-.modal.detail-modal { max-width: 640px; }
-.modal-close { position: absolute; top: 14px; right: 18px; background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
-.modal-close:hover { color: var(--text); }
-.modal-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 18px; }
-.form-row { margin-bottom: 14px; }
-.form-row label { display: block; font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
-.form-row input, .form-row textarea, .form-row select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 9px 12px; outline: none; transition: border-color 0.15s; }
-.form-row input:focus, .form-row textarea:focus, .form-row select:focus { border-color: var(--accent); }
-.form-row textarea { resize: vertical; min-height: 90px; }
-.form-row select option { background: var(--surface2); }
-.form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
-.btn-cancel { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; padding: 8px 18px; border-radius: 4px; cursor: pointer; }
-.btn-cancel:hover { color: var(--text); }
-.btn-submit { background: var(--accent-dim); border: 1px solid rgba(200,169,110,0.4); color: var(--accent); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 8px 20px; border-radius: 4px; cursor: pointer; }
-.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-.detail-body { font-size: 0.88rem; color: #c0c8d4; line-height: 1.65; white-space: pre-wrap; margin-bottom: 18px; }
-.replies-section { border-top: 1px solid var(--border); padding-top: 16px; }
-.replies-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 12px; }
-.reply-item { background: var(--surface2); border-radius: 5px; padding: 12px 14px; margin-bottom: 8px; }
-.reply-meta { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; }
-.reply-text { font-size: 0.85rem; color: #c0c8d4; white-space: pre-wrap; }
-.reply-input-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-.reply-input-row input { flex: 1; min-width: 100px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; padding: 8px 12px; outline: none; }
-.reply-input-row input:focus { border-color: var(--accent); }
-.reply-send-btn { background: var(--accent-dim); border: 1px solid rgba(200,169,110,0.4); color: var(--accent); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; padding: 8px 14px; border-radius: 4px; cursor: pointer; white-space: nowrap; }
-.reply-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.detail-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
-.action-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; padding: 6px 12px; border-radius: 4px; cursor: pointer; transition: all 0.15s; }
-.action-btn.resolve { color: var(--green); border-color: rgba(90,158,122,0.3); }
-.action-btn.resolve:hover { background: var(--green-dim); }
-.action-btn.archive { color: var(--blue); border-color: rgba(90,138,176,0.3); }
-.action-btn.archive:hover { background: var(--blue-dim); }
-.action-btn.del { color: var(--red); border-color: rgba(192,80,80,0.3); }
-.action-btn.del:hover { background: var(--red-dim); }
-.toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 10px 18px; font-size: 0.82rem; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 999; }
-.toast.show { opacity: 1; }
-footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 10px; }
-.footer-inner { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+.modal {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  width: 100%;
+  max-width: 380px;
+  margin: 16px;
+}
+.modal h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+.modal p { font-size: 0.82rem; color: var(--muted); margin-bottom: 20px; }
+.modal input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.modal input:focus { border-color: var(--accent); }
+.modal-btn {
+  width: 100%;
+  background: var(--accent);
+  color: #0f1115;
+  border: none;
+  border-radius: 6px;
+  padding: 11px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: opacity 0.2s;
+}
+.modal-btn:hover { opacity: 0.85; }
+.modal-cancel {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 6px;
+}
+.modal-cancel:hover { color: var(--text); }
+.modal-note {
+  font-size: 0.74rem;
+  color: #4a5060;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  padding: 24px 32px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* ── RESPONSIVE ── */
 @media (max-width: 600px) {
-  .entry-fields { grid-template-columns: 100px 1fr; }
-  .site-title { font-size: 1.5rem; }
-  .modal { padding: 22px 18px; }
-  .tab-btn { padding: 12px 14px; font-size: 0.8rem; }
+  .main { padding: 32px 16px 48px; }
+  header { padding: 24px 16px 18px; }
 }
 </style>
 </head>
@@ -148,586 +314,182 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
 
 <header>
   <div class="site-title">Scottsdale Park Place</div>
-  <div class="site-subtitle">Community Information Portal &nbsp;|&nbsp; 4354 N 54th St, Scottsdale AZ 85251</div>
+  <div class="site-subtitle">Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251</div>
 </header>
 
 <nav>
-  <a href="index.html">Home</a>
+  <a href="index.html" class="active">Home</a>
   <a href="issues.html">Capital Projects</a>
-  <a href="#">Documents</a>
-  <a href="board.html" class="active">Board</a>
-  <a href="#">Contact</a>
+  <a href="documents.html">Documents</a>
+  <a href="#contact">Contact</a>
+  <a href="board.html">Board Portal</a>
 </nav>
 
-<div class="restricted-bar">&#128274; BOARD &amp; MANAGEMENT ACCESS ONLY &mdash; Do not share this page outside of authorized personnel</div>
+<div class="main">
 
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('discuss',this)">Discussion Board</button>
-  <button class="tab-btn" onclick="switchTab('ops',this)">Operations Manual</button>
-</div>
+  <!-- INTRO -->
+  <div class="intro-section">
+    <h2>Welcome to Scottsdale Park Place</h2>
+    <p>Scottsdale Park Place is a condominium community located at 4704 N. Scottsdale Road, Scottsdale, AZ 85251. This site is maintained by the Homeowners Association board and serves as the official community resource for governance information, capital project updates, association documents, and resident communications.</p>
+  </div>
 
-<!-- ===== DISCUSSION BOARD (default) ===== -->
-<div class="tab-panel active" id="tab-discuss">
-<div class="container">
-  <div class="page-header">
-    <h1>Discussion Board</h1>
-    <p>Shared in real time across all board members and management. Open issues surface first.</p>
+  <!-- NAV CARDS -->
+  <div class="section-label">Community Resources</div>
+  <div class="nav-cards">
+    <a href="issues.html" class="nav-card">
+      <span class="nav-card-icon">🏗️</span>
+      <div class="nav-card-title">Capital Projects</div>
+      <div class="nav-card-desc">Reserve study timeline, project status, and funding overview.</div>
+    </a>
+    <a href="documents.html" class="nav-card">
+      <span class="nav-card-icon">📄</span>
+      <div class="nav-card-title">Documents</div>
+      <div class="nav-card-desc">Meeting minutes, budgets, CC&Rs, and association records.</div>
+    </a>
+    <a href="#portal" class="nav-card">
+      <span class="nav-card-icon">🔐</span>
+      <div class="nav-card-title">Resident Portal</div>
+      <div class="nav-card-desc">Owner and renter access to community resources and forms.</div>
+    </a>
+    <a href="#contact" class="nav-card">
+      <span class="nav-card-icon">✉️</span>
+      <div class="nav-card-title">Contact</div>
+      <div class="nav-card-desc">Reach the board or property manager with questions.</div>
+    </a>
   </div>
-  <div id="dbError" class="error-state" style="display:none;"></div>
-  <div class="tally-bar" id="tallyBar">
-    <div class="tally-box t-all" onclick="setStatusFilter('all')"><span class="tally-val" id="t-all">—</span><span class="tally-lbl">Total</span></div>
-    <div class="tally-box t-open" onclick="setStatusFilter('open')"><span class="tally-val" id="t-open">—</span><span class="tally-lbl">Open</span></div>
-    <div class="tally-box t-progress" onclick="setStatusFilter('in-progress')"><span class="tally-val" id="t-progress">—</span><span class="tally-lbl">In Progress</span></div>
-    <div class="tally-box t-resolved" onclick="setStatusFilter('resolved')"><span class="tally-val" id="t-resolved">—</span><span class="tally-lbl">Resolved</span></div>
-    <div class="tally-box t-knowledge" onclick="setStatusFilter('knowledge')"><span class="tally-val" id="t-knowledge">—</span><span class="tally-lbl">Knowledge Base</span></div>
-  </div>
-  <div class="board-controls">
-    <div class="filter-row" id="statusFilters">
-      <button class="filter-btn active" onclick="setStatusFilter('all',this)">All</button>
-      <button class="filter-btn" onclick="setStatusFilter('open',this)">Open</button>
-      <button class="filter-btn" onclick="setStatusFilter('in-progress',this)">In Progress</button>
-      <button class="filter-btn" onclick="setStatusFilter('resolved',this)">Resolved</button>
-      <button class="filter-btn" onclick="setStatusFilter('knowledge',this)">Knowledge Base</button>
-    </div>
-    <button class="new-issue-btn" onclick="openNewIssue()">+ New Entry</button>
-  </div>
-  <div class="cat-row" id="catFilters">
-    <button class="cat-btn active" onclick="setCatFilter('all',this)">All Categories</button>
-    <button class="cat-btn" onclick="setCatFilter('Capital Projects',this)">Capital Projects</button>
-    <button class="cat-btn" onclick="setCatFilter('ARC Requests',this)">ARC Requests</button>
-    <button class="cat-btn" onclick="setCatFilter('Service Requests',this)">Service Requests</button>
-    <button class="cat-btn" onclick="setCatFilter('Governance',this)">Governance</button>
-    <button class="cat-btn" onclick="setCatFilter('Finance',this)">Finance</button>
-    <button class="cat-btn" onclick="setCatFilter('Access & Security',this)">Access &amp; Security</button>
-    <button class="cat-btn" onclick="setCatFilter('Infrastructure',this)">Infrastructure</button>
-    <button class="cat-btn" onclick="setCatFilter('Vendor',this)">Vendor</button>
-    <button class="cat-btn" onclick="setCatFilter('Legal',this)">Legal</button>
-  </div>
-  <div class="issue-list" id="issueList"><div class="loading-state">Loading entries...</div></div>
-</div>
-</div>
 
-<!-- ===== OPS MANUAL ===== -->
-<div class="tab-panel" id="tab-ops">
-<div class="container">
-  <div class="page-header">
-    <h1>Board Operations Manual</h1>
-    <p>Credentials, vendor accounts, contacts, equipment locations, and system access. Add entries as information is confirmed.</p>
-  </div>
-  <div class="ops-section">
-    <div class="ops-section-title"><span>🔐</span> Portal Access &amp; Credentials</div>
-    <div class="entry-grid">
-      <div class="entry-card">
-        <div class="entry-name">Brown Community Management Portal <span class="status-tag tag-active">Active</span></div>
-        <div class="entry-fields">
-          <div class="field-label">URL</div><div class="field-value"><span>brownmanagement.com</span><button class="copy-btn" onclick="copyVal('brownmanagement.com')">copy</button></div>
-          <div class="field-label">Username</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Password</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Notes</div><div class="field-value notes-field empty">Add login notes here</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">HOA Gmail Account <span class="status-tag tag-active">Active</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Email</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Password</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Recovery</div><div class="field-value empty">— not yet entered —</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Cloudflare (scottsdaleparkplace.com) <span class="status-tag tag-active">Active</span></div>
-        <div class="entry-fields">
-          <div class="field-label">URL</div><div class="field-value"><span>dash.cloudflare.com</span><button class="copy-btn" onclick="copyVal('dash.cloudflare.com')">copy</button></div>
-          <div class="field-label">Account</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Notes</div><div class="field-value notes-field">GitHub repo: aaroncrandal/scottsdaleparkplace-site. Auto-deploys on commit.</div>
-        </div>
-      </div>
-      <div class="placeholder-card"><span style="opacity:.5">➕</span> Add additional portals: Zoom, DocuSign, insurance portal, etc.</div>
-    </div>
-  </div>
-  <div class="ops-section">
-    <div class="ops-section-title"><span>🏢</span> Vendor Accounts &amp; Service Contacts</div>
-    <div class="entry-grid">
-      <div class="entry-card">
-        <div class="entry-name">Pool Service <span class="status-tag tag-unknown">Confirm Vendor</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Company</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Contact</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Phone</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Schedule</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Account #</div><div class="field-value empty">— not yet entered —</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Landscaping <span class="status-tag tag-unknown">Confirm Vendor</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Company</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Contact</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Phone</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Schedule</div><div class="field-value empty">— not yet entered —</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Plumbing / Emergency Maintenance <span class="status-tag tag-unknown">Confirm Vendor</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Company</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Contact</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Phone</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">24hr Line</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Combo Lock</div><div class="field-value empty">— access code for plumbing areas —</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Sewer Lift Station Service <span class="status-tag tag-unknown">Confirm Vendor</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Company</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Contact</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Phone</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Combo Lock</div><div class="field-value empty">— combination to access lift station enclosure —</div>
-          <div class="field-label">Alarm Code</div><div class="field-value empty">— code to silence alarm on unit —</div>
-          <div class="field-label">Notes</div><div class="field-value notes-field empty">Grundfos 1 HP pump. Jams when residents flush diapers or wipes. Silence alarm before servicing. Replacement scheduled 2027.</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">AZCCTV (Surveillance) <span class="status-tag tag-active">Active</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Company</div><div class="field-value">AZCCTV</div>
-          <div class="field-label">Contact</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Phone</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Notes</div><div class="field-value notes-field empty">Replaced previous Sielox system. Add NVR credentials in Camera section.</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">HOA Legal Counsel <span class="status-tag tag-active">Active</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Attorney</div><div class="field-value">Quentin</div>
-          <div class="field-label">Firm</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Phone</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Email</div><div class="field-value empty">— not yet entered —</div>
-        </div>
-      </div>
-      <div class="placeholder-card"><span style="opacity:.5">➕</span> Add: electrician, roofer, pest control, trash, insurance agent, etc.</div>
-    </div>
-  </div>
-  <div class="ops-section">
-    <div class="ops-section-title"><span>🚪</span> Door Access &amp; Entry System</div>
-    <div class="entry-grid">
-      <div class="entry-card">
-        <div class="entry-name">Entry Fob System <span class="status-tag tag-unknown">Confirm Status</span></div>
-        <div class="entry-fields">
-          <div class="field-label">System</div><div class="field-value empty">— confirm post-rekeying —</div>
-          <div class="field-label">Admin Login</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Password</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Fob Mgmt</div><div class="field-value empty">— portal or contact for adding/removing fobs —</div>
-          <div class="field-label">Notes</div><div class="field-value notes-field empty">Prior system controlled solely by Will (resigned Oct 2025). Confirm current access ownership with Brown Mgmt.</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Clubhouse Entry <span class="status-tag tag-unknown">Confirm</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Code / Key</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Last Changed</div><div class="field-value empty">— unknown —</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Pool Gate <span class="status-tag tag-unknown">Confirm</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Access Type</div><div class="field-value empty">— fob / key / code —</div>
-          <div class="field-label">Code / Key</div><div class="field-value empty">— not yet entered —</div>
-        </div>
-      </div>
-      <div class="placeholder-card"><span style="opacity:.5">➕</span> Add: laundry, bike room, storage, mail room, rooftop, etc.</div>
-    </div>
-  </div>
-  <div class="ops-section">
-    <div class="ops-section-title"><span>📷</span> Camera Surveillance System</div>
-    <div class="entry-grid">
-      <div class="entry-card">
-        <div class="entry-name">NVR Access <span class="status-tag tag-unknown">Confirm Access</span></div>
-        <div class="entry-fields">
-          <div class="field-label">NVR Location</div><div class="field-value empty">— physical location on property —</div>
-          <div class="field-label">Local IP</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Remote URL</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Username</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Password</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Mobile App</div><div class="field-value empty">— app name if applicable —</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Camera Locations</div>
-        <div class="entry-fields">
-          <div class="field-label">Cam 1</div><div class="field-value empty">— location / coverage —</div>
-          <div class="field-label">Cam 2</div><div class="field-value empty">— location / coverage —</div>
-          <div class="field-label">Cam 3</div><div class="field-value empty">— location / coverage —</div>
-          <div class="field-label">Cam 4</div><div class="field-value empty">— location / coverage —</div>
-          <div class="field-label">More</div><div class="field-value empty">— add as needed —</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="ops-section">
-    <div class="ops-section-title"><span>📍</span> Equipment Locations &amp; Emergency Reference</div>
-    <div class="note-box">These details prevent a late-night emergency from becoming a disaster. Add locations as confirmed.</div>
-    <div class="entry-grid" style="margin-top:14px;">
-      <div class="entry-card">
-        <div class="entry-name">Building Water Main Shutoffs <span class="status-tag tag-unknown">Unconfirmed</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Building A</div><div class="field-value empty">— not yet documented —</div>
-          <div class="field-label">Building B</div><div class="field-value empty">— not yet documented —</div>
-          <div class="field-label">Building C</div><div class="field-value empty">— not yet documented —</div>
-          <div class="field-label">Building D</div><div class="field-value empty">— not yet documented —</div>
-          <div class="field-label">Building E</div><div class="field-value empty">— not yet documented —</div>
-          <div class="field-label">Building F</div><div class="field-value empty">— not yet documented —</div>
-          <div class="field-label">Building G</div><div class="field-value empty">— not yet documented —</div>
-          <div class="field-label">Master (All)</div><div class="field-value empty">— master shutoff for entire property —</div>
-          <div class="field-label">Combo Lock</div><div class="field-value empty">— access code for utility areas —</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Sewer Lift Station <span class="status-tag tag-active">Active</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Location</div><div class="field-value empty">— physical location on property —</div>
-          <div class="field-label">Combo Lock</div><div class="field-value empty">— combination to access enclosure —</div>
-          <div class="field-label">Alarm Code</div><div class="field-value empty">— code to silence alarm —</div>
-          <div class="field-label">Pump</div><div class="field-value">Grundfos Heavy Duty, 1 HP</div>
-          <div class="field-label">Service Co.</div><div class="field-value empty">— not yet entered —</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Electrical Panels <span class="status-tag tag-active">Active</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Main (Club)</div><div class="field-value notes-field">1200A load center — E side of clubhouse building</div>
-          <div class="field-label">Panel A</div><div class="field-value empty">2x 200A panels — clubhouse (confirm exact location)</div>
-          <div class="field-label">Panel B</div><div class="field-value empty">200A pool panel — clubhouse building</div>
-          <div class="field-label">Unit Panels</div><div class="field-value empty">— individual unit panel locations —</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Irrigation Controllers <span class="status-tag tag-active">Active</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Controller 1</div><div class="field-value">Building A — Irritrol 18-station (mfg 2022)</div>
-          <div class="field-label">Controller 2</div><div class="field-value">Building D — Hunter I-Core (mfg 2013)</div>
-          <div class="field-label">Controller 3</div><div class="field-value">Building G — Hunter I-Core (mfg 2013)</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Pool &amp; Spa Equipment <span class="status-tag tag-unknown">Confirm Location</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Location</div><div class="field-value empty">— equipment room/area location —</div>
-          <div class="field-label">Combo Lock</div><div class="field-value empty">— combination to access equipment area —</div>
-          <div class="field-label">Pool Filter</div><div class="field-value empty">Pentair Triton II TR-100 (assumed — confirm)</div>
-          <div class="field-label">Pool Heater</div><div class="field-value empty">Raypak 399,000 BTU (assumed — confirm)</div>
-          <div class="field-label">Spa Filter</div><div class="field-value empty">Pentair Triton II TR-60 (assumed — confirm)</div>
-          <div class="field-label">Spa Heater</div><div class="field-value empty">266,000 BTU (assumed — confirm)</div>
-        </div>
-      </div>
-      <div class="placeholder-card"><span style="opacity:.5">➕</span> Add: gas shutoffs, telecom demarcation, rooftop access, storage, laundry breakers</div>
-    </div>
-  </div>
-  <div class="ops-section">
-    <div class="ops-section-title"><span>📋</span> Insurance &amp; Key Accounts</div>
-    <div class="entry-grid">
-      <div class="entry-card">
-        <div class="entry-name">HOA Master Insurance Policy <span class="status-tag tag-unknown">Confirm</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Carrier</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Policy #</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Agent</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Phone</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Renewal</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Notes</div><div class="field-value notes-field empty">Ran $48,450 against $31,200 budget in 2023 — 55% overage. Review at next renewal.</div>
-        </div>
-      </div>
-      <div class="entry-card">
-        <div class="entry-name">Reserve Fund — CDARS <span class="status-tag tag-active">Active</span></div>
-        <div class="entry-fields">
-          <div class="field-label">Institution</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Account #</div><div class="field-value empty">— not yet entered —</div>
-          <div class="field-label">Rate</div><div class="field-value empty">3.65% as of 2023 — confirm current</div>
-          <div class="field-label">Balance</div><div class="field-value empty">~$641K as of Jan 2024 — confirm current</div>
-          <div class="field-label">Contact</div><div class="field-value empty">— not yet entered —</div>
-        </div>
-      </div>
-      <div class="placeholder-card"><span style="opacity:.5">➕</span> Add: operating account, utilities, waste/trash, telecom contracts</div>
-    </div>
-  </div>
-</div>
-</div><!-- end ops -->
+  <!-- BOARD + PROPERTY MANAGER -->
+  <div class="two-col">
 
-<!-- NEW ENTRY MODAL -->
-<div class="modal-overlay" id="newIssueModal">
+    <div class="info-box">
+      <h3>Board of Directors</h3>
+      <div class="board-member">
+        <span class="member-name">Aaron Crandal</span>
+        <span class="member-role">President</span>
+      </div>
+      <div class="board-member">
+        <span class="member-name">Marilyn Weaver</span>
+        <span class="member-role">Treasurer</span>
+      </div>
+      <div class="board-member">
+        <span class="member-name">Anna Oliver</span>
+        <span class="member-role">Secretary</span>
+      </div>
+      <div class="board-member">
+        <span class="member-name">James Erway</span>
+        <span class="member-role">Board Member</span>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <h3>Property Manager</h3>
+      <div class="contact-row">
+        <div class="contact-label">Manager</div>
+        <div class="contact-value">Madison Garrison</div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Company</div>
+        <div class="contact-value">Brown Community Management</div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Email</div>
+        <div class="contact-value"><a href="mailto:Madison.Garrison@brownmanagement.com">Madison.Garrison@brownmanagement.com</a></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Website</div>
+        <div class="contact-value"><a href="https://www.brownmanagement.com" target="_blank">brownmanagement.com</a></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PORTAL ACCESS -->
+  <div class="portal-section" id="portal">
+    <div class="section-label">Portal Access</div>
+    <div class="portal-cards">
+
+      <div class="portal-card" onclick="openModal('board')">
+        <span class="portal-card-icon">🛡️</span>
+        <div class="portal-card-title">Board &amp; Management</div>
+        <div class="portal-card-desc">Access the board discussion board, operations manual, and governance tools.</div>
+        <span class="portal-lock">🔒 Restricted</span>
+      </div>
+
+      <div class="portal-card" onclick="openModal('owner')">
+        <span class="portal-card-icon">🏠</span>
+        <div class="portal-card-title">Owner Portal</div>
+        <div class="portal-card-desc">Assessment history, community documents, forms, and meeting records.</div>
+        <span class="portal-lock">🔒 Owners Only</span>
+      </div>
+
+      <div class="portal-card" onclick="openModal('renter')">
+        <span class="portal-card-icon">🗝️</span>
+        <div class="portal-card-title">Renter Portal</div>
+        <div class="portal-card-desc">Community rules, amenity access, maintenance requests, and notices.</div>
+        <span class="portal-lock">🔒 Renters Only</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="contact">
+    <div class="section-label">Contact</div>
+    <div class="info-box" style="max-width: 480px;">
+      <h3>Get in Touch</h3>
+      <div class="contact-row">
+        <div class="contact-label">Board Email</div>
+        <div class="contact-value"><a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Property Manager</div>
+        <div class="contact-value"><a href="mailto:Madison.Garrison@brownmanagement.com">Madison.Garrison@brownmanagement.com</a></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Management Office</div>
+        <div class="contact-value">Brown Community Management<br><a href="https://www.brownmanagement.com" target="_blank">brownmanagement.com</a></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal('newIssueModal')">&times;</button>
-    <div class="modal-title">New Entry</div>
-    <div class="form-row"><label>Title</label><input type="text" id="newTitle" placeholder="Brief description" /></div>
-    <div class="form-row"><label>Status</label>
-      <select id="newStatus">
-        <option value="open">Open Issue</option>
-        <option value="in-progress">In Progress</option>
-        <option value="resolved">Resolved</option>
-        <option value="knowledge">Knowledge Base</option>
-      </select>
-    </div>
-    <div class="form-row"><label>Category</label>
-      <select id="newTag">
-        <option value="">— Select category —</option>
-        <option>Capital Projects</option><option>ARC Requests</option><option>Service Requests</option>
-        <option>Governance</option><option>Finance</option><option>Access &amp; Security</option>
-        <option>Infrastructure</option><option>Vendor</option><option>Legal</option><option>Other</option>
-      </select>
-    </div>
-    <div class="form-row"><label>Author</label><input type="text" id="newAuthor" placeholder="Your name" /></div>
-    <div class="form-row"><label>Details</label><textarea id="newBody" placeholder="Full description, context, relevant history..."></textarea></div>
-    <div class="form-actions">
-      <button class="btn-cancel" onclick="closeModal('newIssueModal')">Cancel</button>
-      <button class="btn-submit" id="submitBtn" onclick="submitIssue()">Save Entry</button>
-    </div>
+    <h3 id="modalTitle">Portal Access</h3>
+    <p id="modalSubtitle">Enter your credentials to continue.</p>
+    <input type="email" placeholder="Email address" autocomplete="email">
+    <input type="password" placeholder="Password" autocomplete="current-password">
+    <button class="modal-btn">Sign In</button>
+    <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    <div class="modal-note">Authentication backend coming soon. Contact the board if you need access.</div>
   </div>
 </div>
-
-<!-- DETAIL MODAL -->
-<div class="modal-overlay" id="detailModal">
-  <div class="modal detail-modal">
-    <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
-    <div id="detailContent"></div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <footer>
-  <div class="footer-inner">
-    Scottsdale Park Place HOA &mdash; Board Operations<br>
-    <span style="margin-top:6px;display:block;"><a href="index.html">Back to Home</a> &nbsp;&bull;&nbsp; Last updated: <span id="lastUpdated"></span></span>
-  </div>
+  Scottsdale Park Place Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251<br>
+  <span style="margin-top:6px; display:block; color:#4a5060;">For technical issues with this site, contact <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a></span>
 </footer>
 
 <script>
-const SUPABASE_URL = 'https://hmjypvnbbmyzmutmuxpj.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_TNKX4dXBuDocWxpmIw1yyQ_wKnFhQVr';
-
-async function sbFetch(path, options = {}) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': options.prefer || '', ...options.headers },
-    ...options
-  });
-  if (!res.ok) throw new Error(await res.text());
-  const text = await res.text();
-  return text ? JSON.parse(text) : null;
+const titles = {
+  board:  ['Board & Management Portal', 'Restricted to board members and property management.'],
+  owner:  ['Owner Portal', 'Access your account, documents, and community resources.'],
+  renter: ['Renter Portal', 'Access community information and submit requests.']
+};
+function openModal(type) {
+  document.getElementById('modalTitle').textContent = titles[type][0];
+  document.getElementById('modalSubtitle').textContent = titles[type][1];
+  document.getElementById('loginModal').classList.add('open');
 }
-
-document.getElementById("lastUpdated").textContent =
-  new Date(document.lastModified).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-
-function switchTab(id, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  btn.classList.add('active');
+function closeModal() {
+  document.getElementById('loginModal').classList.remove('open');
 }
-
-function copyVal(text) { navigator.clipboard.writeText(text).then(() => showToast('Copied')); }
-
-function showToast(msg, color) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.style.color = color || 'var(--green)';
-  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000);
-}
-
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+document.getElementById('loginModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
 });
-
-function esc(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-let statusFilter = 'all', catFilter = 'all', allIssues = [], currentIssueId = null;
-const statusLabels = { open:'Open', 'in-progress':'In Progress', resolved:'Resolved', knowledge:'Knowledge Base' };
-const cardCls = { open:'open-issue', 'in-progress':'in-progress', resolved:'resolved', knowledge:'knowledge' };
-const tagCls = { open:'tag-open', 'in-progress':'tag-progress', resolved:'tag-resolved', knowledge:'tag-knowledge' };
-
-function sortIssues(issues) {
-  const priority = { open:0, 'in-progress':1, resolved:2, knowledge:3 };
-  return [...issues].sort((a,b) => {
-    const pa = priority[a.status]??4, pb = priority[b.status]??4;
-    if (pa !== pb) return pa - pb;
-    const asc = pa <= 1;
-    return asc ? new Date(a.created_at)-new Date(b.created_at) : new Date(b.created_at)-new Date(a.created_at);
-  });
-}
-
-function updateTallies(issues) {
-  const c = { open:0, 'in-progress':0, resolved:0, knowledge:0 };
-  issues.forEach(i => { if(c[i.status]!==undefined) c[i.status]++; });
-  document.getElementById('t-all').textContent = issues.length;
-  document.getElementById('t-open').textContent = c['open'];
-  document.getElementById('t-progress').textContent = c['in-progress'];
-  document.getElementById('t-resolved').textContent = c['resolved'];
-  document.getElementById('t-knowledge').textContent = c['knowledge'];
-}
-
-function setStatusFilter(filter, btn) {
-  statusFilter = filter;
-  document.querySelectorAll('#statusFilters .filter-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  else {
-    const btns = document.querySelectorAll('#statusFilters .filter-btn');
-    const map = {all:0,open:1,'in-progress':2,resolved:3,knowledge:4};
-    if (btns[map[filter]]) btns[map[filter]].classList.add('active');
-  }
-  renderIssues();
-}
-
-function setCatFilter(cat, btn) {
-  catFilter = cat;
-  document.querySelectorAll('#catFilters .cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderIssues();
-}
-
-async function loadIssues() {
-  const list = document.getElementById('issueList');
-  const errEl = document.getElementById('dbError');
-  list.innerHTML = '<div class="loading-state">Loading entries...</div>';
-  errEl.style.display = 'none';
-  try {
-    const data = await sbFetch('issues?order=created_at.asc', { method:'GET' });
-    allIssues = data || [];
-    updateTallies(allIssues);
-    renderIssues();
-  } catch(e) {
-    errEl.textContent = 'Could not connect to database. Check your connection and try again.';
-    errEl.style.display = 'block';
-    list.innerHTML = '';
-  }
-}
-
-function renderIssues() {
-  const list = document.getElementById('issueList');
-  let filtered = allIssues;
-  if (statusFilter !== 'all') filtered = filtered.filter(i => i.status === statusFilter);
-  if (catFilter !== 'all') filtered = filtered.filter(i => i.tag === catFilter);
-  const sorted = sortIssues(filtered);
-  if (sorted.length === 0) {
-    list.innerHTML = `<div class="empty-state"><span class="ei">📋</span>${statusFilter==='all'&&catFilter==='all'?'No entries yet. Click <strong>+ New Entry</strong> to add the first.':'No entries match this filter.'}</div>`;
-    return;
-  }
-  list.innerHTML = sorted.map(issue => {
-    const replies = issue.replies || [];
-    const date = issue.created_at ? new Date(issue.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
-    return `<div class="issue-card ${cardCls[issue.status]||'open-issue'}" onclick="openDetail(${issue.id})">
-      <div class="issue-title">${esc(issue.title)}</div>
-      <div class="issue-meta">${esc(issue.author||'Board')}${date?' &bull; '+date:''}${issue.tag?' &bull; '+esc(issue.tag):''}</div>
-      ${issue.body?`<div class="issue-preview">${esc(issue.body)}</div>`:''}
-      <div class="issue-footer">
-        <span class="issue-tag ${tagCls[issue.status]||'tag-open'}">${statusLabels[issue.status]||issue.status}</span>
-        ${issue.tag?`<span class="cat-pill">${esc(issue.tag)}</span>`:''}
-        ${replies.length?`<span class="reply-count">💬 ${replies.length}</span>`:''}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function openNewIssue() {
-  ['newTitle','newBody','newAuthor'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('newStatus').value='open';
-  document.getElementById('newTag').value='';
-  document.getElementById('newIssueModal').classList.add('open');
-}
-
-async function submitIssue() {
-  const title = document.getElementById('newTitle').value.trim();
-  if (!title) { document.getElementById('newTitle').focus(); return; }
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true; btn.textContent = 'Saving...';
-  try {
-    await sbFetch('issues', { method:'POST', prefer:'return=minimal', body: JSON.stringify({
-      title, body: document.getElementById('newBody').value.trim(),
-      status: document.getElementById('newStatus').value,
-      tag: document.getElementById('newTag').value||null,
-      author: document.getElementById('newAuthor').value.trim()||'Board', replies: []
-    })});
-    closeModal('newIssueModal'); showToast('Entry saved'); await loadIssues();
-  } catch(e) { showToast('Error saving entry','var(--red)'); }
-  btn.disabled = false; btn.textContent = 'Save Entry';
-}
-
-async function openDetail(id) {
-  currentIssueId = id;
-  let issue;
-  try {
-    const data = await sbFetch(`issues?id=eq.${id}`, { method:'GET' });
-    issue = data && data[0];
-  } catch(e) { showToast('Error loading entry','var(--red)'); return; }
-  if (!issue) return;
-  const replies = issue.replies || [];
-  const date = issue.created_at ? new Date(issue.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
-  const repliesHtml = replies.map(r =>
-    `<div class="reply-item"><div class="reply-meta">${esc(r.author)} &bull; ${esc(r.date)}</div><div class="reply-text">${esc(r.text)}</div></div>`
-  ).join('') || '<div style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">No replies yet.</div>';
-  document.getElementById('detailContent').innerHTML = `
-    <div style="margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <span class="issue-tag ${tagCls[issue.status]||'tag-open'}">${statusLabels[issue.status]||issue.status}</span>
-      ${issue.tag?`<span class="cat-pill">${esc(issue.tag)}</span>`:''}
-    </div>
-    <div class="modal-title" style="margin-bottom:6px;">${esc(issue.title)}</div>
-    <div style="font-size:0.75rem;color:var(--muted);margin-bottom:16px;">${esc(issue.author||'Board')}${date?' &bull; '+date:''}</div>
-    ${issue.body?`<div class="detail-body">${esc(issue.body)}</div>`:''}
-    <div class="replies-section">
-      <div class="replies-label">Replies &amp; Updates</div>
-      <div id="replyList">${repliesHtml}</div>
-      <div class="reply-input-row">
-        <input type="text" id="replyInput" placeholder="Add a reply or update..." onkeydown="if(event.key==='Enter')submitReply()" />
-        <input type="text" id="replyAuthor" placeholder="Your name" style="max-width:120px;" />
-        <button class="reply-send-btn" id="replyBtn" onclick="submitReply()">Post</button>
-      </div>
-    </div>
-    <div class="detail-actions">
-      <button class="action-btn resolve" onclick="changeStatus(${id},'resolved')">Mark Resolved</button>
-      <button class="action-btn" onclick="changeStatus(${id},'in-progress')">In Progress</button>
-      <button class="action-btn archive" onclick="changeStatus(${id},'knowledge')">Knowledge Base</button>
-      <button class="action-btn del" onclick="deleteIssue(${id})">Delete</button>
-    </div>`;
-  document.getElementById('detailModal').classList.add('open');
-}
-
-async function submitReply() {
-  const text = document.getElementById('replyInput').value.trim();
-  const author = document.getElementById('replyAuthor').value.trim()||'Board';
-  if (!text) return;
-  const btn = document.getElementById('replyBtn'); btn.disabled = true;
-  try {
-    const data = await sbFetch(`issues?id=eq.${currentIssueId}`, { method:'GET' });
-    const issue = data && data[0]; if (!issue) throw new Error();
-    const replies = [...(issue.replies||[]), { text, author, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) }];
-    await sbFetch(`issues?id=eq.${currentIssueId}`, { method:'PATCH', prefer:'return=minimal', body: JSON.stringify({ replies }) });
-    document.getElementById('replyInput').value = '';
-    document.getElementById('replyList').innerHTML = replies.map(r =>
-      `<div class="reply-item"><div class="reply-meta">${esc(r.author)} &bull; ${esc(r.date)}</div><div class="reply-text">${esc(r.text)}</div></div>`
-    ).join('');
-    await loadIssues(); showToast('Reply posted');
-  } catch(e) { showToast('Error posting reply','var(--red)'); }
-  btn.disabled = false;
-}
-
-async function changeStatus(id, newStatus) {
-  try {
-    await sbFetch(`issues?id=eq.${id}`, { method:'PATCH', prefer:'return=minimal', body: JSON.stringify({ status: newStatus }) });
-    closeModal('detailModal'); showToast('Status updated'); await loadIssues();
-  } catch(e) { showToast('Error updating status','var(--red)'); }
-}
-
-async function deleteIssue(id) {
-  if (!confirm('Delete this entry? This cannot be undone.')) return;
-  try {
-    await sbFetch(`issues?id=eq.${id}`, { method:'DELETE' });
-    closeModal('detailModal'); showToast('Entry deleted'); await loadIssues();
-  } catch(e) { showToast('Error deleting entry','var(--red)'); }
-}
-
-loadIssues();
 </script>
+
 </body>
 </html>
