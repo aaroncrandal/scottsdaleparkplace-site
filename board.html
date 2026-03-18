@@ -13,6 +13,7 @@
   --yellow: #c8a030; --yellow-dim: rgba(200,160,48,0.12);
   --green: #5a9e7a; --green-dim: rgba(90,158,122,0.12);
   --blue: #5a8ab0; --blue-dim: rgba(90,138,176,0.12);
+  --orange: #c87840;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
@@ -59,6 +60,7 @@ nav a.active { color: var(--accent); }
 .tally-box:hover { border-color: #3a3f50; }
 .tally-box.t-open { border-top: 2px solid var(--red); }
 .tally-box.t-progress { border-top: 2px solid var(--yellow); }
+.tally-box.t-overdue { border-top: 2px solid var(--orange); }
 .tally-box.t-resolved { border-top: 2px solid var(--green); }
 .tally-box.t-knowledge { border-top: 2px solid var(--blue); }
 .tally-box.t-all { border-top: 2px solid var(--accent); }
@@ -91,6 +93,11 @@ nav a.active { color: var(--accent); }
 .tag-resolved { background: var(--green-dim); color: var(--green); border: 1px solid rgba(90,158,122,0.3); }
 .tag-knowledge { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(90,138,176,0.3); }
 .cat-pill { font-size: 0.68rem; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 2px 8px; border-radius: 3px; }
+.due-badge { font-size: 0.68rem; font-weight: 600; padding: 2px 8px; border-radius: 3px; }
+.due-green  { background: var(--green-dim); color: var(--green); border: 1px solid rgba(90,158,122,0.3); }
+.due-yellow { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(200,160,48,0.3); }
+.due-orange { background: rgba(200,120,64,0.15); color: var(--orange); border: 1px solid rgba(200,120,64,0.3); }
+.due-red    { background: var(--red-dim); color: var(--red); border: 1px solid rgba(192,80,80,0.3); }
 .reply-count { font-size: 0.75rem; color: var(--muted); margin-left: auto; }
 .loading-state, .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 0.88rem; }
 .empty-state .ei { font-size: 2rem; display: block; margin-bottom: 10px; opacity: 0.4; }
@@ -108,6 +115,7 @@ nav a.active { color: var(--accent); }
 .form-row input:focus, .form-row textarea:focus, .form-row select:focus { border-color: var(--accent); }
 .form-row textarea { resize: vertical; min-height: 90px; }
 .form-row select option { background: var(--surface2); }
+.form-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
 .btn-cancel { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; padding: 8px 18px; border-radius: 4px; cursor: pointer; }
 .btn-cancel:hover { color: var(--text); }
@@ -141,6 +149,7 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
   .site-title { font-size: 1.5rem; }
   .modal { padding: 22px 18px; }
   .tab-btn { padding: 12px 14px; font-size: 0.8rem; }
+  .form-two-col { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -154,9 +163,9 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
 <nav>
   <a href="index.html">Home</a>
   <a href="issues.html">Capital Projects</a>
-  <a href="#">Documents</a>
+  <a href="documents.html">Documents</a>
   <a href="board.html" class="active">Board</a>
-  <a href="#">Contact</a>
+  <a href="contact.html">Contact</a>
 </nav>
 
 <div class="restricted-bar">&#128274; BOARD &amp; MANAGEMENT ACCESS ONLY &mdash; Do not share this page outside of authorized personnel</div>
@@ -166,7 +175,7 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
   <button class="tab-btn" onclick="switchTab('ops',this)">Operations Manual</button>
 </div>
 
-<!-- ===== DISCUSSION BOARD (default) ===== -->
+<!-- ===== DISCUSSION BOARD ===== -->
 <div class="tab-panel active" id="tab-discuss">
 <div class="container">
   <div class="page-header">
@@ -174,10 +183,11 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
     <p>Shared in real time across all board members and management. Open issues surface first.</p>
   </div>
   <div id="dbError" class="error-state" style="display:none;"></div>
-  <div class="tally-bar" id="tallyBar">
+  <div class="tally-bar">
     <div class="tally-box t-all" onclick="setStatusFilter('all')"><span class="tally-val" id="t-all">—</span><span class="tally-lbl">Total</span></div>
     <div class="tally-box t-open" onclick="setStatusFilter('open')"><span class="tally-val" id="t-open">—</span><span class="tally-lbl">Open</span></div>
     <div class="tally-box t-progress" onclick="setStatusFilter('in-progress')"><span class="tally-val" id="t-progress">—</span><span class="tally-lbl">In Progress</span></div>
+    <div class="tally-box t-overdue" onclick="setStatusFilter('overdue')"><span class="tally-val" id="t-overdue">—</span><span class="tally-lbl">Overdue</span></div>
     <div class="tally-box t-resolved" onclick="setStatusFilter('resolved')"><span class="tally-val" id="t-resolved">—</span><span class="tally-lbl">Resolved</span></div>
     <div class="tally-box t-knowledge" onclick="setStatusFilter('knowledge')"><span class="tally-val" id="t-knowledge">—</span><span class="tally-lbl">Knowledge Base</span></div>
   </div>
@@ -186,6 +196,7 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
       <button class="filter-btn active" onclick="setStatusFilter('all',this)">All</button>
       <button class="filter-btn" onclick="setStatusFilter('open',this)">Open</button>
       <button class="filter-btn" onclick="setStatusFilter('in-progress',this)">In Progress</button>
+      <button class="filter-btn" onclick="setStatusFilter('overdue',this)">Overdue</button>
       <button class="filter-btn" onclick="setStatusFilter('resolved',this)">Resolved</button>
       <button class="filter-btn" onclick="setStatusFilter('knowledge',this)">Knowledge Base</button>
     </div>
@@ -285,7 +296,7 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
           <div class="field-label">Phone</div><div class="field-value empty">— not yet entered —</div>
           <div class="field-label">Combo Lock</div><div class="field-value empty">— combination to access lift station enclosure —</div>
           <div class="field-label">Alarm Code</div><div class="field-value empty">— code to silence alarm on unit —</div>
-          <div class="field-label">Notes</div><div class="field-value notes-field empty">Grundfos 1 HP pump. Jams when residents flush diapers or wipes. Silence alarm before servicing. Replacement scheduled 2027.</div>
+          <div class="field-label">Notes</div><div class="field-value notes-field">Grundfos 1 HP pump. Jams when residents flush diapers or wipes. Silence alarm before servicing. Replacement scheduled 2027.</div>
         </div>
       </div>
       <div class="entry-card">
@@ -336,7 +347,7 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
           <div class="field-label">Code / Key</div><div class="field-value empty">— not yet entered —</div>
         </div>
       </div>
-      <div class="placeholder-card"><span style="opacity:.5">➕</span> Add: laundry, bike room, storage, mail room, rooftop, etc.</div>
+      <div class="placeholder-card"><span style="opacity:.5">➕</span> Add: laundry, bike room, storage, mail room, etc.</div>
     </div>
   </div>
   <div class="ops-section">
@@ -459,22 +470,39 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
   <div class="modal">
     <button class="modal-close" onclick="closeModal('newIssueModal')">&times;</button>
     <div class="modal-title">New Entry</div>
-    <div class="form-row"><label>Title</label><input type="text" id="newTitle" placeholder="Brief description" /></div>
-    <div class="form-row"><label>Status</label>
-      <select id="newStatus">
-        <option value="open">Open Issue</option>
-        <option value="in-progress">In Progress</option>
-        <option value="resolved">Resolved</option>
-        <option value="knowledge">Knowledge Base</option>
-      </select>
+    <div class="form-row"><label>Title *</label><input type="text" id="newTitle" placeholder="Brief description" /></div>
+    <div class="form-two-col">
+      <div class="form-row"><label>Status</label>
+        <select id="newStatus">
+          <option value="open">Open Issue</option>
+          <option value="in-progress">In Progress</option>
+          <option value="resolved">Resolved</option>
+          <option value="knowledge">Knowledge Base</option>
+        </select>
+      </div>
+      <div class="form-row"><label>Category</label>
+        <select id="newTag">
+          <option value="">— Select —</option>
+          <option>Capital Projects</option><option>ARC Requests</option><option>Service Requests</option>
+          <option>Governance</option><option>Finance</option><option>Access &amp; Security</option>
+          <option>Infrastructure</option><option>Vendor</option><option>Legal</option><option>Other</option>
+        </select>
+      </div>
     </div>
-    <div class="form-row"><label>Category</label>
-      <select id="newTag">
-        <option value="">— Select category —</option>
-        <option>Capital Projects</option><option>ARC Requests</option><option>Service Requests</option>
-        <option>Governance</option><option>Finance</option><option>Access &amp; Security</option>
-        <option>Infrastructure</option><option>Vendor</option><option>Legal</option><option>Other</option>
-      </select>
+    <div class="form-two-col">
+      <div class="form-row"><label>Assigned To</label>
+        <select id="newAssigned">
+          <option value="">— Select —</option>
+          <option>Aaron Crandal</option>
+          <option>Marilyn Weaver</option>
+          <option>Anna Oliver</option>
+          <option>James Erway</option>
+          <option>Madison Garrison</option>
+        </select>
+      </div>
+      <div class="form-row"><label>Due Date</label>
+        <input type="date" id="newDueDate" />
+      </div>
     </div>
     <div class="form-row"><label>Author</label><input type="text" id="newAuthor" placeholder="Your name" /></div>
     <div class="form-row"><label>Details</label><textarea id="newBody" placeholder="Full description, context, relevant history..."></textarea></div>
@@ -543,6 +571,24 @@ function esc(str) {
   return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function dueBadge(dueDateStr) {
+  if (!dueDateStr) return '';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const due = new Date(dueDateStr + 'T00:00:00');
+  const diff = Math.round((due - today) / 86400000);
+  if (diff < 0)  return `<span class="due-badge due-red">⚠ Overdue ${Math.abs(diff)}d</span>`;
+  if (diff === 0) return `<span class="due-badge due-orange">Due Today</span>`;
+  if (diff <= 3)  return `<span class="due-badge due-yellow">Due in ${diff}d</span>`;
+  return `<span class="due-badge due-green">Due ${due.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span>`;
+}
+
+function isOverdue(issue) {
+  if (!issue.due_date) return false;
+  if (issue.status === 'resolved' || issue.status === 'knowledge') return false;
+  const today = new Date(); today.setHours(0,0,0,0);
+  return new Date(issue.due_date + 'T00:00:00') < today;
+}
+
 let statusFilter = 'all', catFilter = 'all', allIssues = [], currentIssueId = null;
 const statusLabels = { open:'Open', 'in-progress':'In Progress', resolved:'Resolved', knowledge:'Knowledge Base' };
 const cardCls = { open:'open-issue', 'in-progress':'in-progress', resolved:'resolved', knowledge:'knowledge' };
@@ -551,6 +597,9 @@ const tagCls = { open:'tag-open', 'in-progress':'tag-progress', resolved:'tag-re
 function sortIssues(issues) {
   const priority = { open:0, 'in-progress':1, resolved:2, knowledge:3 };
   return [...issues].sort((a,b) => {
+    const aOver = isOverdue(a), bOver = isOverdue(b);
+    if (aOver && !bOver) return -1;
+    if (!aOver && bOver) return 1;
     const pa = priority[a.status]??4, pb = priority[b.status]??4;
     if (pa !== pb) return pa - pb;
     const asc = pa <= 1;
@@ -559,11 +608,15 @@ function sortIssues(issues) {
 }
 
 function updateTallies(issues) {
-  const c = { open:0, 'in-progress':0, resolved:0, knowledge:0 };
-  issues.forEach(i => { if(c[i.status]!==undefined) c[i.status]++; });
+  const c = { open:0, 'in-progress':0, resolved:0, knowledge:0, overdue:0 };
+  issues.forEach(i => {
+    if (c[i.status] !== undefined) c[i.status]++;
+    if (isOverdue(i)) c.overdue++;
+  });
   document.getElementById('t-all').textContent = issues.length;
   document.getElementById('t-open').textContent = c['open'];
   document.getElementById('t-progress').textContent = c['in-progress'];
+  document.getElementById('t-overdue').textContent = c['overdue'];
   document.getElementById('t-resolved').textContent = c['resolved'];
   document.getElementById('t-knowledge').textContent = c['knowledge'];
 }
@@ -573,8 +626,8 @@ function setStatusFilter(filter, btn) {
   document.querySelectorAll('#statusFilters .filter-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   else {
+    const map = {all:0,open:1,'in-progress':2,overdue:3,resolved:4,knowledge:5};
     const btns = document.querySelectorAll('#statusFilters .filter-btn');
-    const map = {all:0,open:1,'in-progress':2,resolved:3,knowledge:4};
     if (btns[map[filter]]) btns[map[filter]].classList.add('active');
   }
   renderIssues();
@@ -607,7 +660,11 @@ async function loadIssues() {
 function renderIssues() {
   const list = document.getElementById('issueList');
   let filtered = allIssues;
-  if (statusFilter !== 'all') filtered = filtered.filter(i => i.status === statusFilter);
+  if (statusFilter === 'overdue') {
+    filtered = filtered.filter(i => isOverdue(i));
+  } else if (statusFilter !== 'all') {
+    filtered = filtered.filter(i => i.status === statusFilter);
+  }
   if (catFilter !== 'all') filtered = filtered.filter(i => i.tag === catFilter);
   const sorted = sortIssues(filtered);
   if (sorted.length === 0) {
@@ -617,13 +674,16 @@ function renderIssues() {
   list.innerHTML = sorted.map(issue => {
     const replies = issue.replies || [];
     const date = issue.created_at ? new Date(issue.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+    const badge = dueBadge(issue.due_date);
+    const assignedMeta = issue.assigned_to ? ` &bull; ${esc(issue.assigned_to)}` : '';
     return `<div class="issue-card ${cardCls[issue.status]||'open-issue'}" onclick="openDetail(${issue.id})">
       <div class="issue-title">${esc(issue.title)}</div>
-      <div class="issue-meta">${esc(issue.author||'Board')}${date?' &bull; '+date:''}${issue.tag?' &bull; '+esc(issue.tag):''}</div>
+      <div class="issue-meta">${esc(issue.author||'Board')}${assignedMeta}${date?' &bull; '+date:''}${issue.tag?' &bull; '+esc(issue.tag):''}</div>
       ${issue.body?`<div class="issue-preview">${esc(issue.body)}</div>`:''}
       <div class="issue-footer">
         <span class="issue-tag ${tagCls[issue.status]||'tag-open'}">${statusLabels[issue.status]||issue.status}</span>
         ${issue.tag?`<span class="cat-pill">${esc(issue.tag)}</span>`:''}
+        ${badge}
         ${replies.length?`<span class="reply-count">💬 ${replies.length}</span>`:''}
       </div>
     </div>`;
@@ -631,9 +691,10 @@ function renderIssues() {
 }
 
 function openNewIssue() {
-  ['newTitle','newBody','newAuthor'].forEach(id => document.getElementById(id).value='');
+  ['newTitle','newBody','newAuthor','newDueDate'].forEach(id => document.getElementById(id).value='');
   document.getElementById('newStatus').value='open';
   document.getElementById('newTag').value='';
+  document.getElementById('newAssigned').value='';
   document.getElementById('newIssueModal').classList.add('open');
 }
 
@@ -644,10 +705,14 @@ async function submitIssue() {
   btn.disabled = true; btn.textContent = 'Saving...';
   try {
     await sbFetch('issues', { method:'POST', prefer:'return=minimal', body: JSON.stringify({
-      title, body: document.getElementById('newBody').value.trim(),
+      title,
+      body: document.getElementById('newBody').value.trim(),
       status: document.getElementById('newStatus').value,
       tag: document.getElementById('newTag').value||null,
-      author: document.getElementById('newAuthor').value.trim()||'Board', replies: []
+      author: document.getElementById('newAuthor').value.trim()||'Board',
+      assigned_to: document.getElementById('newAssigned').value||null,
+      due_date: document.getElementById('newDueDate').value||null,
+      replies: []
     })});
     closeModal('newIssueModal'); showToast('Entry saved'); await loadIssues();
   } catch(e) { showToast('Error saving entry','var(--red)'); }
@@ -664,6 +729,7 @@ async function openDetail(id) {
   if (!issue) return;
   const replies = issue.replies || [];
   const date = issue.created_at ? new Date(issue.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+  const badge = dueBadge(issue.due_date);
   const repliesHtml = replies.map(r =>
     `<div class="reply-item"><div class="reply-meta">${esc(r.author)} &bull; ${esc(r.date)}</div><div class="reply-text">${esc(r.text)}</div></div>`
   ).join('') || '<div style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">No replies yet.</div>';
@@ -671,9 +737,14 @@ async function openDetail(id) {
     <div style="margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
       <span class="issue-tag ${tagCls[issue.status]||'tag-open'}">${statusLabels[issue.status]||issue.status}</span>
       ${issue.tag?`<span class="cat-pill">${esc(issue.tag)}</span>`:''}
+      ${badge}
     </div>
     <div class="modal-title" style="margin-bottom:6px;">${esc(issue.title)}</div>
-    <div style="font-size:0.75rem;color:var(--muted);margin-bottom:16px;">${esc(issue.author||'Board')}${date?' &bull; '+date:''}</div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-bottom:16px;">
+      ${esc(issue.author||'Board')}${date?' &bull; '+date:''}
+      ${issue.assigned_to?` &bull; Assigned: <strong style="color:var(--text)">${esc(issue.assigned_to)}</strong>`:''}
+      ${issue.due_date?` &bull; Due: <strong style="color:var(--text)">${new Date(issue.due_date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</strong>`:''}
+    </div>
     ${issue.body?`<div class="detail-body">${esc(issue.body)}</div>`:''}
     <div class="replies-section">
       <div class="replies-label">Replies &amp; Updates</div>
