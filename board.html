@@ -18,7 +18,6 @@
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
-
 header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 28px 24px 20px; text-align: center; }
 .site-title { font-family: 'DM Serif Display', serif; font-size: 2rem; letter-spacing: 0.02em; }
 .site-subtitle { margin-top: 4px; font-size: 0.8rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
@@ -37,8 +36,6 @@ nav a.active { color: var(--accent); }
 .page-header { margin-bottom: 24px; }
 .page-header h1 { font-family: 'DM Serif Display', serif; font-size: 1.7rem; font-weight: 400; }
 .page-header p { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
-
-/* OPS */
 .ops-section { margin-bottom: 32px; }
 .ops-section-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
 .ops-section-title span { font-size: 1rem; }
@@ -57,8 +54,6 @@ nav a.active { color: var(--accent); }
 .tag-unknown { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(200,160,48,0.3); }
 .placeholder-card { background: var(--surface); border: 1px dashed var(--border); border-radius: 6px; padding: 18px 22px; color: var(--muted); font-size: 0.85rem; display: flex; align-items: center; gap: 10px; }
 .note-box { background: var(--yellow-dim); border: 1px solid rgba(200,160,48,0.2); border-radius: 5px; padding: 12px 16px; font-size: 0.82rem; color: #d4bb70; margin-top: 10px; }
-
-/* TALLY BAR */
 .tally-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
 .tally-box { background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 12px 16px; display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 80px; cursor: pointer; transition: border-color 0.15s; }
 .tally-box:hover { border-color: #3a3f50; }
@@ -69,8 +64,6 @@ nav a.active { color: var(--accent); }
 .tally-box.t-all { border-top: 2px solid var(--accent); }
 .tally-val { font-family: 'DM Serif Display', serif; font-size: 1.5rem; line-height: 1; }
 .tally-lbl { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 3px; text-align: center; }
-
-/* BOARD CONTROLS */
 .board-controls { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
 .filter-row { display: flex; gap: 6px; flex-wrap: wrap; }
 .filter-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; padding: 5px 14px; border-radius: 20px; cursor: pointer; transition: all 0.15s; }
@@ -81,8 +74,6 @@ nav a.active { color: var(--accent); }
 .cat-btn.active { background: var(--surface); border-color: #4a4f60; color: var(--text); font-weight: 500; }
 .new-issue-btn { background: var(--accent-dim); border: 1px solid rgba(200,169,110,0.4); color: var(--accent); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 8px 18px; border-radius: 5px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
 .new-issue-btn:hover { background: rgba(200,169,110,0.25); }
-
-/* ISSUES */
 .issue-list { display: flex; flex-direction: column; gap: 10px; }
 .issue-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 16px 20px; cursor: pointer; transition: border-color 0.15s; }
 .issue-card:hover { border-color: #3a3f50; }
@@ -104,8 +95,6 @@ nav a.active { color: var(--accent); }
 .loading-state, .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 0.88rem; }
 .empty-state .ei { font-size: 2rem; display: block; margin-bottom: 10px; opacity: 0.4; }
 .error-state { background: var(--red-dim); border: 1px solid rgba(192,80,80,0.25); border-radius: 5px; padding: 14px 18px; font-size: 0.85rem; color: #d08080; margin-bottom: 16px; }
-
-/* MODALS */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
 .modal-overlay.open { display: flex; }
 .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px 32px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; position: relative; }
@@ -143,12 +132,10 @@ nav a.active { color: var(--accent); }
 .action-btn.archive:hover { background: var(--blue-dim); }
 .action-btn.del { color: var(--red); border-color: rgba(192,80,80,0.3); }
 .action-btn.del:hover { background: var(--red-dim); }
-
 .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 10px 18px; font-size: 0.82rem; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 999; }
 .toast.show { opacity: 1; }
 footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 10px; }
 .footer-inner { max-width: 900px; margin: 0 auto; padding: 0 20px; }
-
 @media (max-width: 600px) {
   .entry-fields { grid-template-columns: 100px 1fr; }
   .site-title { font-size: 1.5rem; }
@@ -175,19 +162,58 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
 <div class="restricted-bar">&#128274; BOARD &amp; MANAGEMENT ACCESS ONLY &mdash; Do not share this page outside of authorized personnel</div>
 
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('ops',this)">Operations Manual</button>
-  <button class="tab-btn" onclick="switchTab('discuss',this)">Discussion Board</button>
+  <button class="tab-btn active" onclick="switchTab('discuss',this)">Discussion Board</button>
+  <button class="tab-btn" onclick="switchTab('ops',this)">Operations Manual</button>
 </div>
 
+<!-- ===== DISCUSSION BOARD (default) ===== -->
+<div class="tab-panel active" id="tab-discuss">
+<div class="container">
+  <div class="page-header">
+    <h1>Discussion Board</h1>
+    <p>Shared in real time across all board members and management. Open issues surface first.</p>
+  </div>
+  <div id="dbError" class="error-state" style="display:none;"></div>
+  <div class="tally-bar" id="tallyBar">
+    <div class="tally-box t-all" onclick="setStatusFilter('all')"><span class="tally-val" id="t-all">—</span><span class="tally-lbl">Total</span></div>
+    <div class="tally-box t-open" onclick="setStatusFilter('open')"><span class="tally-val" id="t-open">—</span><span class="tally-lbl">Open</span></div>
+    <div class="tally-box t-progress" onclick="setStatusFilter('in-progress')"><span class="tally-val" id="t-progress">—</span><span class="tally-lbl">In Progress</span></div>
+    <div class="tally-box t-resolved" onclick="setStatusFilter('resolved')"><span class="tally-val" id="t-resolved">—</span><span class="tally-lbl">Resolved</span></div>
+    <div class="tally-box t-knowledge" onclick="setStatusFilter('knowledge')"><span class="tally-val" id="t-knowledge">—</span><span class="tally-lbl">Knowledge Base</span></div>
+  </div>
+  <div class="board-controls">
+    <div class="filter-row" id="statusFilters">
+      <button class="filter-btn active" onclick="setStatusFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setStatusFilter('open',this)">Open</button>
+      <button class="filter-btn" onclick="setStatusFilter('in-progress',this)">In Progress</button>
+      <button class="filter-btn" onclick="setStatusFilter('resolved',this)">Resolved</button>
+      <button class="filter-btn" onclick="setStatusFilter('knowledge',this)">Knowledge Base</button>
+    </div>
+    <button class="new-issue-btn" onclick="openNewIssue()">+ New Entry</button>
+  </div>
+  <div class="cat-row" id="catFilters">
+    <button class="cat-btn active" onclick="setCatFilter('all',this)">All Categories</button>
+    <button class="cat-btn" onclick="setCatFilter('Capital Projects',this)">Capital Projects</button>
+    <button class="cat-btn" onclick="setCatFilter('ARC Requests',this)">ARC Requests</button>
+    <button class="cat-btn" onclick="setCatFilter('Service Requests',this)">Service Requests</button>
+    <button class="cat-btn" onclick="setCatFilter('Governance',this)">Governance</button>
+    <button class="cat-btn" onclick="setCatFilter('Finance',this)">Finance</button>
+    <button class="cat-btn" onclick="setCatFilter('Access & Security',this)">Access &amp; Security</button>
+    <button class="cat-btn" onclick="setCatFilter('Infrastructure',this)">Infrastructure</button>
+    <button class="cat-btn" onclick="setCatFilter('Vendor',this)">Vendor</button>
+    <button class="cat-btn" onclick="setCatFilter('Legal',this)">Legal</button>
+  </div>
+  <div class="issue-list" id="issueList"><div class="loading-state">Loading entries...</div></div>
+</div>
+</div>
 
 <!-- ===== OPS MANUAL ===== -->
-<div class="tab-panel active" id="tab-ops">
+<div class="tab-panel" id="tab-ops">
 <div class="container">
   <div class="page-header">
     <h1>Board Operations Manual</h1>
     <p>Credentials, vendor accounts, contacts, equipment locations, and system access. Add entries as information is confirmed.</p>
   </div>
-
   <div class="ops-section">
     <div class="ops-section-title"><span>🔐</span> Portal Access &amp; Credentials</div>
     <div class="entry-grid">
@@ -219,7 +245,6 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
       <div class="placeholder-card"><span style="opacity:.5">➕</span> Add additional portals: Zoom, DocuSign, insurance portal, etc.</div>
     </div>
   </div>
-
   <div class="ops-section">
     <div class="ops-section-title"><span>🏢</span> Vendor Accounts &amp; Service Contacts</div>
     <div class="entry-grid">
@@ -284,7 +309,6 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
       <div class="placeholder-card"><span style="opacity:.5">➕</span> Add: electrician, roofer, pest control, trash, insurance agent, etc.</div>
     </div>
   </div>
-
   <div class="ops-section">
     <div class="ops-section-title"><span>🚪</span> Door Access &amp; Entry System</div>
     <div class="entry-grid">
@@ -315,7 +339,6 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
       <div class="placeholder-card"><span style="opacity:.5">➕</span> Add: laundry, bike room, storage, mail room, rooftop, etc.</div>
     </div>
   </div>
-
   <div class="ops-section">
     <div class="ops-section-title"><span>📷</span> Camera Surveillance System</div>
     <div class="entry-grid">
@@ -342,7 +365,6 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
       </div>
     </div>
   </div>
-
   <div class="ops-section">
     <div class="ops-section-title"><span>📍</span> Equipment Locations &amp; Emergency Reference</div>
     <div class="note-box">These details prevent a late-night emergency from becoming a disaster. Add locations as confirmed.</div>
@@ -402,7 +424,6 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
       <div class="placeholder-card"><span style="opacity:.5">➕</span> Add: gas shutoffs, telecom demarcation, rooftop access, storage, laundry breakers</div>
     </div>
   </div>
-
   <div class="ops-section">
     <div class="ops-section-title"><span>📋</span> Insurance &amp; Key Accounts</div>
     <div class="entry-grid">
@@ -433,69 +454,13 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
 </div>
 </div><!-- end ops -->
 
-
-<!-- ===== DISCUSSION BOARD ===== -->
-<div class="tab-panel" id="tab-discuss">
-<div class="container">
-
-  <div class="page-header">
-    <h1>Discussion Board</h1>
-    <p>Shared in real time across all board members and management. Open issues surface first.</p>
-  </div>
-
-  <div id="dbError" class="error-state" style="display:none;"></div>
-
-  <!-- TALLIES -->
-  <div class="tally-bar" id="tallyBar">
-    <div class="tally-box t-all" onclick="setStatusFilter('all')"><span class="tally-val" id="t-all">—</span><span class="tally-lbl">Total</span></div>
-    <div class="tally-box t-open" onclick="setStatusFilter('open')"><span class="tally-val" id="t-open">—</span><span class="tally-lbl">Open</span></div>
-    <div class="tally-box t-progress" onclick="setStatusFilter('in-progress')"><span class="tally-val" id="t-progress">—</span><span class="tally-lbl">In Progress</span></div>
-    <div class="tally-box t-resolved" onclick="setStatusFilter('resolved')"><span class="tally-val" id="t-resolved">—</span><span class="tally-lbl">Resolved</span></div>
-    <div class="tally-box t-knowledge" onclick="setStatusFilter('knowledge')"><span class="tally-val" id="t-knowledge">—</span><span class="tally-lbl">Knowledge Base</span></div>
-  </div>
-
-  <!-- STATUS FILTERS -->
-  <div class="board-controls">
-    <div class="filter-row" id="statusFilters">
-      <button class="filter-btn active" onclick="setStatusFilter('all',this)">All</button>
-      <button class="filter-btn" onclick="setStatusFilter('open',this)">Open</button>
-      <button class="filter-btn" onclick="setStatusFilter('in-progress',this)">In Progress</button>
-      <button class="filter-btn" onclick="setStatusFilter('resolved',this)">Resolved</button>
-      <button class="filter-btn" onclick="setStatusFilter('knowledge',this)">Knowledge Base</button>
-    </div>
-    <button class="new-issue-btn" onclick="openNewIssue()">+ New Entry</button>
-  </div>
-
-  <!-- CATEGORY FILTERS -->
-  <div class="cat-row" id="catFilters">
-    <button class="cat-btn active" onclick="setCatFilter('all',this)">All Categories</button>
-    <button class="cat-btn" onclick="setCatFilter('Capital Projects',this)">Capital Projects</button>
-    <button class="cat-btn" onclick="setCatFilter('ARC Requests',this)">ARC Requests</button>
-    <button class="cat-btn" onclick="setCatFilter('Service Requests',this)">Service Requests</button>
-    <button class="cat-btn" onclick="setCatFilter('Governance',this)">Governance</button>
-    <button class="cat-btn" onclick="setCatFilter('Finance',this)">Finance</button>
-    <button class="cat-btn" onclick="setCatFilter('Access & Security',this)">Access &amp; Security</button>
-    <button class="cat-btn" onclick="setCatFilter('Infrastructure',this)">Infrastructure</button>
-    <button class="cat-btn" onclick="setCatFilter('Vendor',this)">Vendor</button>
-    <button class="cat-btn" onclick="setCatFilter('Legal',this)">Legal</button>
-  </div>
-
-  <div class="issue-list" id="issueList"><div class="loading-state">Loading entries...</div></div>
-</div>
-</div>
-
-
 <!-- NEW ENTRY MODAL -->
 <div class="modal-overlay" id="newIssueModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('newIssueModal')">&times;</button>
     <div class="modal-title">New Entry</div>
-    <div class="form-row">
-      <label>Title</label>
-      <input type="text" id="newTitle" placeholder="Brief description" />
-    </div>
-    <div class="form-row">
-      <label>Status</label>
+    <div class="form-row"><label>Title</label><input type="text" id="newTitle" placeholder="Brief description" /></div>
+    <div class="form-row"><label>Status</label>
       <select id="newStatus">
         <option value="open">Open Issue</option>
         <option value="in-progress">In Progress</option>
@@ -503,30 +468,16 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
         <option value="knowledge">Knowledge Base</option>
       </select>
     </div>
-    <div class="form-row">
-      <label>Category</label>
+    <div class="form-row"><label>Category</label>
       <select id="newTag">
         <option value="">— Select category —</option>
-        <option>Capital Projects</option>
-        <option>ARC Requests</option>
-        <option>Service Requests</option>
-        <option>Governance</option>
-        <option>Finance</option>
-        <option>Access &amp; Security</option>
-        <option>Infrastructure</option>
-        <option>Vendor</option>
-        <option>Legal</option>
-        <option>Other</option>
+        <option>Capital Projects</option><option>ARC Requests</option><option>Service Requests</option>
+        <option>Governance</option><option>Finance</option><option>Access &amp; Security</option>
+        <option>Infrastructure</option><option>Vendor</option><option>Legal</option><option>Other</option>
       </select>
     </div>
-    <div class="form-row">
-      <label>Author</label>
-      <input type="text" id="newAuthor" placeholder="Your name" />
-    </div>
-    <div class="form-row">
-      <label>Details</label>
-      <textarea id="newBody" placeholder="Full description, context, relevant history..."></textarea>
-    </div>
+    <div class="form-row"><label>Author</label><input type="text" id="newAuthor" placeholder="Your name" /></div>
+    <div class="form-row"><label>Details</label><textarea id="newBody" placeholder="Full description, context, relevant history..."></textarea></div>
     <div class="form-actions">
       <button class="btn-cancel" onclick="closeModal('newIssueModal')">Cancel</button>
       <button class="btn-submit" id="submitBtn" onclick="submitIssue()">Save Entry</button>
@@ -557,13 +508,7 @@ const SUPABASE_KEY = 'sb_publishable_TNKX4dXBuDocWxpmIw1yyQ_wKnFhQVr';
 
 async function sbFetch(path, options = {}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': options.prefer || '',
-      ...options.headers
-    },
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': options.prefer || '', ...options.headers },
     ...options
   });
   if (!res.ok) throw new Error(await res.text());
@@ -579,17 +524,14 @@ function switchTab(id, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
-  if (id === 'discuss') loadIssues();
 }
 
 function copyVal(text) { navigator.clipboard.writeText(text).then(() => showToast('Copied')); }
 
 function showToast(msg, color) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.color = color || 'var(--green)';
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+  t.textContent = msg; t.style.color = color || 'var(--green)';
+  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000);
 }
 
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
@@ -601,37 +543,29 @@ function esc(str) {
   return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ---- STATE ----
-let statusFilter = 'all';
-let catFilter = 'all';
-let allIssues = [];
-let currentIssueId = null;
-
+let statusFilter = 'all', catFilter = 'all', allIssues = [], currentIssueId = null;
 const statusLabels = { open:'Open', 'in-progress':'In Progress', resolved:'Resolved', knowledge:'Knowledge Base' };
 const cardCls = { open:'open-issue', 'in-progress':'in-progress', resolved:'resolved', knowledge:'knowledge' };
 const tagCls = { open:'tag-open', 'in-progress':'tag-progress', resolved:'tag-resolved', knowledge:'tag-knowledge' };
 
-// ---- SORTING: open issues oldest first, then in-progress oldest first, then resolved/knowledge newest first ----
 function sortIssues(issues) {
-  const priority = { open: 0, 'in-progress': 1, resolved: 2, knowledge: 3 };
-  return [...issues].sort((a, b) => {
-    const pa = priority[a.status] ?? 4, pb = priority[b.status] ?? 4;
+  const priority = { open:0, 'in-progress':1, resolved:2, knowledge:3 };
+  return [...issues].sort((a,b) => {
+    const pa = priority[a.status]??4, pb = priority[b.status]??4;
     if (pa !== pb) return pa - pb;
-    // open + in-progress: oldest first; resolved + knowledge: newest first
     const asc = pa <= 1;
-    const da = new Date(a.created_at), db = new Date(b.created_at);
-    return asc ? da - db : db - da;
+    return asc ? new Date(a.created_at)-new Date(b.created_at) : new Date(b.created_at)-new Date(a.created_at);
   });
 }
 
 function updateTallies(issues) {
-  const counts = { open: 0, 'in-progress': 0, resolved: 0, knowledge: 0 };
-  issues.forEach(i => { if (counts[i.status] !== undefined) counts[i.status]++; });
+  const c = { open:0, 'in-progress':0, resolved:0, knowledge:0 };
+  issues.forEach(i => { if(c[i.status]!==undefined) c[i.status]++; });
   document.getElementById('t-all').textContent = issues.length;
-  document.getElementById('t-open').textContent = counts['open'];
-  document.getElementById('t-progress').textContent = counts['in-progress'];
-  document.getElementById('t-resolved').textContent = counts['resolved'];
-  document.getElementById('t-knowledge').textContent = counts['knowledge'];
+  document.getElementById('t-open').textContent = c['open'];
+  document.getElementById('t-progress').textContent = c['in-progress'];
+  document.getElementById('t-resolved').textContent = c['resolved'];
+  document.getElementById('t-knowledge').textContent = c['knowledge'];
 }
 
 function setStatusFilter(filter, btn) {
@@ -659,7 +593,7 @@ async function loadIssues() {
   list.innerHTML = '<div class="loading-state">Loading entries...</div>';
   errEl.style.display = 'none';
   try {
-    const data = await sbFetch('issues?order=created_at.asc', { method: 'GET' });
+    const data = await sbFetch('issues?order=created_at.asc', { method:'GET' });
     allIssues = data || [];
     updateTallies(allIssues);
     renderIssues();
@@ -676,17 +610,14 @@ function renderIssues() {
   if (statusFilter !== 'all') filtered = filtered.filter(i => i.status === statusFilter);
   if (catFilter !== 'all') filtered = filtered.filter(i => i.tag === catFilter);
   const sorted = sortIssues(filtered);
-
   if (sorted.length === 0) {
-    list.innerHTML = `<div class="empty-state"><span class="ei">📋</span>${statusFilter === 'all' && catFilter === 'all' ? 'No entries yet. Click <strong>+ New Entry</strong> to add the first.' : 'No entries match this filter.'}</div>`;
+    list.innerHTML = `<div class="empty-state"><span class="ei">📋</span>${statusFilter==='all'&&catFilter==='all'?'No entries yet. Click <strong>+ New Entry</strong> to add the first.':'No entries match this filter.'}</div>`;
     return;
   }
-
   list.innerHTML = sorted.map(issue => {
     const replies = issue.replies || [];
     const date = issue.created_at ? new Date(issue.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
-    return `
-    <div class="issue-card ${cardCls[issue.status]||'open-issue'}" onclick="openDetail(${issue.id})">
+    return `<div class="issue-card ${cardCls[issue.status]||'open-issue'}" onclick="openDetail(${issue.id})">
       <div class="issue-title">${esc(issue.title)}</div>
       <div class="issue-meta">${esc(issue.author||'Board')}${date?' &bull; '+date:''}${issue.tag?' &bull; '+esc(issue.tag):''}</div>
       ${issue.body?`<div class="issue-preview">${esc(issue.body)}</div>`:''}
@@ -712,20 +643,13 @@ async function submitIssue() {
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Saving...';
   try {
-    await sbFetch('issues', {
-      method: 'POST', prefer: 'return=minimal',
-      body: JSON.stringify({
-        title,
-        body: document.getElementById('newBody').value.trim(),
-        status: document.getElementById('newStatus').value,
-        tag: document.getElementById('newTag').value||null,
-        author: document.getElementById('newAuthor').value.trim()||'Board',
-        replies: []
-      })
-    });
-    closeModal('newIssueModal');
-    showToast('Entry saved');
-    await loadIssues();
+    await sbFetch('issues', { method:'POST', prefer:'return=minimal', body: JSON.stringify({
+      title, body: document.getElementById('newBody').value.trim(),
+      status: document.getElementById('newStatus').value,
+      tag: document.getElementById('newTag').value||null,
+      author: document.getElementById('newAuthor').value.trim()||'Board', replies: []
+    })});
+    closeModal('newIssueModal'); showToast('Entry saved'); await loadIssues();
   } catch(e) { showToast('Error saving entry','var(--red)'); }
   btn.disabled = false; btn.textContent = 'Save Entry';
 }
@@ -734,19 +658,17 @@ async function openDetail(id) {
   currentIssueId = id;
   let issue;
   try {
-    const data = await sbFetch(`issues?id=eq.${id}`, { method: 'GET' });
+    const data = await sbFetch(`issues?id=eq.${id}`, { method:'GET' });
     issue = data && data[0];
   } catch(e) { showToast('Error loading entry','var(--red)'); return; }
   if (!issue) return;
-
   const replies = issue.replies || [];
   const date = issue.created_at ? new Date(issue.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
   const repliesHtml = replies.map(r =>
     `<div class="reply-item"><div class="reply-meta">${esc(r.author)} &bull; ${esc(r.date)}</div><div class="reply-text">${esc(r.text)}</div></div>`
   ).join('') || '<div style="font-size:0.82rem;color:var(--muted);margin-bottom:8px;">No replies yet.</div>';
-
   document.getElementById('detailContent').innerHTML = `
-    <div style="margin-bottom:6px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+    <div style="margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
       <span class="issue-tag ${tagCls[issue.status]||'tag-open'}">${statusLabels[issue.status]||issue.status}</span>
       ${issue.tag?`<span class="cat-pill">${esc(issue.tag)}</span>`:''}
     </div>
@@ -775,42 +697,37 @@ async function submitReply() {
   const text = document.getElementById('replyInput').value.trim();
   const author = document.getElementById('replyAuthor').value.trim()||'Board';
   if (!text) return;
-  const btn = document.getElementById('replyBtn');
-  btn.disabled = true;
+  const btn = document.getElementById('replyBtn'); btn.disabled = true;
   try {
-    const data = await sbFetch(`issues?id=eq.${currentIssueId}`, { method: 'GET' });
-    const issue = data && data[0];
-    if (!issue) throw new Error();
+    const data = await sbFetch(`issues?id=eq.${currentIssueId}`, { method:'GET' });
+    const issue = data && data[0]; if (!issue) throw new Error();
     const replies = [...(issue.replies||[]), { text, author, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) }];
-    await sbFetch(`issues?id=eq.${currentIssueId}`, { method: 'PATCH', prefer: 'return=minimal', body: JSON.stringify({ replies }) });
+    await sbFetch(`issues?id=eq.${currentIssueId}`, { method:'PATCH', prefer:'return=minimal', body: JSON.stringify({ replies }) });
     document.getElementById('replyInput').value = '';
     document.getElementById('replyList').innerHTML = replies.map(r =>
       `<div class="reply-item"><div class="reply-meta">${esc(r.author)} &bull; ${esc(r.date)}</div><div class="reply-text">${esc(r.text)}</div></div>`
     ).join('');
-    await loadIssues();
-    showToast('Reply posted');
+    await loadIssues(); showToast('Reply posted');
   } catch(e) { showToast('Error posting reply','var(--red)'); }
   btn.disabled = false;
 }
 
 async function changeStatus(id, newStatus) {
   try {
-    await sbFetch(`issues?id=eq.${id}`, { method: 'PATCH', prefer: 'return=minimal', body: JSON.stringify({ status: newStatus }) });
-    closeModal('detailModal');
-    showToast('Status updated');
-    await loadIssues();
+    await sbFetch(`issues?id=eq.${id}`, { method:'PATCH', prefer:'return=minimal', body: JSON.stringify({ status: newStatus }) });
+    closeModal('detailModal'); showToast('Status updated'); await loadIssues();
   } catch(e) { showToast('Error updating status','var(--red)'); }
 }
 
 async function deleteIssue(id) {
   if (!confirm('Delete this entry? This cannot be undone.')) return;
   try {
-    await sbFetch(`issues?id=eq.${id}`, { method: 'DELETE' });
-    closeModal('detailModal');
-    showToast('Entry deleted');
-    await loadIssues();
+    await sbFetch(`issues?id=eq.${id}`, { method:'DELETE' });
+    closeModal('detailModal'); showToast('Entry deleted'); await loadIssues();
   } catch(e) { showToast('Error deleting entry','var(--red)'); }
 }
+
+loadIssues();
 </script>
 </body>
 </html>
