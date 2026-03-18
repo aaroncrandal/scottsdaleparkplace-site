@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scottsdale Park Place | Community Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<title>Capital Projects | Scottsdale Park Place HOA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #0f1115;
@@ -15,76 +15,412 @@
   --accent-dim: rgba(200,169,110,0.15);
   --text: #e8e4dc;
   --muted: #7a8090;
+  --red: #c05050;
+  --red-dim: rgba(192,80,80,0.15);
+  --yellow: #c8a030;
+  --yellow-dim: rgba(200,160,48,0.15);
+  --blue: #5a8ab0;
+  --blue-dim: rgba(90,138,176,0.15);
+  --green: #5a9e7a;
+  --green-dim: rgba(90,158,122,0.15);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 28px 24px 20px; text-align: center; }
-.site-title { font-family: 'DM Serif Display', serif; font-size: 2rem; letter-spacing: 0.02em; }
-.site-subtitle { margin-top: 4px; font-size: 0.8rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+/* ── HEADER ── */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 32px 20px;
+  text-align: center;
+}
+.site-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.9rem;
+  letter-spacing: 0.02em;
+}
+.site-subtitle {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
 
-nav { background: #13161d; border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; gap: 4px; padding: 10px 16px; }
-nav a { color: #b0b8c8; padding: 6px 16px; border-radius: 4px; font-size: 0.85rem; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s; }
-nav a:hover { background: var(--surface2); color: var(--text); text-decoration: none; }
-nav a.active { color: var(--accent); }
+/* ── NAV ── */
+nav {
+  background: #13161d;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+nav a {
+  padding: 13px 22px;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); text-decoration: none; }
 
-.container { max-width: 860px; margin: 36px auto; padding: 0 20px; }
-.section { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 28px 32px; margin-bottom: 20px; }
-.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
-.section-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; font-weight: 400; }
+/* ── PAGE HEADER ── */
+.page-header {
+  padding: 44px 32px 32px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.page-header p {
+  color: var(--muted);
+  font-size: 0.92rem;
+  max-width: 640px;
+}
 
-.quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-.quick-link { display: block; background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 14px 18px; color: var(--text); transition: border-color 0.15s, background 0.15s; }
-.quick-link:hover { border-color: var(--accent); background: var(--accent-dim); text-decoration: none; }
-.quick-link .ql-label { font-weight: 500; font-size: 0.92rem; display: block; }
-.quick-link .ql-desc { font-size: 0.78rem; color: var(--muted); margin-top: 3px; display: block; }
+/* ── STAT BOXES ── */
+.stats-row {
+  display: flex;
+  gap: 16px;
+  padding: 0 32px 40px;
+  max-width: 960px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.stat-box {
+  flex: 1;
+  min-width: 180px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 20px;
+}
+.stat-box .stat-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.stat-box .stat-value {
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.stat-box .stat-note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 3px;
+}
 
-.board-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-.board-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 14px 18px; }
-.board-role { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 4px; }
-.board-name { font-weight: 500; font-size: 0.97rem; }
+/* ── TIMELINE SECTION LABEL ── */
+.timeline-label {
+  padding: 0 32px 16px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.timeline-label h2 {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.timeline-hint {
+  font-size: 0.78rem;
+  color: #4a5060;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.timeline-hint svg { opacity: 0.5; }
 
-.pm-block { background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 20px 24px; }
-.pm-name { font-weight: 600; font-size: 1.05rem; }
-.pm-title { font-size: 0.82rem; color: var(--accent); margin-top: 2px; margin-bottom: 14px; }
-.pm-details { display: flex; flex-direction: column; gap: 6px; }
-.pm-detail { font-size: 0.85rem; color: #c0c6d0; }
-.pm-detail .label { color: var(--muted); font-size: 0.78rem; display: inline-block; width: 52px; }
+/* ── HORIZONTAL TIMELINE ── */
+.timeline-wrapper {
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 16px 32px 48px;
+  cursor: grab;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
+}
+.timeline-wrapper:active { cursor: grabbing; }
+.timeline-wrapper::-webkit-scrollbar { height: 6px; }
+.timeline-wrapper::-webkit-scrollbar-track { background: var(--surface); border-radius: 3px; }
+.timeline-wrapper::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-.login-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
-.login-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 22px 22px 18px; text-align: center; transition: border-color 0.2s; }
-.login-card:hover { border-color: var(--accent); }
-.login-icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
-.login-label { font-weight: 600; font-size: 0.92rem; display: block; margin-bottom: 6px; }
-.login-desc { font-size: 0.78rem; color: var(--muted); display: block; margin-bottom: 14px; }
-.login-btn { display: inline-block; background: var(--surface); border: 1px solid var(--border); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; padding: 7px 22px; border-radius: 4px; cursor: pointer; transition: border-color 0.15s, background 0.15s; width: 100%; }
-.login-btn:hover { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
-.login-btn.primary { background: var(--accent-dim); border-color: rgba(200,169,110,0.4); color: var(--accent); }
-.login-btn.primary:hover { background: rgba(200,169,110,0.25); }
+.timeline-track {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  min-width: max-content;
+  padding-bottom: 20px;
+  position: relative;
+}
 
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; }
-.modal-overlay.open { display: flex; }
-.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 32px 36px; width: 100%; max-width: 380px; position: relative; }
-.modal-close { position: absolute; top: 14px; right: 18px; background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; line-height: 1; }
-.modal-close:hover { color: var(--text); }
-.modal-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 4px; }
-.modal-subtitle { font-size: 0.82rem; color: var(--muted); margin-bottom: 22px; }
-.modal label { display: block; font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
-.modal input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 9px 12px; margin-bottom: 16px; outline: none; transition: border-color 0.15s; }
-.modal input:focus { border-color: var(--accent); }
-.modal-submit { width: 100%; background: var(--accent-dim); border: 1px solid rgba(200,169,110,0.4); color: var(--accent); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; padding: 10px; border-radius: 4px; cursor: pointer; }
-.modal-submit:hover { background: rgba(200,169,110,0.25); }
-.modal-note { font-size: 0.75rem; color: var(--muted); margin-top: 12px; text-align: center; }
+/* horizontal line */
+.timeline-track::before {
+  content: '';
+  position: absolute;
+  top: 38px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+}
 
-footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 10px; }
-.footer-inner { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+/* ── YEAR GROUP ── */
+.year-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.year-marker {
+  font-family: 'DM Serif Display', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 0 10px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+.year-marker.overdue { color: var(--red); }
+.year-marker.urgent { color: var(--yellow); }
+.year-marker.current { color: var(--blue); }
+.year-marker.future { color: var(--green); }
 
+.year-nodes {
+  display: flex;
+  gap: 12px;
+  padding: 0 16px 0 16px;
+  margin-top: 4px;
+}
+
+/* ── PROJECT NODE ── */
+.project-node {
+  width: 160px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 14px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  position: relative;
+}
+.project-node::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 20px;
+  background: var(--border);
+}
+.project-node:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 10;
+}
+.project-node.overdue { border-color: rgba(192,80,80,0.4); }
+.project-node.overdue:hover { border-color: var(--red); }
+.project-node.urgent { border-color: rgba(200,160,48,0.4); }
+.project-node.urgent:hover { border-color: var(--yellow); }
+.project-node.current { border-color: rgba(90,138,176,0.4); }
+.project-node.current:hover { border-color: var(--blue); }
+.project-node.future { border-color: rgba(90,158,122,0.4); }
+.project-node.future:hover { border-color: var(--green); }
+
+.node-icon {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+  display: block;
+}
+.node-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: 6px;
+}
+.node-cost {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.node-badge {
+  display: inline-block;
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 20px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.badge-overdue { background: var(--red-dim); color: var(--red); }
+.badge-urgent  { background: var(--yellow-dim); color: var(--yellow); }
+.badge-planned { background: var(--blue-dim); color: var(--blue); }
+.badge-longterm{ background: var(--green-dim); color: var(--green); }
+
+/* ── POPUP ── */
+.popup {
+  display: none;
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  background: #1a1e28;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  z-index: 100;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.popup::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: #1a1e28;
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+}
+.project-node:hover .popup { display: block; }
+.popup-title {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.popup-year {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.popup-cost {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.popup-desc {
+  font-size: 0.78rem;
+  color: #b0b8c8;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.popup-note {
+  font-size: 0.74rem;
+  color: var(--muted);
+  font-style: italic;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+/* ── YEAR SEPARATOR ── */
+.year-sep {
+  width: 32px;
+  flex-shrink: 0;
+}
+
+/* ── CONTEXT BOX ── */
+.context-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 32px 56px;
+}
+.context-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px 24px;
+  margin-bottom: 16px;
+}
+.context-box h3 {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.context-box p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* ── LEGEND ── */
+.legend {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 0 32px 24px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-overdue { background: var(--red); }
+.dot-urgent  { background: var(--yellow); }
+.dot-planned { background: var(--blue); }
+.dot-longterm{ background: var(--green); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  padding: 24px 32px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* ── RESPONSIVE ── */
 @media (max-width: 600px) {
-  .section { padding: 20px 18px; }
-  .site-title { font-size: 1.5rem; }
-  .modal { margin: 16px; padding: 24px 20px; }
+  .stats-row { padding: 0 16px 32px; }
+  .page-header { padding: 28px 16px 20px; }
+  .timeline-wrapper { padding: 16px 16px 48px; }
+  .legend { padding: 0 16px 20px; }
+  .context-section { padding: 0 16px 40px; }
+  .timeline-label { padding: 0 16px 16px; }
 }
 </style>
 </head>
@@ -92,151 +428,449 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
 
 <header>
   <div class="site-title">Scottsdale Park Place</div>
-  <div class="site-subtitle">Community Information Portal &nbsp;|&nbsp; 4354 N 54th St, Scottsdale AZ 85251</div>
+  <div class="site-subtitle">Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251</div>
 </header>
 
 <nav>
-  <a href="index.html" class="active">Home</a>
-  <a href="issues.html">Capital Projects</a>
-  <a href="#">Documents</a>
-  <a href="board.html">Board</a>
-  <a href="#">Contact</a>
+  <a href="index.html">Home</a>
+  <a href="issues.html" class="active">Capital Projects</a>
+  <a href="documents.html">Documents</a>
+  <a href="index.html#contact">Contact</a>
+  <a href="board.html">Board Portal</a>
 </nav>
 
-<div class="container">
-
-  <div class="section">
-    <h2 style="font-family:'DM Serif Display',serif; font-size:1.25rem; font-weight:400;">Community Updates</h2>
-    <p style="color:#c0c6d0; font-size:0.88rem; margin-top:14px;">Scottsdale Park Place is a 164-unit condominium community at 4354 N 54th St, Scottsdale. This site is maintained by the board to keep residents informed about community operations, active issues, and important documents.</p>
-  </div>
-
-  <div class="section">
-    <div class="section-header">
-      <h2>Site Sections</h2>
-    </div>
-    <div class="quick-links">
-      <a href="issues.html" class="quick-link">
-        <span class="ql-label">Capital Projects</span>
-        <span class="ql-desc">Reserve study timeline, project status, and financial planning</span>
-      </a>
-      <a href="#" class="quick-link">
-        <span class="ql-label">Documents</span>
-        <span class="ql-desc">Meeting minutes, budgets, CC&Rs, and association records</span>
-      </a>
-      <a href="board.html" class="quick-link">
-        <span class="ql-desc">Vendor contacts, credentials, and operational documentation</span>
-      </a>
-      <a href="#" class="quick-link">
-        <span class="ql-label">Contact</span>
-        <span class="ql-desc">Submit a concern or request to the board or property manager</span>
-      </a>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-header">
-      <h2>Board of Directors</h2>
-    </div>
-    <div class="board-grid">
-      <div class="board-card">
-        <div class="board-role">President</div>
-        <div class="board-name">Aaron Crandal</div>
-      </div>
-      <div class="board-card">
-        <div class="board-role">Treasurer</div>
-        <div class="board-name">Marilyn</div>
-      </div>
-      <div class="board-card">
-        <div class="board-role">Secretary</div>
-        <div class="board-name">Anna</div>
-      </div>
-      <div class="board-card">
-        <div class="board-role">Board Member</div>
-        <div class="board-name">James Erway</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-header">
-      <h2>Property Manager</h2>
-    </div>
-    <div class="pm-block">
-      <div class="pm-name">Madison Garrison</div>
-      <div class="pm-title">Community Manager &mdash; Brown Community Management</div>
-      <div class="pm-details">
-        <div class="pm-detail"><span class="label">Office</span>(480) 539-1396</div>
-        <div class="pm-detail"><span class="label">Direct</span>(480) 889-0259</div>
-        <div class="pm-detail"><span class="label">Email</span><a href="mailto:Madison.Garrison@brownmanagement.com">Madison.Garrison@brownmanagement.com</a></div>
-        <div class="pm-detail"><span class="label">Web</span><a href="https://brownmanagement.com" target="_blank">brownmanagement.com</a></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-header">
-      <h2>Portal Access</h2>
-    </div>
-    <div class="login-grid">
-      <div class="login-card">
-        <span class="login-icon">🔐</span>
-        <span class="login-label">Board / Management</span>
-        <span class="login-desc">Operational docs, credentials, vendor records, infrastructure notes</span>
-        <button class="login-btn primary" onclick="openModal('board')">Sign In</button>
-      </div>
-      <div class="login-card">
-        <span class="login-icon">🏠</span>
-        <span class="login-label">Owners</span>
-        <span class="login-desc">Assessment history, community documents, forms, and meeting records</span>
-        <button class="login-btn" onclick="openModal('owner')">Sign In</button>
-      </div>
-      <div class="login-card">
-        <span class="login-icon">🗝️</span>
-        <span class="login-label">Renters</span>
-        <span class="login-desc">Community rules, amenity info, maintenance requests, and notices</span>
-        <button class="login-btn" onclick="openModal('renter')">Sign In</button>
-      </div>
-    </div>
-  </div>
-
+<div class="page-header">
+  <h1>Capital Projects Timeline</h1>
+  <p>All scheduled capital expenditures from the May 2024 FDReserve Studies reserve study. Hover any project for details. Drag to scroll.</p>
 </div>
 
-<div class="modal-overlay" id="loginModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">&times;</button>
-    <div class="modal-title" id="modalTitle">Sign In</div>
-    <div class="modal-subtitle" id="modalSubtitle">Enter your credentials to continue.</div>
-    <label>Email</label>
-    <input type="email" placeholder="your@email.com" />
-    <label>Password</label>
-    <input type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
-    <button class="modal-submit">Sign In</button>
-    <div class="modal-note">Portal access is being implemented. Contact the board to request credentials.</div>
+<!-- STAT BOXES -->
+<div class="stats-row">
+  <div class="stat-box">
+    <div class="stat-label">Reserve Fund Balance</div>
+    <div class="stat-value">$641K</div>
+    <div class="stat-note">As of May 2024 study</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">Funded Status</div>
+    <div class="stat-value">25%</div>
+    <div class="stat-note">Significantly underfunded</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">Current Annual Contribution</div>
+    <div class="stat-value">$117K</div>
+    <div class="stat-note">From assessments</div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-label">Recommended Contribution</div>
+    <div class="stat-value">$300K+</div>
+    <div class="stat-note">Per reserve study</div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot dot-overdue"></div> Past Due (2024)</div>
+  <div class="legend-item"><div class="legend-dot dot-urgent"></div> Urgent (2025)</div>
+  <div class="legend-item"><div class="legend-dot dot-planned"></div> Planned (2026–2030)</div>
+  <div class="legend-item"><div class="legend-dot dot-longterm"></div> Long-Term (2032+)</div>
+</div>
+
+<!-- TIMELINE HINT -->
+<div class="timeline-label">
+  <h2>2024 — 2035 Project Timeline</h2>
+  <div class="timeline-hint">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#7a8090" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Drag to scroll &mdash; hover any card for details
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="timeline-wrapper" id="timeline">
+  <div class="timeline-track">
+
+    <!-- 2024 OVERDUE -->
+    <div class="year-group">
+      <div class="year-marker overdue">2024</div>
+      <div class="year-nodes">
+
+        <div class="project-node overdue">
+          <div class="node-badge badge-overdue">Past Due</div>
+          <div class="node-icon">🏊</div>
+          <div class="node-name">Pool Deck Recoat</div>
+          <div class="node-cost">$28,481</div>
+          <div class="popup">
+            <div class="popup-title">Pool Deck Recoat</div>
+            <div class="popup-year">Scheduled: 2024 &mdash; <span style="color:var(--red)">Past Due</span></div>
+            <div class="popup-cost">$28,481</div>
+            <div class="popup-desc">Recoating of pool deck surface. Original surface showing wear. Delay increases risk of surface failure and slip hazard liability.</div>
+            <div class="popup-note">Overdue from 2024 schedule. Recommend addressing in 2025 alongside other deferred items.</div>
+          </div>
+        </div>
+
+        <div class="project-node overdue">
+          <div class="node-badge badge-overdue">Past Due</div>
+          <div class="node-icon">🔒</div>
+          <div class="node-name">Entry Fob System</div>
+          <div class="node-cost">$22,400</div>
+          <div class="popup">
+            <div class="popup-title">Entry Fob System Replacement</div>
+            <div class="popup-year">Scheduled: 2024 &mdash; <span style="color:var(--red)">Past Due</span></div>
+            <div class="popup-cost">$22,400</div>
+            <div class="popup-desc">Replacement of property entry fob access system. Current system is aging and has limited administrative access following board transition.</div>
+            <div class="popup-note">Board access to fob management was isolated to prior board member Will. Resolving admin access is a 2025 priority.</div>
+          </div>
+        </div>
+
+        <div class="project-node overdue">
+          <div class="node-badge badge-overdue">Past Due</div>
+          <div class="node-icon">📹</div>
+          <div class="node-name">Surveillance Upgrade</div>
+          <div class="node-cost">$23,400</div>
+          <div class="popup">
+            <div class="popup-title">Surveillance System Upgrade</div>
+            <div class="popup-year">Scheduled: 2024 &mdash; <span style="color:var(--red)">Past Due</span></div>
+            <div class="popup-cost">$23,400</div>
+            <div class="popup-desc">Upgrade of AZCCTV surveillance infrastructure. Existing system is end-of-life. NVR admin access currently unresolved following board transition.</div>
+            <div class="popup-note">AZCCTV is the current vendor. Board regaining full NVR access is a prerequisite to this project.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="year-sep"></div>
+
+    <!-- 2025 URGENT -->
+    <div class="year-group">
+      <div class="year-marker urgent">2025</div>
+      <div class="year-nodes">
+
+        <div class="project-node urgent">
+          <div class="node-badge badge-urgent">Urgent</div>
+          <div class="node-icon">🛣️</div>
+          <div class="node-name">Asphalt Phase 1</div>
+          <div class="node-cost">$168,224</div>
+          <div class="popup">
+            <div class="popup-title">Asphalt Replacement — Phase 1</div>
+            <div class="popup-year">Scheduled: 2025 &mdash; <span style="color:var(--yellow)">Urgent</span></div>
+            <div class="popup-cost">$168,224</div>
+            <div class="popup-desc">Phase 1 of a 3-year full property pavement replacement program. Original asphalt is at end of useful life. Continued deferral accelerates base damage and increases long-term costs.</div>
+            <div class="popup-note">Phase 2 follows in 2026, Phase 3 in 2027. Total asphalt program: ~$522K.</div>
+          </div>
+        </div>
+
+        <div class="project-node urgent">
+          <div class="node-badge badge-urgent">Urgent</div>
+          <div class="node-icon">🚗</div>
+          <div class="node-name">Carports Phase 1</div>
+          <div class="node-cost">$171,938</div>
+          <div class="popup">
+            <div class="popup-title">Carport Replacement — Phase 1</div>
+            <div class="popup-year">Scheduled: 2025 &mdash; <span style="color:var(--yellow)">Urgent</span></div>
+            <div class="popup-cost">$171,938</div>
+            <div class="popup-desc">Phase 1 of carport structure replacement across the 164-space property. Original metal carport structures are aging and require full replacement.</div>
+            <div class="popup-note">Phase 2 in 2026, Phase 3 in 2027. Total carport program: ~$530K.</div>
+          </div>
+        </div>
+
+        <div class="project-node urgent">
+          <div class="node-badge badge-urgent">Urgent</div>
+          <div class="node-icon">🌊</div>
+          <div class="node-name">Pool Resurfacing</div>
+          <div class="node-cost">$30,000</div>
+          <div class="popup">
+            <div class="popup-title">Pool Resurfacing</div>
+            <div class="popup-year">Scheduled: 2025 &mdash; <span style="color:var(--yellow)">Urgent</span></div>
+            <div class="popup-cost">$30,000</div>
+            <div class="popup-desc">Full pool interior resurfacing. Pool surface has reached end of useful life. Continued use without resurfacing poses health and structural risk.</div>
+            <div class="popup-note">Coordinate with pool deck recoat (2024 carryover) to minimize disruption.</div>
+          </div>
+        </div>
+
+        <div class="project-node urgent">
+          <div class="node-badge badge-urgent">Urgent</div>
+          <div class="node-icon">💧</div>
+          <div class="node-name">Water Heaters (Bldg A–G)</div>
+          <div class="node-cost">$131,250</div>
+          <div class="popup">
+            <div class="popup-title">Domestic Water Heaters — All Buildings</div>
+            <div class="popup-year">Scheduled: 2025 &mdash; <span style="color:var(--yellow)">Urgent</span></div>
+            <div class="popup-cost">$131,250</div>
+            <div class="popup-desc">Replacement of all domestic water heaters across Buildings A through G. Units are at or past expected service life. Failure risk is elevated across multiple buildings simultaneously.</div>
+            <div class="popup-note">Undocumented shared water line infrastructure may affect sequencing. Property walk with plumber recommended before project start.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="year-sep"></div>
+
+    <!-- 2026 PLANNED -->
+    <div class="year-group">
+      <div class="year-marker current">2026</div>
+      <div class="year-nodes">
+
+        <div class="project-node current">
+          <div class="node-badge badge-planned">Planned</div>
+          <div class="node-icon">🎨</div>
+          <div class="node-name">Community Paint</div>
+          <div class="node-cost">$350,097</div>
+          <div class="popup">
+            <div class="popup-title">Community Paint — Full Property</div>
+            <div class="popup-year">Scheduled: 2026 &mdash; <span style="color:var(--blue)">Planned</span></div>
+            <div class="popup-cost">$350,097</div>
+            <div class="popup-desc">Full exterior repaint of all buildings. Minor stucco repairs included. Property was last painted in 2016 for approximately $175,000. Current condition rated fair by reserve study.</div>
+            <div class="popup-note">8-year paint cycle. Board to confirm scope with vendor prior to bid.</div>
+          </div>
+        </div>
+
+        <div class="project-node current">
+          <div class="node-badge badge-planned">Planned</div>
+          <div class="node-icon">🛣️</div>
+          <div class="node-name">Asphalt Phase 2</div>
+          <div class="node-cost">$174,459</div>
+          <div class="popup">
+            <div class="popup-title">Asphalt Replacement — Phase 2</div>
+            <div class="popup-year">Scheduled: 2026 &mdash; <span style="color:var(--blue)">Planned</span></div>
+            <div class="popup-cost">$174,459</div>
+            <div class="popup-desc">Continuation of the 3-year full property pavement replacement program initiated in 2025.</div>
+            <div class="popup-note">Concurrent with Carports Phase 2. Must follow Phase 1 completion.</div>
+          </div>
+        </div>
+
+        <div class="project-node current">
+          <div class="node-badge badge-planned">Planned</div>
+          <div class="node-icon">🚗</div>
+          <div class="node-name">Carports Phase 2</div>
+          <div class="node-cost">$176,817</div>
+          <div class="popup">
+            <div class="popup-title">Carport Replacement — Phase 2</div>
+            <div class="popup-year">Scheduled: 2026 &mdash; <span style="color:var(--blue)">Planned</span></div>
+            <div class="popup-cost">$176,817</div>
+            <div class="popup-desc">Phase 2 of carport structure replacement. Concurrent with asphalt work for efficiency.</div>
+            <div class="popup-note">Phase 2 of 3. Completes approximately two-thirds of the full carport scope.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="year-sep"></div>
+
+    <!-- 2027 PLANNED -->
+    <div class="year-group">
+      <div class="year-marker current">2027</div>
+      <div class="year-nodes">
+
+        <div class="project-node current">
+          <div class="node-badge badge-planned">Planned</div>
+          <div class="node-icon">🛣️</div>
+          <div class="node-name">Asphalt Phase 3</div>
+          <div class="node-cost">$179,693</div>
+          <div class="popup">
+            <div class="popup-title">Asphalt Replacement — Phase 3</div>
+            <div class="popup-year">Scheduled: 2027 &mdash; <span style="color:var(--blue)">Planned</span></div>
+            <div class="popup-cost">$179,693</div>
+            <div class="popup-desc">Final phase of the full property pavement replacement program. Completes the 3-year asphalt program initiated in 2025.</div>
+            <div class="popup-note">Completion of 3-year program. Total asphalt budget: ~$522K.</div>
+          </div>
+        </div>
+
+        <div class="project-node current">
+          <div class="node-badge badge-planned">Planned</div>
+          <div class="node-icon">🚗</div>
+          <div class="node-name">Carports Phase 3</div>
+          <div class="node-cost">$182,121</div>
+          <div class="popup">
+            <div class="popup-title">Carport Replacement — Phase 3</div>
+            <div class="popup-year">Scheduled: 2027 &mdash; <span style="color:var(--blue)">Planned</span></div>
+            <div class="popup-cost">$182,121</div>
+            <div class="popup-desc">Final phase of carport replacement. Completion of the full 164-space carport program.</div>
+            <div class="popup-note">Phase 3 of 3. Total carport program: ~$530K.</div>
+          </div>
+        </div>
+
+        <div class="project-node current">
+          <div class="node-badge badge-planned">Planned</div>
+          <div class="node-icon">⚙️</div>
+          <div class="node-name">Lift Station Pump</div>
+          <div class="node-cost">$26,083</div>
+          <div class="popup">
+            <div class="popup-title">Sewer Lift Station Pump Replacement</div>
+            <div class="popup-year">Scheduled: 2027 &mdash; <span style="color:var(--blue)">Planned</span></div>
+            <div class="popup-cost">$26,083</div>
+            <div class="popup-desc">Replacement of the Grundfos 1 HP sewer lift station pump. Current pump is operational but aging. Known to jam on non-flushable items. Alarm must be silenced before servicing.</div>
+            <div class="popup-note">Grundfos 1 HP pump. Replacement scheduled 2027 per reserve study.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="year-sep"></div>
+
+    <!-- 2028–2030 PLANNED -->
+    <div class="year-group">
+      <div class="year-marker current">2028–2030</div>
+      <div class="year-nodes">
+
+        <div class="project-node current">
+          <div class="node-badge badge-planned">Planned</div>
+          <div class="node-icon">🌿</div>
+          <div class="node-name">Irrigation Phase 1</div>
+          <div class="node-cost">$337,653</div>
+          <div class="popup">
+            <div class="popup-title">Irrigation System — Phase 1</div>
+            <div class="popup-year">Scheduled: 2028 &mdash; <span style="color:var(--blue)">Planned</span></div>
+            <div class="popup-cost">$337,653</div>
+            <div class="popup-desc">Phase 1 of a 3-year full property irrigation system overhaul. Original 1978 system is in poor condition per board assessment. Full replacement budget is approximately $900K spread over 3 phases.</div>
+            <div class="popup-note">Controllers identified: Irritrol 18-station (Bldg A, 2022), Hunter I-Core (Bldg D, 2013), Hunter I-Core (Bldg G, 2013).</div>
+          </div>
+        </div>
+
+        <div class="project-node current">
+          <div class="node-badge badge-planned">Planned</div>
+          <div class="node-icon">🌿</div>
+          <div class="node-name">Irrigation Phase 2 + Security</div>
+          <div class="node-cost">$381,807</div>
+          <div class="popup">
+            <div class="popup-title">Irrigation Phase 2 + Security Refurbish</div>
+            <div class="popup-year">Scheduled: 2029 &mdash; <span style="color:var(--blue)">Planned</span></div>
+            <div class="popup-cost">$381,807</div>
+            <div class="popup-desc">Irrigation Phase 2 combined with security system refurbishment, pet stations, BBQ area, and spa work.</div>
+            <div class="popup-note">Multi-item year. Coordinate with property manager on vendor sequencing.</div>
+          </div>
+        </div>
+
+        <div class="project-node current">
+          <div class="node-badge badge-planned">Planned</div>
+          <div class="node-icon">🌿</div>
+          <div class="node-name">Irrigation Ph. 3 + Clubhouse</div>
+          <div class="node-cost">$489,681</div>
+          <div class="popup">
+            <div class="popup-title">Irrigation Phase 3 + Clubhouse Remodel</div>
+            <div class="popup-year">Scheduled: 2030 &mdash; <span style="color:var(--blue)">Planned</span></div>
+            <div class="popup-cost">$489,681</div>
+            <div class="popup-desc">Final irrigation phase combined with clubhouse remodel and second community paint cycle. Largest single-year budget in the study.</div>
+            <div class="popup-note">Community paint second cycle at 8-year interval from 2026. Board should begin vendor bids by 2029.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="year-sep"></div>
+
+    <!-- 2032+ LONG TERM -->
+    <div class="year-group">
+      <div class="year-marker future">2032+</div>
+      <div class="year-nodes">
+
+        <div class="project-node future">
+          <div class="node-badge badge-longterm">Long-Term</div>
+          <div class="node-icon">🏠</div>
+          <div class="node-name">Roof Replacement</div>
+          <div class="node-cost">$429,000</div>
+          <div class="popup">
+            <div class="popup-title">Full Roof Replacement</div>
+            <div class="popup-year">Scheduled: 2033 &mdash; <span style="color:var(--green)">Long-Term</span></div>
+            <div class="popup-cost">$429,000</div>
+            <div class="popup-desc">Full replacement of all building roofs. Included in the reserve study's 30-year projection. Exact scope to be confirmed closer to project date based on condition assessments.</div>
+            <div class="popup-note">Largest single capital item in the 30-year plan. Reserve funding strategy must account for this.</div>
+          </div>
+        </div>
+
+        <div class="project-node future">
+          <div class="node-badge badge-longterm">Long-Term</div>
+          <div class="node-icon">⚡</div>
+          <div class="node-name">Electrical Panel Replacement</div>
+          <div class="node-cost">$61,000</div>
+          <div class="popup">
+            <div class="popup-title">All Electrical Panel Replacements</div>
+            <div class="popup-year">Scheduled: 2033 &mdash; <span style="color:var(--green)">Long-Term</span></div>
+            <div class="popup-cost">$61,000</div>
+            <div class="popup-desc">Replacement of all electrical panels across the property. Original 1978 electrical infrastructure will require full replacement.</div>
+            <div class="popup-note">Coordinate with roof project for access and disruption efficiency.</div>
+          </div>
+        </div>
+
+        <div class="project-node future">
+          <div class="node-badge badge-longterm">Long-Term</div>
+          <div class="node-icon">🏊</div>
+          <div class="node-name">Pool Resurface (2nd cycle)</div>
+          <div class="node-cost">$30,000</div>
+          <div class="popup">
+            <div class="popup-title">Pool Resurfacing — Second Cycle</div>
+            <div class="popup-year">Scheduled: 2032 &mdash; <span style="color:var(--green)">Long-Term</span></div>
+            <div class="popup-cost">$30,000</div>
+            <div class="popup-desc">Second pool resurfacing cycle following the 2025 project. 7-year resurfacing interval per reserve study.</div>
+            <div class="popup-note">Coordinate with pool deck recoat on same cycle.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- end timeline-track -->
+</div><!-- end timeline-wrapper -->
+
+<!-- CONTEXT BOXES -->
+<div class="context-section">
+  <div class="context-box">
+    <h3>Reserve Fund Status</h3>
+    <p>The May 2024 reserve study found Scottsdale Park Place at 25% funded — significantly below the recommended threshold. The current annual contribution of $117,000 is insufficient to meet the $300,000+ recommended level. The board is reviewing the funding model with FDReserve Studies, LLC (William Schlimgen, PE) in March 2026. A proposed strategy will be shared with owners following that review.</p>
+  </div>
+  <div class="context-box">
+    <h3>About This Timeline</h3>
+    <p>All project data is sourced from the FDReserve Studies reserve study update dated May 25, 2024. Scheduled years and cost estimates are from that study and will shift based on available funds, vendor bids, and board decisions. The full study is available in the Documents section. Questions can be directed to the board via the Contact page.</p>
   </div>
 </div>
 
 <footer>
-  <div class="footer-inner">
-    Scottsdale Park Place HOA &nbsp;&bull;&nbsp; 4354 N 54th St, Scottsdale AZ 85251<br>
-    <span style="margin-top:6px;display:block;">Last updated: <span id="lastUpdated"></span></span>
-  </div>
+  Scottsdale Park Place HOA &nbsp;&bull;&nbsp; Capital project data: FDReserve Studies, LLC — Reserve Study Update, May 25, 2024<br>
+  <span style="margin-top:6px; display:block;"><a href="index.html">Back to Home</a> &nbsp;&bull;&nbsp; Last updated: March 2026</span>
 </footer>
 
 <script>
-document.getElementById("lastUpdated").textContent =
-  new Date(document.lastModified).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-const titles = {
-  board: ['Board / Management','Access operational records and governance documentation.'],
-  owner: ['Owner Portal','Access your account, documents, and community resources.'],
-  renter: ['Renter Portal','Access community information and submit requests.']
-};
-function openModal(type) {
-  document.getElementById('modalTitle').textContent = titles[type][0];
-  document.getElementById('modalSubtitle').textContent = titles[type][1];
-  document.getElementById('loginModal').classList.add('open');
-}
-function closeModal() { document.getElementById('loginModal').classList.remove('open'); }
-document.getElementById('loginModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+// Drag to scroll
+const wrapper = document.getElementById('timeline');
+let isDown = false, startX, scrollLeft;
+
+wrapper.addEventListener('mousedown', e => {
+  isDown = true;
+  wrapper.style.cursor = 'grabbing';
+  startX = e.pageX - wrapper.offsetLeft;
+  scrollLeft = wrapper.scrollLeft;
+});
+wrapper.addEventListener('mouseleave', () => { isDown = false; wrapper.style.cursor = 'grab'; });
+wrapper.addEventListener('mouseup', () => { isDown = false; wrapper.style.cursor = 'grab'; });
+wrapper.addEventListener('mousemove', e => {
+  if (!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - wrapper.offsetLeft;
+  const walk = (x - startX) * 1.4;
+  wrapper.scrollLeft = scrollLeft - walk;
+});
+
+// Prevent popup from going off-screen bottom
+document.querySelectorAll('.project-node').forEach(node => {
+  node.addEventListener('mouseenter', () => {
+    const popup = node.querySelector('.popup');
+    if (!popup) return;
+    const rect = node.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    if (spaceBelow < 220) {
+      popup.style.top = 'auto';
+      popup.style.bottom = 'calc(100% + 12px)';
+    } else {
+      popup.style.top = 'calc(100% + 12px)';
+      popup.style.bottom = 'auto';
+    }
+  });
+});
 </script>
+
 </body>
 </html>
