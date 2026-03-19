@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community — Scottsdale Park Place HOA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1115;
+  --surface: #181c23;
+  --surface2: #1e2330;
+  --border: #2a2f3d;
+  --accent: #c8a96e;
+  --accent-dim: rgba(200,169,110,0.15);
+  --text: #e8e4dc;
+  --muted: #7a8090;
+  --red: #c05050;
+  --blue: #5a8ab0;
+  --green: #5a9e7a;
+  --orange: #c8825a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 32px 32px 24px; text-align: center; }
+.site-title { font-family: 'DM Serif Display', serif; font-size: 2.1rem; letter-spacing: 0.02em; }
+.site-subtitle { margin-top: 5px; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; }
+nav { background: #13161d; border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
+nav a { padding: 13px 22px; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; }
+nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+.main { max-width: 960px; margin: 0 auto; padding: 48px 32px 80px; }
+.section-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+
+/* ── AUTH GATE ── */
+#authGate {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+.gate-icon { font-size: 3rem; margin-bottom: 20px; }
+.gate-title { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+.gate-desc { font-size: 0.88rem; color: #b0b8c8; line-height: 1.7; margin-bottom: 32px; }
+.auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 32px 28px; text-align: left; }
+.auth-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 6px; }
+.auth-card p { font-size: 0.8rem; color: var(--muted); margin-bottom: 22px; }
+.auth-tabs { display: flex; gap: 0; margin-bottom: 24px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.auth-tab { flex: 1; padding: 9px; text-align: center; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: transparent; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; transition: background 0.2s, color 0.2s; }
+.auth-tab.active { background: var(--accent); color: #0f1115; }
+.form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.form-field label { font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.form-field input, .form-field select {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 7px;
+  padding: 10px 14px; color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem; outline: none; transition: border-color 0.2s; width: 100%;
+}
+.form-field input::placeholder { color: #4a5060; }
+.form-field input:focus, .form-field select:focus { border-color: var(--accent); }
+.form-field select option { background: #1e2330; }
+.auth-btn { width: 100%; background: var(--accent); color: #0f1115; border: none; border-radius: 7px; padding: 12px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-top: 4px; }
+.auth-btn:hover { opacity: 0.88; }
+.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.auth-error { background: rgba(192,80,80,0.1); border: 1px solid rgba(192,80,80,0.25); border-radius: 6px; padding: 10px 14px; font-size: 0.8rem; color: var(--red); margin-bottom: 14px; display: none; }
+.auth-error.show { display: block; }
+.auth-note { font-size: 0.72rem; color: #4a5060; text-align: center; margin-top: 14px; line-height: 1.5; }
+
+/* ── BULLETIN BOARD ── */
+#bulletinBoard { display: none; }
+.bulletin-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+.bulletin-title h2 { font-family: 'DM Serif Display', serif; font-size: 1.7rem; color: var(--accent); margin-bottom: 4px; }
+.bulletin-title p { font-size: 0.84rem; color: var(--muted); }
+.user-badge {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 14px; font-size: 0.8rem;
+}
+.user-badge-name { color: var(--text); font-weight: 500; }
+.user-badge-unit { color: var(--muted); }
+.user-badge-role { background: var(--accent-dim); color: var(--accent); border-radius: 4px; padding: 1px 7px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.sign-out-btn { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.76rem; cursor: pointer; margin-left: 8px; padding: 2px 0; }
+.sign-out-btn:hover { color: var(--text); }
+
+/* ── TRENDING ── */
+.trending-bar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.trending-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.trending-topics { display: flex; gap: 8px; flex-wrap: wrap; }
+.trending-chip {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 20px;
+  padding: 4px 12px; font-size: 0.76rem; color: var(--text); cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.trending-chip:hover { border-color: var(--accent); color: var(--accent); }
+.trending-chip .chip-count { color: var(--muted); font-size: 0.7rem; margin-left: 4px; }
+
+/* ── COMPOSE ── */
+.compose-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 28px;
+}
+.compose-row { display: flex; gap: 12px; align-items: flex-start; }
+.compose-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--accent-dim); border: 1px solid var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.88rem; font-weight: 600; color: var(--accent);
+  flex-shrink: 0; margin-top: 2px;
+}
+.compose-inputs { flex: 1; }
+.compose-textarea {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+  resize: none; outline: none; min-height: 60px;
+  transition: border-color 0.2s, min-height 0.2s;
+  line-height: 1.6;
+}
+.compose-textarea::placeholder { color: #4a5060; }
+.compose-textarea:focus { border-color: var(--accent); min-height: 90px; }
+.compose-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 10px; }
+.compose-category select {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+  padding: 7px 30px 7px 12px; color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem; outline: none; cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a8090' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+}
+.compose-category select:focus { border-color: var(--accent); }
+.compose-category select option { background: #1e2330; }
+.post-btn { background: var(--accent); color: #0f1115; border: none; border-radius: 6px; padding: 8px 20px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.post-btn:hover { opacity: 0.88; }
+.post-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── FILTERS ── */
+.filter-row { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 6px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--muted); cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+/* ── POSTS ── */
+.posts-feed { display: flex; flex-direction: column; gap: 14px; }
+.post-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  transition: border-color 0.2s;
+}
+.post-card:hover { border-color: #3a4050; }
+.post-card.pinned { border-color: rgba(200,169,110,0.35); background: rgba(200,169,110,0.04); }
+.post-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; }
+.post-author { display: flex; align-items: center; gap: 10px; }
+.post-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.76rem; font-weight: 600; color: var(--muted); flex-shrink: 0; }
+.post-avatar.board { background: rgba(200,169,110,0.12); border-color: rgba(200,169,110,0.3); color: var(--accent); }
+.post-avatar.manager { background: rgba(90,138,176,0.12); border-color: rgba(90,138,176,0.3); color: var(--blue); }
+.post-meta { display: flex; flex-direction: column; gap: 2px; }
+.post-name { font-size: 0.84rem; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.post-unit-time { font-size: 0.74rem; color: var(--muted); }
+.post-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+.post-badge { font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+.badge-board   { background: rgba(200,169,110,0.15); color: var(--accent); }
+.badge-manager { background: rgba(90,138,176,0.15); color: var(--blue); }
+.badge-pinned  { background: rgba(200,169,110,0.12); color: var(--accent); }
+.badge-cat { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+.post-body { font-size: 0.88rem; color: #c8d0dc; line-height: 1.7; margin-bottom: 12px; white-space: pre-wrap; }
+.post-actions { display: flex; gap: 16px; align-items: center; }
+.post-action-btn { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: color 0.2s; padding: 0; }
+.post-action-btn:hover { color: var(--text); }
+.post-action-btn.liked { color: var(--accent); }
+.reply-section { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px; display: none; }
+.reply-section.open { display: block; }
+.reply-input-row { display: flex; gap: 10px; align-items: flex-start; }
+.reply-textarea {
+  flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 7px;
+  padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.84rem; resize: none; outline: none; min-height: 50px;
+  transition: border-color 0.2s; line-height: 1.5;
+}
+.reply-textarea::placeholder { color: #4a5060; }
+.reply-textarea:focus { border-color: var(--accent); }
+.reply-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; cursor: pointer; white-space: nowrap; transition: border-color 0.2s; }
+.reply-btn:hover { border-color: var(--accent); }
+.reply-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.replies-list { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.reply-item { display: flex; gap: 10px; }
+.reply-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 600; color: var(--muted); flex-shrink: 0; margin-top: 2px; }
+.reply-avatar.board { background: rgba(200,169,110,0.12); border-color: rgba(200,169,110,0.3); color: var(--accent); }
+.reply-body { flex: 1; background: var(--surface2); border-radius: 8px; padding: 10px 14px; }
+.reply-header { display: flex; gap: 8px; align-items: baseline; margin-bottom: 4px; flex-wrap: wrap; }
+.reply-name { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+.reply-time { font-size: 0.72rem; color: var(--muted); }
+.reply-text { font-size: 0.84rem; color: #c8d0dc; line-height: 1.6; }
+
+/* ── EMPTY STATE ── */
+.empty-state { text-align: center; padding: 48px 24px; color: var(--muted); }
+.empty-state-icon { font-size: 2.4rem; margin-bottom: 14px; }
+.empty-state p { font-size: 0.88rem; line-height: 1.6; }
+
+/* ── LOADING ── */
+.posts-loading { text-align: center; padding: 48px; color: var(--muted); font-size: 0.85rem; }
+.dot-pulse { display: inline-flex; gap: 4px; }
+.dot-pulse span { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; animation: pulse 1.2s ease-in-out infinite; }
+.dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+.dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulse { 0%,80%,100% { opacity:0.2; transform:scale(0.8); } 40% { opacity:1; transform:scale(1); } }
+
+footer { border-top: 1px solid var(--border); background: var(--surface); padding: 24px 32px; text-align: center; font-size: 0.78rem; color: var(--muted); }
+@media (max-width: 640px) {
+  .main { padding: 32px 16px 48px; }
+  header { padding: 24px 16px 18px; }
+  .bulletin-header { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="site-title">Scottsdale Park Place</div>
+  <div class="site-subtitle">Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251</div>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="issues.html">Capital Projects</a>
+  <a href="documents.html">Documents</a>
+  <a href="contact.html">Contact</a>
+  <a href="board.html">Board Portal</a>
+  <a href="community.html" class="active">Community</a>
+</nav>
+
+<div class="main">
+
+  <!-- AUTH GATE -->
+  <div id="authGate">
+    <div class="gate-icon">🏘️</div>
+    <div class="gate-title">Community Bulletin</div>
+    <div class="gate-desc">Sign in to read posts, share updates, and connect with your neighbors at Scottsdale Park Place.</div>
+
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('signin')">Sign In</button>
+        <button class="auth-tab" onclick="switchTab('register')">Create Account</button>
+      </div>
+
+      <div id="authError" class="auth-error"></div>
+
+      <!-- SIGN IN -->
+      <div id="signinForm">
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" id="siEmail" placeholder="you@email.com" autocomplete="email">
+        </div>
+        <div class="form-field">
+          <label>Password</label>
+          <input type="password" id="siPassword" placeholder="Password" autocomplete="current-password">
+        </div>
+        <button class="auth-btn" id="signinBtn" onclick="signIn()">Sign In</button>
+      </div>
+
+      <!-- REGISTER -->
+      <div id="registerForm" style="display:none;">
+        <div class="form-field">
+          <label>Full Name</label>
+          <input type="text" id="regName" placeholder="First and last name">
+        </div>
+        <div class="form-field">
+          <label>Unit Number</label>
+          <input type="text" id="regUnit" placeholder="e.g. 142">
+        </div>
+        <div class="form-field">
+          <label>I am a…</label>
+          <select id="regRole">
+            <option value="owner">Owner</option>
+            <option value="renter">Renter</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="you@email.com" autocomplete="email">
+        </div>
+        <div class="form-field">
+          <label>Password</label>
+          <input type="password" id="regPassword" placeholder="At least 8 characters" autocomplete="new-password">
+        </div>
+        <button class="auth-btn" id="registerBtn" onclick="register()">Create Account</button>
+        <div class="auth-note">By creating an account you agree to follow community guidelines. Posts are visible to all registered residents. Violations may result in account suspension.</div>
+      </div>
+
+      <div class="auth-note" id="signinNote">Don't have an account? Switch to Create Account above.</div>
+    </div>
+  </div>
+
+  <!-- BULLETIN BOARD (shown after login) -->
+  <div id="bulletinBoard">
+
+    <div class="bulletin-header">
+      <div class="bulletin-title">
+        <h2>Community Bulletin</h2>
+        <p>Share updates, ask questions, and stay connected with your neighbors.</p>
+      </div>
+      <div class="user-badge">
+        <span class="user-badge-name" id="badgeName"></span>
+        <span class="user-badge-unit" id="badgeUnit"></span>
+        <span class="user-badge-role" id="badgeRole"></span>
+        <button class="sign-out-btn" onclick="signOut()">Sign out</button>
+      </div>
+    </div>
+
+    <!-- TRENDING -->
+    <div class="trending-bar" id="trendingBar" style="display:none;">
+      <span class="trending-label">🔥 Trending</span>
+      <div class="trending-topics" id="trendingTopics"></div>
+    </div>
+
+    <!-- COMPOSE -->
+    <div class="compose-card">
+      <div class="compose-row">
+        <div class="compose-avatar" id="composeAvatar"></div>
+        <div class="compose-inputs">
+          <textarea class="compose-textarea" id="composeText" placeholder="Share an update, ask a question, or post a notice for your neighbors…" maxlength="1200"></textarea>
+          <div class="compose-footer">
+            <div class="compose-category">
+              <select id="composeCategory">
+                <option value="general">💬 General</option>
+                <option value="question">❓ Question</option>
+                <option value="notice">📢 Notice</option>
+                <option value="maintenance">🔧 Maintenance</option>
+                <option value="noise">🔊 Noise / Nuisance</option>
+                <option value="parking">🚗 Parking</option>
+                <option value="amenity">🏊 Amenity</option>
+                <option value="safety">🚨 Safety</option>
+                <option value="forsale">🏷️ For Sale / Free</option>
+              </select>
+            </div>
+            <button class="post-btn" id="postBtn" onclick="submitPost()">Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filter-row" id="filterRow">
+      <button class="filter-btn active" onclick="setFilter('all', this)">All Posts</button>
+      <button class="filter-btn" onclick="setFilter('general', this)">General</button>
+      <button class="filter-btn" onclick="setFilter('question', this)">Questions</button>
+      <button class="filter-btn" onclick="setFilter('notice', this)">Notices</button>
+      <button class="filter-btn" onclick="setFilter('maintenance', this)">Maintenance</button>
+      <button class="filter-btn" onclick="setFilter('parking', this)">Parking</button>
+    </div>
+
+    <!-- POSTS FEED -->
+    <div class="section-label">Recent Posts</div>
+    <div id="postsFeed" class="posts-feed">
+      <div class="posts-loading">
+        <div class="dot-pulse"><span></span><span></span><span></span></div>
+        <div style="margin-top:10px;">Loading posts…</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  Scottsdale Park Place Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251<br>
+  <span style="margin-top:6px; display:block; color:#4a5060;">For technical issues with this site, contact <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a></span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL  = 'https://hmjypvnbbmyzmutmuxpj.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtanlwdm5iYm15em11dG11eHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzEzMjQsImV4cCI6MjA4OTM0NzMyNH0.hZNbLus9qjwni5Du8UeFJGK7xXQMtqMAr6URs75aZP8';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+let currentUser  = null;
+let currentFilter = 'all';
+
+/* ── CATEGORY LABELS ── */
+const catLabels = {
+  general: '💬 General', question: '❓ Question', notice: '📢 Notice',
+  maintenance: '🔧 Maintenance', noise: '🔊 Noise', parking: '🚗 Parking',
+  amenity: '🏊 Amenity', safety: '🚨 Safety', forsale: '🏷️ For Sale'
+};
+
+/* ── AUTH TABS ── */
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (i===0) === (tab==='signin')));
+  document.getElementById('signinForm').style.display   = tab === 'signin'   ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('signinNote').style.display   = tab === 'signin'   ? 'block' : 'none';
+  clearAuthError();
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('authError');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+function clearAuthError() {
+  document.getElementById('authError').classList.remove('show');
+}
+
+/* ── SIGN IN ── */
+async function signIn() {
+  const email    = document.getElementById('siEmail').value.trim();
+  const password = document.getElementById('siPassword').value;
+  if (!email || !password) { showAuthError('Please enter your email and password.'); return; }
+  const btn = document.getElementById('signinBtn');
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  clearAuthError();
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) { showAuthError(error.message); btn.disabled = false; btn.textContent = 'Sign In'; return; }
+  await loadUserProfile(data.user);
+}
+
+/* ── REGISTER ── */
+async function register() {
+  const name     = document.getElementById('regName').value.trim();
+  const unit     = document.getElementById('regUnit').value.trim();
+  const role     = document.getElementById('regRole').value;
+  const email    = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  if (!name || !unit || !email || !password) { showAuthError('Please fill in all fields.'); return; }
+  if (password.length < 8) { showAuthError('Password must be at least 8 characters.'); return; }
+  const btn = document.getElementById('registerBtn');
+  btn.disabled = true; btn.textContent = 'Creating account…';
+  clearAuthError();
+  const { data, error } = await sb.auth.signUp({
+    email, password,
+    options: { data: { name, unit, role } }
+  });
+  if (error) { showAuthError(error.message); btn.disabled = false; btn.textContent = 'Create Account'; return; }
+  showAuthError('✓ Check your email to confirm your account, then sign in.');
+  document.getElementById('authError').style.color = 'var(--green)';
+  document.getElementById('authError').style.background = 'rgba(90,158,122,0.1)';
+  document.getElementById('authError').style.borderColor = 'rgba(90,158,122,0.3)';
+  btn.disabled = false; btn.textContent = 'Create Account';
+}
+
+/* ── SIGN OUT ── */
+async function signOut() {
+  await sb.auth.signOut();
+  currentUser = null;
+  document.getElementById('authGate').style.display = 'block';
+  document.getElementById('bulletinBoard').style.display = 'none';
+}
+
+/* ── LOAD PROFILE ── */
+async function loadUserProfile(user) {
+  const meta = user.user_metadata || {};
+  currentUser = {
+    id:   user.id,
+    name: meta.name || user.email.split('@')[0],
+    unit: meta.unit || '—',
+    role: meta.role || 'owner',
+    email: user.email
+  };
+  showBulletin();
+}
+
+/* ── SHOW BULLETIN ── */
+function showBulletin() {
+  document.getElementById('authGate').style.display = 'none';
+  document.getElementById('bulletinBoard').style.display = 'block';
+
+  const initials = currentUser.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('composeAvatar').textContent = initials;
+  document.getElementById('badgeName').textContent = currentUser.name;
+  document.getElementById('badgeUnit').textContent = 'Unit ' + currentUser.unit;
+  document.getElementById('badgeRole').textContent = currentUser.role;
+
+  loadPosts();
+}
+
+/* ── LOAD POSTS ── */
+async function loadPosts() {
+  const feed = document.getElementById('postsFeed');
+  feed.innerHTML = `<div class="posts-loading"><div class="dot-pulse"><span></span><span></span><span></span></div><div style="margin-top:10px;">Loading posts…</div></div>`;
+
+  let query = sb.from('community_posts')
+    .select('*')
+    .is('reply_to', null)
+    .order('is_pinned', { ascending: false })
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  if (currentFilter !== 'all') query = query.eq('category', currentFilter);
+
+  const { data: posts, error } = await query;
+
+  if (error) {
+    feed.innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Unable to load posts. Please refresh the page.</p></div>`;
+    return;
+  }
+
+  if (!posts || posts.length === 0) {
+    feed.innerHTML = `<div class="empty-state"><div class="empty-state-icon">💬</div><p>No posts yet. Be the first to share something with your neighbors.</p></div>`;
+    return;
+  }
+
+  updateTrending(posts);
+  feed.innerHTML = '';
+  for (const post of posts) {
+    feed.appendChild(buildPostCard(post));
+  }
+}
+
+/* ── TRENDING ── */
+function updateTrending(posts) {
+  const counts = {};
+  posts.forEach(p => { counts[p.category] = (counts[p.category] || 0) + 1; });
+  const top3 = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  if (top3.length === 0) return;
+  const bar = document.getElementById('trendingBar');
+  const topics = document.getElementById('trendingTopics');
+  bar.style.display = 'flex';
+  topics.innerHTML = top3.map(([cat, count]) =>
+    `<span class="trending-chip" onclick="setFilter('${cat}', null)">${catLabels[cat] || cat} <span class="chip-count">${count}</span></span>`
+  ).join('');
+}
+
+/* ── BUILD POST CARD ── */
+function buildPostCard(post) {
+  const card = document.createElement('div');
+  card.className = 'post-card' + (post.is_pinned ? ' pinned' : '');
+  card.dataset.id = post.id;
+
+  const initials = (post.author_name || '?').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  const avatarClass = post.posted_by_role === 'board' ? 'board' : post.posted_by_role === 'manager' ? 'manager' : '';
+  const timeStr = formatTime(post.created_at);
+
+  const badges = [];
+  if (post.is_pinned)                   badges.push(`<span class="post-badge badge-pinned">📌 Pinned</span>`);
+  if (post.posted_by_role === 'board')   badges.push(`<span class="post-badge badge-board">Board</span>`);
+  if (post.posted_by_role === 'manager') badges.push(`<span class="post-badge badge-manager">Manager</span>`);
+  if (post.category)                    badges.push(`<span class="post-badge badge-cat">${catLabels[post.category] || post.category}</span>`);
+
+  card.innerHTML = `
+    <div class="post-header">
+      <div class="post-author">
+        <div class="post-avatar ${avatarClass}">${initials}</div>
+        <div class="post-meta">
+          <div class="post-name">${escHtml(post.author_name)}</div>
+          <div class="post-unit-time">Unit ${escHtml(post.unit)} &nbsp;·&nbsp; ${timeStr}</div>
+        </div>
+      </div>
+      <div class="post-badges">${badges.join('')}</div>
+    </div>
+    <div class="post-body">${escHtml(post.body)}</div>
+    <div class="post-actions">
+      <button class="post-action-btn" onclick="toggleReply('${post.id}')">💬 Reply</button>
+      <button class="post-action-btn" onclick="loadReplies('${post.id}', this)">View replies</button>
+    </div>
+    <div class="reply-section" id="replySection-${post.id}">
+      <div class="reply-input-row">
+        <textarea class="reply-textarea" id="replyText-${post.id}" placeholder="Write a reply…" rows="2"></textarea>
+        <button class="reply-btn" onclick="submitReply('${post.id}')">Reply</button>
+      </div>
+      <div class="replies-list" id="repliesList-${post.id}"></div>
+    </div>
+  `;
+  return card;
+}
+
+/* ── SUBMIT POST ── */
+async function submitPost() {
+  const body = document.getElementById('composeText').value.trim();
+  if (!body) return;
+  const btn = document.getElementById('postBtn');
+  btn.disabled = true; btn.textContent = 'Posting…';
+
+  const { error } = await sb.from('community_posts').insert({
+    unit:          currentUser.unit,
+    author_name:   currentUser.name,
+    category:      document.getElementById('composeCategory').value,
+    body,
+    posted_by_role: currentUser.role
+  });
+
+  btn.disabled = false; btn.textContent = 'Post';
+  if (error) { alert('Post failed: ' + error.message); return; }
+  document.getElementById('composeText').value = '';
+  loadPosts();
+}
+
+/* ── REPLY ── */
+function toggleReply(postId) {
+  const section = document.getElementById(`replySection-${postId}`);
+  section.classList.toggle('open');
+  if (section.classList.contains('open')) {
+    loadReplies(postId, null);
+    document.getElementById(`replyText-${postId}`).focus();
+  }
+}
+
+async function loadReplies(postId, btn) {
+  const list = document.getElementById(`repliesList-${postId}`);
+  const section = document.getElementById(`replySection-${postId}`);
+  if (!section.classList.contains('open')) section.classList.add('open');
+  const { data: replies, error } = await sb.from('community_posts')
+    .select('*').eq('reply_to', postId).order('created_at', { ascending: true });
+  if (error || !replies?.length) { list.innerHTML = ''; return; }
+  list.innerHTML = replies.map(r => {
+    const initials = (r.author_name || '?').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+    const roleClass = r.posted_by_role === 'board' ? 'board' : '';
+    return `
+      <div class="reply-item">
+        <div class="reply-avatar ${roleClass}">${initials}</div>
+        <div class="reply-body">
+          <div class="reply-header">
+            <span class="reply-name">${escHtml(r.author_name)}</span>
+            <span class="reply-time">Unit ${escHtml(r.unit)} · ${formatTime(r.created_at)}</span>
+            ${r.posted_by_role === 'board' ? '<span class="post-badge badge-board" style="font-size:0.62rem;">Board</span>' : ''}
+          </div>
+          <div class="reply-text">${escHtml(r.body)}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function submitReply(postId) {
+  const textarea = document.getElementById(`replyText-${postId}`);
+  const body = textarea.value.trim();
+  if (!body) return;
+  const btn = document.querySelector(`#replySection-${postId} .reply-btn`);
+  btn.disabled = true;
+  const { error } = await sb.from('community_posts').insert({
+    unit:          currentUser.unit,
+    author_name:   currentUser.name,
+    category:      'general',
+    body,
+    reply_to:      postId,
+    posted_by_role: currentUser.role
+  });
+  btn.disabled = false;
+  if (error) { alert('Reply failed: ' + error.message); return; }
+  textarea.value = '';
+  loadReplies(postId, null);
+}
+
+/* ── FILTER ── */
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  loadPosts();
+}
+
+/* ── HELPERS ── */
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function formatTime(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 1000);
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  if (diff < 604800) return Math.floor(diff/86400) + 'd ago';
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+/* ── INIT ── */
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user) {
+    await loadUserProfile(session.user);
+  }
+  sb.auth.onAuthStateChange((_event, session) => {
+    if (session?.user && !currentUser) loadUserProfile(session.user);
+  });
+})();
+</script>
+
+</body>
+</html>
