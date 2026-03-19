@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documents — Scottsdale Park Place HOA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1115;
+  --surface: #181c23;
+  --surface2: #1e2330;
+  --border: #2a2f3d;
+  --accent: #c8a96e;
+  --accent-dim: rgba(200,169,110,0.15);
+  --text: #e8e4dc;
+  --muted: #7a8090;
+  --red: #c05050;
+  --blue: #5a8ab0;
+  --green: #5a9e7a;
+  --orange: #c8825a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 32px 32px 24px; text-align: center; }
+.site-title { font-family: 'DM Serif Display', serif; font-size: 2.1rem; letter-spacing: 0.02em; }
+.site-subtitle { margin-top: 5px; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; }
+nav { background: #13161d; border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
+nav a { padding: 13px 22px; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; }
+nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+.main { max-width: 960px; margin: 0 auto; padding: 48px 32px 80px; }
+.page-header { margin-bottom: 40px; }
+.page-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.7rem; color: var(--accent); margin-bottom: 8px; }
+.page-header p { color: #b0b8c8; font-size: 0.9rem; max-width: 600px; line-height: 1.7; }
+.section-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+.search-section { margin-bottom: 56px; }
+.search-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 32px 28px; position: relative; overflow: hidden; }
+.search-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.6; }
+.search-intro { margin-bottom: 20px; }
+.search-intro h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 6px; }
+.search-intro p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+.search-row { display: flex; gap: 10px; }
+.search-input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+.search-input::placeholder { color: #4a5060; }
+.search-input:focus { border-color: var(--accent); }
+.search-btn { background: var(--accent); color: #0f1115; border: none; border-radius: 8px; padding: 12px 22px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+.search-btn:hover { opacity: 0.88; }
+.search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.search-suggestions { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+.suggestion-chip { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 13px; font-size: 0.76rem; color: var(--muted); cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+.suggestion-chip:hover { border-color: var(--accent); color: var(--accent); }
+.search-result { display: none; margin-top: 24px; border-top: 1px solid var(--border); padding-top: 24px; }
+.search-result.visible { display: block; }
+.result-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.result-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.result-text { font-size: 0.88rem; color: #c8d0dc; line-height: 1.75; white-space: pre-wrap; }
+.result-disclaimer { margin-top: 14px; font-size: 0.74rem; color: #4a5060; font-style: italic; }
+.result-loading { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 0.85rem; }
+.dot-pulse { display: flex; gap: 4px; }
+.dot-pulse span { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; animation: pulse 1.2s ease-in-out infinite; }
+.dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+.dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulse { 0%,80%,100% { opacity:0.2; transform:scale(0.8); } 40% { opacity:1; transform:scale(1); } }
+.doc-library { margin-bottom: 56px; }
+.doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.doc-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; display: flex; align-items: flex-start; gap: 16px; transition: border-color 0.2s, transform 0.15s; }
+.doc-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.doc-card.unavailable { opacity: 0.55; }
+.doc-card.unavailable:hover { border-color: var(--border); transform: none; }
+.doc-icon { font-size: 1.8rem; flex-shrink: 0; margin-top: 2px; }
+.doc-body { flex: 1; }
+.doc-title { font-weight: 600; font-size: 0.9rem; color: var(--text); margin-bottom: 4px; }
+.doc-meta { font-size: 0.76rem; color: var(--muted); margin-bottom: 10px; line-height: 1.4; }
+.doc-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.badge { font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; padding: 2px 8px; font-weight: 600; }
+.badge-available { background: rgba(90,158,122,0.15); color: var(--green); }
+.badge-pending   { background: rgba(200,130,90,0.15); color: var(--orange); }
+.badge-restricted { background: rgba(200,169,110,0.12); color: var(--accent); }
+.badge-type { background: rgba(90,138,176,0.12); color: var(--blue); }
+.doc-link { display: inline-block; margin-top: 10px; font-size: 0.78rem; color: var(--accent); font-weight: 500; }
+.arc-section { scroll-margin-top: 24px; }
+.arc-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 36px 32px; position: relative; overflow: hidden; }
+.arc-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--blue), transparent); opacity: 0.7; }
+.arc-header { margin-bottom: 28px; }
+.arc-header h3 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 6px; }
+.arc-header p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; max-width: 560px; }
+.arc-notice { background: rgba(90,138,176,0.1); border: 1px solid rgba(90,138,176,0.25); border-radius: 8px; padding: 12px 16px; font-size: 0.8rem; color: #a0b8cc; margin-bottom: 28px; line-height: 1.5; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label { font-size: 0.76rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.form-label .req { color: var(--accent); margin-left: 2px; }
+.form-input, .form-select, .form-textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; width: 100%; }
+.form-input::placeholder, .form-textarea::placeholder { color: #4a5060; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a8090' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; cursor: pointer; }
+.form-select option { background: #1e2330; }
+.form-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+.form-hint { font-size: 0.74rem; color: #4a5060; margin-top: 2px; line-height: 1.4; }
+.form-divider { grid-column: 1 / -1; border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+.form-section-title { grid-column: 1 / -1; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); padding-top: 8px; }
+.form-submit-row { grid-column: 1 / -1; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+.submit-btn { background: var(--accent); color: #0f1115; border: none; border-radius: 7px; padding: 12px 28px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.submit-btn:hover { opacity: 0.88; }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.submit-note { font-size: 0.78rem; color: #4a5060; }
+.form-status { grid-column: 1 / -1; display: none; padding: 14px 16px; border-radius: 7px; font-size: 0.85rem; line-height: 1.5; }
+.form-status.success { display: block; background: rgba(90,158,122,0.12); border: 1px solid rgba(90,158,122,0.3); color: var(--green); }
+.form-status.error { display: block; background: rgba(192,80,80,0.12); border: 1px solid rgba(192,80,80,0.3); color: var(--red); }
+.checkbox-group { display: flex; flex-direction: column; gap: 8px; }
+.checkbox-label { display: flex; align-items: flex-start; gap: 10px; font-size: 0.84rem; color: var(--text); cursor: pointer; line-height: 1.4; }
+.checkbox-label input[type="checkbox"] { width: 16px; height: 16px; margin-top: 1px; accent-color: var(--accent); flex-shrink: 0; cursor: pointer; }
+footer { border-top: 1px solid var(--border); background: var(--surface); padding: 24px 32px; text-align: center; font-size: 0.78rem; color: var(--muted); }
+@media (max-width: 640px) {
+  .main { padding: 32px 16px 48px; }
+  header { padding: 24px 16px 18px; }
+  .arc-card { padding: 24px 18px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full, .form-divider, .form-section-title, .form-submit-row, .form-status { grid-column: auto; }
+  .search-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="site-title">Scottsdale Park Place</div>
+  <div class="site-subtitle">Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251</div>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="issues.html">Capital Projects</a>
+  <a href="documents.html" class="active">Documents</a>
+  <a href="contact.html">Contact</a>
+  <a href="board.html">Board Portal</a>
+</nav>
+
+<div class="main">
+
+  <div class="page-header">
+    <h2>Association Documents</h2>
+    <p>Governing documents, policies, and records for Scottsdale Park Place. Use the AI assistant to ask questions about our bylaws, CC&Rs, and community rules — or browse the document library directly.</p>
+  </div>
+
+  <!-- AI SEARCH -->
+  <div class="search-section">
+    <div class="section-label">AI Document Assistant</div>
+    <div class="search-card">
+      <div class="search-intro">
+        <h3>Ask Our Documents</h3>
+        <p>Ask any question about our governing documents. The assistant references the official Bylaws, CC&Rs, and Rules &amp; Regulations to answer.</p>
+      </div>
+      <div class="search-row">
+        <input type="text" id="searchInput" class="search-input" placeholder="e.g. Can I install a satellite dish? What is the pet policy?" maxlength="400" autocomplete="off">
+        <button class="search-btn" id="searchBtn" onclick="runSearch()">Ask</button>
+      </div>
+      <div class="search-suggestions">
+        <span class="suggestion-chip" onclick="fillSearch('What are the pet restrictions?')">Pet restrictions</span>
+        <span class="suggestion-chip" onclick="fillSearch('What modifications require ARC approval?')">ARC approval</span>
+        <span class="suggestion-chip" onclick="fillSearch('What are the rules for short-term rentals?')">Short-term rentals</span>
+        <span class="suggestion-chip" onclick="fillSearch('How are assessments determined?')">Assessments</span>
+        <span class="suggestion-chip" onclick="fillSearch('What are the parking rules?')">Parking rules</span>
+        <span class="suggestion-chip" onclick="fillSearch('What is the guest policy?')">Guest policy</span>
+      </div>
+      <div class="search-result" id="searchResult">
+        <div class="result-label">Answer</div>
+        <div class="result-text" id="resultText"></div>
+        <div class="result-disclaimer">This assistant references our governing documents but is not a substitute for legal advice. For official determinations, contact the board or HOA counsel.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENT LIBRARY -->
+  <div class="doc-library">
+    <div class="section-label">Document Library</div>
+    <div class="doc-grid">
+      <div class="doc-card">
+        <div class="doc-icon">📋</div>
+        <div class="doc-body">
+          <div class="doc-title">CC&Rs</div>
+          <div class="doc-meta">Covenants, Conditions &amp; Restrictions — the primary governing document establishing use restrictions and owner obligations.</div>
+          <div class="doc-badges"><span class="badge badge-available">Available</span><span class="badge badge-type">PDF</span></div>
+          <a href="docs/ccrs.pdf" class="doc-link" target="_blank">View Document →</a>
+        </div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">📘</div>
+        <div class="doc-body">
+          <div class="doc-title">Bylaws</div>
+          <div class="doc-meta">Association bylaws governing board elections, meetings, quorum requirements, and operational procedures.</div>
+          <div class="doc-badges"><span class="badge badge-available">Available</span><span class="badge badge-type">PDF</span></div>
+          <a href="docs/bylaws.pdf" class="doc-link" target="_blank">View Document →</a>
+        </div>
+      </div>
+      <div class="doc-card unavailable">
+        <div class="doc-icon">📏</div>
+        <div class="doc-body">
+          <div class="doc-title">Rules &amp; Regulations</div>
+          <div class="doc-meta">Community rules covering noise, parking, amenities, pets, move-in/out, and day-to-day conduct.</div>
+          <div class="doc-badges"><span class="badge badge-pending">Pending Upload</span><span class="badge badge-type">PDF</span></div>
+        </div>
+      </div>
+      <div class="doc-card unavailable">
+        <div class="doc-icon">🏗️</div>
+        <div class="doc-body">
+          <div class="doc-title">ARC Guidelines</div>
+          <div class="doc-meta">Architectural Review Committee standards for unit modifications, exterior changes, and improvement projects.</div>
+          <div class="doc-badges"><span class="badge badge-pending">Pending Upload</span><span class="badge badge-type">PDF</span></div>
+        </div>
+      </div>
+      <div class="doc-card unavailable">
+        <div class="doc-icon">💰</div>
+        <div class="doc-body">
+          <div class="doc-title">2024 Annual Budget</div>
+          <div class="doc-meta">Approved operating budget including reserve contributions, insurance, maintenance, and management fees.</div>
+          <div class="doc-badges"><span class="badge badge-pending">Pending Upload</span><span class="badge badge-type">PDF</span></div>
+        </div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">🏦</div>
+        <div class="doc-body">
+          <div class="doc-title">Reserve Study</div>
+          <div class="doc-meta">Long-range capital planning document detailing reserve fund health and 10-year project projections.</div>
+          <div class="doc-badges"><span class="badge badge-available">Available</span><span class="badge badge-restricted">Board &amp; Owners</span><span class="badge badge-type">PDF</span></div>
+          <a href="docs/reserve-study.pdf" class="doc-link" target="_blank">View Document →</a>
+        </div>
+      </div>
+      <div class="doc-card unavailable">
+        <div class="doc-icon">🗓️</div>
+        <div class="doc-body">
+          <div class="doc-title">Meeting Minutes</div>
+          <div class="doc-meta">Official minutes from board meetings. Most recent sessions available; older records on request.</div>
+          <div class="doc-badges"><span class="badge badge-pending">Pending Upload</span><span class="badge badge-type">PDF</span></div>
+        </div>
+      </div>
+      <div class="doc-card">
+        <div class="doc-icon">📝</div>
+        <div class="doc-body">
+          <div class="doc-title">ARC Request Form</div>
+          <div class="doc-meta">Submit an architectural modification request for board review. Required before beginning any exterior or structural project.</div>
+          <div class="doc-badges"><span class="badge badge-available">Submit Online</span></div>
+          <a href="#arc" class="doc-link">Open Request Form →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC FORM -->
+  <div class="arc-section" id="arc">
+    <div class="section-label">Architectural Review Committee</div>
+    <div class="arc-card">
+      <div class="arc-header">
+        <h3>ARC Modification Request</h3>
+        <p>Use this form to request approval for any modification to your unit's exterior, structure, or common-area-adjacent systems. The board reviews all submissions within 30 days per the CC&Rs.</p>
+      </div>
+      <div class="arc-notice">
+        ⚠️ <strong>Do not begin work before receiving written approval.</strong> Unapproved modifications may require restoration at the owner's expense. Per A.R.S. 33-1817, this form covers all changes other than new construction or rebuilds of the main residential structure. Emergency repairs should be reported via the <a href="contact.html">Contact</a> page.
+      </div>
+
+      <div class="form-grid" id="arcForm">
+
+        <div class="form-section-title">Owner Information</div>
+        <div class="form-group">
+          <label class="form-label">Unit Number <span class="req">*</span></label>
+          <input type="text" class="form-input" id="arcUnit" placeholder="e.g. 142" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Owner Name <span class="req">*</span></label>
+          <input type="text" class="form-input" id="arcName" placeholder="Full name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address <span class="req">*</span></label>
+          <input type="email" class="form-input" id="arcEmail" placeholder="you@email.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-input" id="arcPhone" placeholder="Optional">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mailing Address (if different from unit)</label>
+          <input type="text" class="form-input" id="arcMailing" placeholder="Street, City, State, Zip">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Unit currently occupied by tenant?</label>
+          <select class="form-select" id="arcTenantOccupied">
+            <option value="">Select…</option>
+            <option value="no">No — owner occupied</option>
+            <option value="yes">Yes — tenant occupied</option>
+            <option value="vacant">Vacant</option>
+          </select>
+        </div>
+
+        <hr class="form-divider">
+        <div class="form-section-title">Project Details</div>
+        <div class="form-group full">
+          <label class="form-label">Project Type <span class="req">*</span></label>
+          <select class="form-select" id="arcProjectType" required>
+            <option value="">Select a category…</option>
+            <option value="exterior-paint">Exterior Paint / Stain</option>
+            <option value="window-door">Window or Door Replacement</option>
+            <option value="patio-balcony">Patio / Balcony Modification</option>
+            <option value="flooring">Flooring (if affects sound transmission)</option>
+            <option value="hvac">HVAC / Mechanical Equipment</option>
+            <option value="plumbing">Plumbing Modification</option>
+            <option value="electrical">Electrical Modification</option>
+            <option value="landscaping">Landscaping / Hardscaping</option>
+            <option value="storage">Storage Structure / Addition</option>
+            <option value="antenna-dish">Antenna / Satellite Dish</option>
+            <option value="ev-charger">EV Charger Installation</option>
+            <option value="structural">Structural Change</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Project Description <span class="req">*</span></label>
+          <textarea class="form-textarea" id="arcDescription" rows="4" placeholder="Describe the proposed modification in detail. Include materials, dimensions, colors, and how the work will be done." required></textarea>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Location Within / On Unit</label>
+          <input type="text" class="form-input" id="arcLocation" placeholder="e.g. Front door, west-facing balcony, master bath">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Proposed Start Date <span class="req">*</span></label>
+          <input type="date" class="form-input" id="arcStartDate" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estimated Completion Date</label>
+          <input type="date" class="form-input" id="arcEndDate">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Materials / Color Scheme</label>
+          <textarea class="form-textarea" id="arcMaterials" rows="3" placeholder="List specific products, materials, paint colors (with manufacturer codes), or specifications."></textarea>
+        </div>
+
+        <hr class="form-divider">
+        <div class="form-section-title">Contractor Information (if applicable)</div>
+        <div class="form-group">
+          <label class="form-label">Contractor / Company Name</label>
+          <input type="text" class="form-input" id="arcContractor" placeholder="Leave blank if owner-performed">
+        </div>
+        <div class="form-group">
+          <label class="form-label">AZ Contractor License #</label>
+          <input type="text" class="form-input" id="arcLicense" placeholder="ROC number">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contractor Phone</label>
+          <input type="tel" class="form-input" id="arcContractorPhone">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contractor Email</label>
+          <input type="email" class="form-input" id="arcContractorEmail">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Licensed and insured in Arizona?</label>
+          <select class="form-select" id="arcInsured">
+            <option value="">Select…</option>
+            <option value="yes">Yes — licensed and insured</option>
+            <option value="owner">Owner-performed, no contractor</option>
+            <option value="unknown">Unknown / will confirm</option>
+          </select>
+          <span class="form-hint">Contractors working on shared or structural systems must carry general liability insurance. The board may request a certificate of insurance.</span>
+        </div>
+
+        <hr class="form-divider">
+        <div class="form-section-title">Supporting Documents</div>
+        <div class="form-group full">
+          <label class="form-label">What will you provide?</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label"><input type="checkbox" id="arcDocPlans"> Drawings or plans</label>
+            <label class="checkbox-label"><input type="checkbox" id="arcDocPhotos"> Photos of current condition</label>
+            <label class="checkbox-label"><input type="checkbox" id="arcDocSamples"> Material / color samples</label>
+            <label class="checkbox-label"><input type="checkbox" id="arcDocQuote"> Contractor quote or scope letter</label>
+            <label class="checkbox-label"><input type="checkbox" id="arcDocInsurance"> Contractor certificate of insurance</label>
+            <label class="checkbox-label"><input type="checkbox" id="arcDocNone"> None — submitting description only</label>
+          </div>
+          <span class="form-hint">Email supporting documents to <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a> with your unit number in the subject line after submitting.</span>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Additional Notes</label>
+          <textarea class="form-textarea" id="arcNotes" rows="3" placeholder="Anything else the board should know — timeline constraints, special circumstances, etc."></textarea>
+        </div>
+
+        <hr class="form-divider">
+        <div class="form-group full">
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="arcAgreement" required>
+              I understand that work may not begin until written approval is received from the board. I agree to maintain all improvements and take responsibility for any debris or damage to common areas caused by me or my contractors. I will comply with all applicable City and State laws and obtain all required permits. I certify the information provided is accurate and complete.
+            </label>
+          </div>
+        </div>
+
+        <div class="form-status" id="arcStatus"></div>
+        <div class="form-submit-row">
+          <button class="submit-btn" id="arcSubmitBtn" onclick="submitArcForm()">Submit Request</button>
+          <span class="submit-note">You will receive a confirmation email. The board will respond within 30 days.</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Scottsdale Park Place Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251<br>
+  <span style="margin-top:6px; display:block; color:#4a5060;">For technical issues with this site, contact <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a></span>
+</footer>
+
+<script>
+const SUPABASE_URL   = 'https://hmjypvnbbmyzmutmuxpj.supabase.co';
+const SUPABASE_ANON  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtanlwdm5iYm15em11dG11eHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzEzMjQsImV4cCI6MjA4OTM0NzMyNH0.hZNbLus9qjwni5Du8UeFJGK7xXQMtqMAr6URs75aZP8';
+const DOCS_WORKER    = 'https://spp-docs.aaroncrandal.workers.dev';
+const CONTACT_WORKER = 'https://spp-contact.aaroncrandal.workers.dev';
+
+/* ── AI SEARCH ── */
+function fillSearch(text) {
+  document.getElementById('searchInput').value = text;
+  document.getElementById('searchInput').focus();
+}
+document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
+
+async function runSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  if (!query) return;
+  const resultEl = document.getElementById('searchResult');
+  const resultText = document.getElementById('resultText');
+  const btn = document.getElementById('searchBtn');
+  btn.disabled = true;
+  resultEl.classList.add('visible');
+  resultText.innerHTML = `<div class="result-loading"><div class="dot-pulse"><span></span><span></span><span></span></div>Searching governing documents…</div>`;
+  try {
+    const res = await fetch(DOCS_WORKER, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query }) });
+    if (!res.ok) throw new Error('Worker error ' + res.status);
+    const data = await res.json();
+    resultText.textContent = data.answer || 'No answer returned. Please try rephrasing.';
+  } catch {
+    resultText.textContent = 'Unable to reach the document assistant. Please email board@scottsdaleparkplace.com with your question.';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+/* ── ARC FORM ── */
+async function submitArcForm() {
+  const required = ['arcUnit','arcName','arcEmail','arcStartDate','arcProjectType','arcDescription'];
+  let missing = false;
+  required.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) { el.style.borderColor = 'var(--red)'; missing = true; }
+    else el.style.borderColor = '';
+  });
+  if (!document.getElementById('arcAgreement').checked) { showArcStatus('error', 'Please check the agreement box before submitting.'); return; }
+  if (missing) { showArcStatus('error', 'Please fill in all required fields marked with *'); return; }
+
+  const btn = document.getElementById('arcSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  const docs = [];
+  ['arcDocPlans','arcDocPhotos','arcDocSamples','arcDocQuote','arcDocInsurance','arcDocNone'].forEach(id => {
+    const labels = { arcDocPlans:'Drawings/plans', arcDocPhotos:'Photos', arcDocSamples:'Material samples', arcDocQuote:'Contractor quote', arcDocInsurance:'Certificate of insurance', arcDocNone:'None' };
+    if (document.getElementById(id).checked) docs.push(labels[id]);
+  });
+
+  const record = {
+    unit:               document.getElementById('arcUnit').value.trim(),
+    owner_name:         document.getElementById('arcName').value.trim(),
+    email:              document.getElementById('arcEmail').value.trim(),
+    phone:              document.getElementById('arcPhone').value.trim(),
+    mailing_address:    document.getElementById('arcMailing').value.trim(),
+    tenant_occupied:    document.getElementById('arcTenantOccupied').value,
+    project_type:       document.getElementById('arcProjectType').value,
+    description:        document.getElementById('arcDescription').value.trim(),
+    work_location:      document.getElementById('arcLocation').value.trim(),
+    start_date:         document.getElementById('arcStartDate').value || null,
+    end_date:           document.getElementById('arcEndDate').value || null,
+    materials:          document.getElementById('arcMaterials').value.trim(),
+    contractor_name:    document.getElementById('arcContractor').value.trim(),
+    contractor_license: document.getElementById('arcLicense').value.trim(),
+    contractor_phone:   document.getElementById('arcContractorPhone').value.trim(),
+    contractor_email:   document.getElementById('arcContractorEmail').value.trim(),
+    insured:            document.getElementById('arcInsured').value,
+    supporting_docs:    docs.join(', '),
+    notes:              document.getElementById('arcNotes').value.trim(),
+    status:             'pending'
+  };
+
+  try {
+    // Save to Supabase
+    const dbRes = await fetch(`${SUPABASE_URL}/rest/v1/arc_requests`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${SUPABASE_ANON}`,
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(record)
+    });
+    if (!dbRes.ok) throw new Error(await dbRes.text());
+
+    // Notification email (non-blocking)
+    fetch(CONTACT_WORKER, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        category: 'ARC Request Submitted',
+        name: record.owner_name,
+        email: record.email,
+        unit: record.unit,
+        projectType: record.project_type,
+        description: record.description,
+        startDate: record.start_date,
+        _notification: true
+      })
+    }).catch(e => console.warn('Email notification failed:', e));
+
+    showArcStatus('success', '✓ Your ARC request has been submitted and recorded. You should receive a confirmation email shortly. The board will respond within 30 days.');
+    document.getElementById('arcForm').querySelectorAll('input, select, textarea').forEach(el => {
+      if (el.type === 'checkbox') el.checked = false;
+      else el.value = '';
+    });
+  } catch (err) {
+    showArcStatus('error', 'Submission failed. Please email board@scottsdaleparkplace.com directly. Error: ' + err.message);
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit Request';
+  }
+}
+
+function showArcStatus(type, msg) {
+  const el = document.getElementById('arcStatus');
+  el.className = 'form-status ' + type;
+  el.textContent = msg;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+
+</body>
+</html>
