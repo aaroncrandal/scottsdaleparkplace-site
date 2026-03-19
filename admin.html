@@ -330,6 +330,7 @@ function renderPending() {
         <select class="pending-role-select" id="prole-${u.id}">
           <option value="owner">Owner</option>
           <option value="renter">Renter</option>
+          <option value="realtor">Realtor</option>
           <option value="board">Board Member</option>
           <option value="manager">Property Manager</option>
           <option value="treasurer">Treasurer</option>
@@ -403,6 +404,7 @@ function renderTable(users) {
           <option value="treasurer" ${u.role==='treasurer'?'selected':''}>Treasurer</option>
           <option value="secretary" ${u.role==='secretary'?'selected':''}>Secretary</option>
           <option value="manager"   ${u.role==='manager'?'selected':''}>Property Manager</option>
+          <option value="realtor"   ${u.role==='realtor'?'selected':''}>Realtor</option>
           <option value="owner"     ${u.role==='owner'?'selected':''}>Owner</option>
           <option value="renter"    ${u.role==='renter'?'selected':''}>Renter</option>
         </select>
