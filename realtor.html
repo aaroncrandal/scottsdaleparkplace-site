@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Realtor Portal — Scottsdale Park Place HOA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1115; --surface: #181c23; --surface2: #1e2330; --border: #2a2f3d;
+  --accent: #c8a96e; --accent-dim: rgba(200,169,110,0.15); --text: #e8e4dc; --muted: #7a8090;
+  --red: #c05050; --blue: #5a8ab0; --green: #5a9e7a; --orange: #c87840;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.bg-grid { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(rgba(200,169,110,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(200,169,110,0.03) 1px, transparent 1px); background-size: 60px 60px; animation: bgDrift 40s linear infinite; }
+@keyframes bgDrift { 0%{background-position:0 0;} 100%{background-position:60px 60px;} }
+
+header { background: rgba(24,28,35,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 28px 32px 20px; text-align: center; position: sticky; top: 0; z-index: 100; }
+.site-title { font-family: 'DM Serif Display', serif; font-size: 1.9rem; letter-spacing: 0.02em; }
+.site-subtitle { margin-top: 3px; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; }
+
+nav { background: rgba(19,22,29,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; position: sticky; top: 69px; z-index: 99; }
+nav a { padding: 11px 20px; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; }
+nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+
+.main { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; position: relative; z-index: 1; }
+
+/* ── AUTH ── */
+#authGate { max-width: 420px; margin: 60px auto; }
+.auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; position: relative; overflow: hidden; }
+.auth-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.6; }
+.auth-card h2 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin-bottom: 6px; }
+.auth-card p { font-size: 0.82rem; color: var(--muted); margin-bottom: 22px; line-height: 1.5; }
+.auth-tabs { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 22px; }
+.auth-tab { flex: 1; padding: 9px; text-align: center; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: transparent; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; transition: background 0.2s, color 0.2s; }
+.auth-tab.active { background: var(--accent); color: #0f1115; }
+.form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 13px; }
+.form-field label { font-size: 0.73rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.form-field input, .form-field select { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; width: 100%; }
+.form-field input::placeholder { color: #4a5060; }
+.form-field input:focus, .form-field select:focus { border-color: var(--accent); }
+.form-field select option { background: #1e2330; }
+.auth-submit { width: 100%; background: var(--accent); color: #0f1115; border: none; border-radius: 7px; padding: 12px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-top: 4px; }
+.auth-submit:hover { opacity: 0.88; }
+.auth-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.auth-msg { border-radius: 6px; padding: 10px 14px; font-size: 0.8rem; margin-bottom: 14px; display: none; }
+.auth-msg.show { display: block; }
+.auth-msg.error { background: rgba(192,80,80,0.1); border: 1px solid rgba(192,80,80,0.25); color: var(--red); }
+.auth-msg.success { background: rgba(90,158,122,0.1); border: 1px solid rgba(90,158,122,0.25); color: var(--green); }
+.auth-note { font-size: 0.72rem; color: #4a5060; text-align: center; margin-top: 14px; line-height: 1.5; }
+
+/* ── PENDING ── */
+#pendingState { max-width: 420px; margin: 60px auto; text-align: center; display: none; }
+.pending-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 36px 28px; }
+.pending-icon { font-size: 2.8rem; margin-bottom: 14px; }
+.pending-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: var(--accent); margin-bottom: 8px; }
+.pending-msg { font-size: 0.85rem; color: #b0b8c8; line-height: 1.7; margin-bottom: 18px; }
+.pending-links { display: flex; gap: 10px; justify-content: center; }
+.pending-links a { color: var(--accent); font-size: 0.82rem; border: 1px solid rgba(200,169,110,0.3); border-radius: 6px; padding: 7px 16px; }
+
+/* ── PORTAL ── */
+#realtorPortal { display: none; }
+.portal-header { margin-bottom: 32px; }
+.portal-header h1 { font-family: 'DM Serif Display', serif; font-size: 1.7rem; font-weight: 400; margin-bottom: 6px; }
+.portal-header p { font-size: 0.85rem; color: var(--muted); }
+.portal-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+.user-badge { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 0.8rem; }
+.user-badge-role { background: var(--accent-dim); color: var(--accent); border-radius: 4px; padding: 1px 7px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.sign-out-btn { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.76rem; cursor: pointer; margin-left: 6px; }
+.sign-out-btn:hover { color: var(--text); }
+.section-label { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── INFO CARDS ── */
+.info-strip {
+  background: rgba(90,138,176,0.08);
+  border: 1px solid rgba(90,138,176,0.2);
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 0.82rem;
+  color: #a0b8cc;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+.info-strip strong { color: var(--text); }
+
+/* ── DOCUMENT REQUEST FORM ── */
+.request-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 32px 28px; margin-bottom: 32px; position: relative; overflow: hidden; }
+.request-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.5; }
+.request-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 6px; }
+.request-card > p { font-size: 0.82rem; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label { font-size: 0.73rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.form-label .req { color: var(--accent); margin-left: 2px; }
+.form-input, .form-select, .form-textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; width: 100%; }
+.form-input::placeholder, .form-textarea::placeholder { color: #4a5060; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a8090' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; cursor: pointer; }
+.form-select option { background: #1e2330; }
+.form-textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+.form-hint { font-size: 0.72rem; color: #4a5060; margin-top: 2px; }
+.form-divider { grid-column: 1 / -1; border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+.form-section-title { grid-column: 1 / -1; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); padding-top: 4px; }
+
+/* ── DOCUMENT CHECKLIST ── */
+.doc-checklist { grid-column: 1 / -1; }
+.doc-checklist-title { font-size: 0.73rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; font-weight: 500; }
+.doc-items { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.doc-item { display: flex; align-items: flex-start; gap: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; font-size: 0.82rem; }
+.doc-item-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.doc-item-body { flex: 1; }
+.doc-item-name { font-weight: 500; color: var(--text); }
+.doc-item-note { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.doc-item-status { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; padding: 1px 6px; margin-top: 4px; display: inline-block; }
+.status-auto     { background: rgba(90,158,122,0.12); color: var(--green); border: 1px solid rgba(90,158,122,0.3); }
+.status-manual   { background: rgba(200,120,64,0.12); color: var(--orange); border: 1px solid rgba(200,120,64,0.3); }
+.status-external { background: rgba(90,138,176,0.12); color: var(--blue); border: 1px solid rgba(90,138,176,0.3); }
+
+.recorder-link-box {
+  grid-column: 1 / -1;
+  background: rgba(90,138,176,0.08);
+  border: 1px solid rgba(90,138,176,0.2);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 0.82rem;
+  color: #a0b8cc;
+  line-height: 1.6;
+}
+.recorder-link-box a { color: var(--blue); font-weight: 500; }
+
+.form-submit-row { grid-column: 1 / -1; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+.submit-btn { background: var(--accent); color: #0f1115; border: none; border-radius: 7px; padding: 12px 28px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.submit-btn:hover { opacity: 0.88; }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.submit-note { font-size: 0.78rem; color: #4a5060; }
+.form-status { grid-column: 1 / -1; display: none; padding: 14px 16px; border-radius: 7px; font-size: 0.85rem; line-height: 1.5; }
+.form-status.success { display: block; background: rgba(90,158,122,0.12); border: 1px solid rgba(90,158,122,0.3); color: var(--green); }
+.form-status.error   { display: block; background: rgba(192,80,80,0.12); border: 1px solid rgba(192,80,80,0.3); color: var(--red); }
+
+/* ── PAST REQUESTS ── */
+.requests-section { margin-bottom: 48px; }
+.request-row { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.req-info { flex: 1; }
+.req-unit { font-weight: 600; font-size: 0.9rem; }
+.req-meta { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.req-status-badge { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; padding: 3px 10px; }
+.req-pending   { background: rgba(200,120,64,0.12); color: var(--orange); border: 1px solid rgba(200,120,64,0.3); }
+.req-fulfilled { background: rgba(90,158,122,0.12); color: var(--green); border: 1px solid rgba(90,158,122,0.3); }
+.req-review    { background: rgba(90,138,176,0.12); color: var(--blue); border: 1px solid rgba(90,138,176,0.3); }
+
+footer { border-top: 1px solid var(--border); background: var(--surface); padding: 24px 32px; text-align: center; font-size: 0.78rem; color: var(--muted); position: relative; z-index: 1; }
+@media (max-width: 640px) {
+  .main { padding: 32px 16px 48px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full, .form-divider, .form-section-title, .form-submit-row, .form-status, .doc-checklist, .recorder-link-box { grid-column: auto; }
+  .doc-items { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<header>
+  <div class="site-title">Scottsdale Park Place</div>
+  <div class="site-subtitle">Homeowners Association &nbsp;&bull;&nbsp; Realtor &amp; Transaction Portal</div>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="contact.html">Contact</a>
+  <a href="realtor.html" class="active">Realtor Portal</a>
+</nav>
+
+<div class="main">
+
+  <!-- AUTH GATE -->
+  <div id="authGate">
+    <div class="auth-card">
+      <h2>Realtor Portal</h2>
+      <p>Licensed agents and brokers can sign in or register to request resale disclosure documents for transactions involving Scottsdale Park Place units.</p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('signin')">Sign In</button>
+        <button class="auth-tab" onclick="switchTab('register')">Register</button>
+      </div>
+      <div id="authMsg" class="auth-msg"></div>
+      <div id="signinForm">
+        <div class="form-field"><label>Email</label><input type="email" id="siEmail" placeholder="you@brokerage.com" autocomplete="email"></div>
+        <div class="form-field"><label>Password</label><input type="password" id="siPassword" placeholder="Password" autocomplete="current-password"></div>
+        <button class="auth-submit" id="siBtn" onclick="signIn()">Sign In</button>
+        <div style="text-align:center;margin-top:10px;"><button onclick="forgotPw()" style="background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.76rem;cursor:pointer;text-decoration:underline;">Forgot password?</button></div>
+      </div>
+      <div id="registerForm" style="display:none;">
+        <div class="form-field"><label>Full Name</label><input type="text" id="regName" placeholder="First and last name"></div>
+        <div class="form-field"><label>Brokerage</label><input type="text" id="regBrokerage" placeholder="Brokerage or firm name"></div>
+        <div class="form-field"><label>AZ Real Estate License #</label><input type="text" id="regLicense" placeholder="SA or BR license number"></div>
+        <div class="form-field"><label>Phone</label><input type="tel" id="regPhone" placeholder="Mobile number"></div>
+        <div class="form-field"><label>Email</label><input type="email" id="regEmail" placeholder="you@brokerage.com" autocomplete="email"></div>
+        <div class="form-field"><label>Password</label><input type="password" id="regPassword" placeholder="At least 8 characters" autocomplete="new-password"></div>
+        <button class="auth-submit" id="regBtn" onclick="register()">Create Account</button>
+        <div class="auth-note">Your account will be reviewed by the HOA board. You will be notified when access is granted. Registration does not imply approval.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PENDING -->
+  <div id="pendingState">
+    <div class="pending-card">
+      <div class="pending-icon">⏳</div>
+      <div class="pending-title">Account Under Review</div>
+      <div class="pending-msg" id="pendingMsg">Your realtor account is pending board verification. You will receive an email once access is granted.</div>
+      <div class="pending-links">
+        <a href="contact.html">Contact the Board</a>
+        <a href="#" onclick="signOut();return false;">Sign Out</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- REALTOR PORTAL -->
+  <div id="realtorPortal">
+
+    <div class="portal-top">
+      <div class="portal-header" style="margin-bottom:0;">
+        <h1>Document Request Portal</h1>
+        <p>Request the Arizona A.R.S. 33-1260 resale disclosure package for any Scottsdale Park Place unit.</p>
+      </div>
+      <div class="user-badge">
+        <span id="badgeName" style="font-weight:500;"></span>
+        <span class="user-badge-role">Realtor</span>
+        <button class="sign-out-btn" onclick="signOut()">Sign out</button>
+      </div>
+    </div>
+
+    <div class="info-strip">
+      <strong>Arizona A.R.S. 33-1260 requires the HOA to provide the resale disclosure package within 10 days of a written request.</strong> Submit your request below and the board will prepare and deliver all available documents. Items requiring manual preparation (lien estoppel, assessment status letter) will be flagged and completed by the property manager. The board may charge up to $400 per A.R.S. 33-1260(C) for package preparation.
+    </div>
+
+    <!-- REQUEST FORM -->
+    <div class="section-label">New Document Request</div>
+    <div class="request-card">
+      <h3>Resale Disclosure Package Request</h3>
+      <p>Complete all fields. You will receive email updates as documents are prepared. Rush requests (72-hour turnaround) incur an additional fee per statute.</p>
+
+      <div class="form-grid">
+
+        <div class="form-section-title">Transaction Details</div>
+
+        <div class="form-group">
+          <label class="form-label">Unit Number <span class="req">*</span></label>
+          <input type="text" class="form-input" id="reqUnit" placeholder="e.g. 142" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Transaction Type <span class="req">*</span></label>
+          <select class="form-select" id="reqTxType" required>
+            <option value="">Select…</option>
+            <option value="sale">Purchase / Sale</option>
+            <option value="refinance">Refinance</option>
+            <option value="estate">Estate / Probate Transfer</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Seller Name</label>
+          <input type="text" class="form-input" id="reqSeller" placeholder="Current owner name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Buyer Name</label>
+          <input type="text" class="form-input" id="reqBuyer" placeholder="Prospective purchaser">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target Close Date</label>
+          <input type="date" class="form-input" id="reqCloseDate">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Rush Request?</label>
+          <select class="form-select" id="reqRush">
+            <option value="no">No — standard (10 days)</option>
+            <option value="yes">Yes — rush (72 hours, additional fee)</option>
+          </select>
+        </div>
+
+        <hr class="form-divider">
+        <div class="form-section-title">Escrow / Title Information</div>
+
+        <div class="form-group">
+          <label class="form-label">Escrow Company</label>
+          <input type="text" class="form-input" id="reqEscrow" placeholder="Title or escrow company name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Escrow Officer</label>
+          <input type="text" class="form-input" id="reqEscrowOfficer" placeholder="Escrow officer name">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Escrow Email</label>
+          <input type="email" class="form-input" id="reqEscrowEmail" placeholder="Documents may be CC'd here if needed">
+        </div>
+
+        <hr class="form-divider">
+        <div class="form-section-title">Documents Included in Package</div>
+
+        <div class="doc-checklist">
+          <div class="doc-items">
+            <div class="doc-item">
+              <div class="doc-item-icon">📋</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">CC&Rs</div>
+                <div class="doc-item-note">Covenants, Conditions &amp; Restrictions</div>
+                <span class="doc-item-status status-auto">Auto — from library</span>
+              </div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-icon">📘</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">Bylaws</div>
+                <div class="doc-item-note">Association governance rules</div>
+                <span class="doc-item-status status-auto">Auto — from library</span>
+              </div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-icon">📏</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">Rules &amp; Regulations</div>
+                <div class="doc-item-note">Community conduct and use rules</div>
+                <span class="doc-item-status status-auto">Auto — from library</span>
+              </div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-icon">💰</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">Current Budget</div>
+                <div class="doc-item-note">Operating and reserve budget</div>
+                <span class="doc-item-status status-auto">Auto — from library</span>
+              </div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-icon">🏦</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">Reserve Study</div>
+                <div class="doc-item-note">Long-range capital planning</div>
+                <span class="doc-item-status status-auto">Auto — from library</span>
+              </div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-icon">🗓️</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">Meeting Minutes (12 mo.)</div>
+                <div class="doc-item-note">Last 12 months of board minutes</div>
+                <span class="doc-item-status status-auto">Auto — from library</span>
+              </div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-icon">🛡️</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">Insurance Summary</div>
+                <div class="doc-item-note">Master policy summary and carrier</div>
+                <span class="doc-item-status status-auto">Auto — from library</span>
+              </div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-icon">⚖️</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">Litigation Disclosure</div>
+                <div class="doc-item-note">Pending legal actions per A.R.S. 33-1260</div>
+                <span class="doc-item-status status-manual">Board prepared</span>
+              </div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-icon">📝</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">Assessment Status Letter</div>
+                <div class="doc-item-note">Current dues balance for the unit</div>
+                <span class="doc-item-status status-manual">Madison / BCM prepares</span>
+              </div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-icon">🔒</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">Lien Estoppel Letter</div>
+                <div class="doc-item-note">Confirms no outstanding liens</div>
+                <span class="doc-item-status status-manual">Madison / BCM prepares</span>
+              </div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-icon">🏦</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">Lender HOA Questionnaire</div>
+                <div class="doc-item-note">Fannie Mae / FHA / VA form</div>
+                <span class="doc-item-status status-manual">Board completes on request</span>
+              </div>
+            </div>
+            <div class="doc-item">
+              <div class="doc-item-icon">🗺️</div>
+              <div class="doc-item-body">
+                <div class="doc-item-name">Recorded Documents</div>
+                <div class="doc-item-note">Maricopa County Recorder search</div>
+                <span class="doc-item-status status-external">External link provided</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="recorder-link-box">
+          🗺️ <strong>Maricopa County Recorder:</strong> Recorded HOA documents (CC&Rs, amendments, plat maps) can be searched at the county level. A direct search link for this property will be generated with your request confirmation. &nbsp;<a href="https://recorder.maricopa.gov/recording/document-search.html" target="_blank">Open Recorder Search →</a>
+        </div>
+
+        <hr class="form-divider">
+
+        <div class="form-group full">
+          <label class="form-label">Additional Notes or Special Instructions</label>
+          <textarea class="form-textarea" class="form-input" id="reqNotes" placeholder="Lender requirements, special circumstances, FHA/VA flag, etc."></textarea>
+        </div>
+
+        <div class="form-status" id="reqStatus"></div>
+        <div class="form-submit-row">
+          <button class="submit-btn" id="reqSubmitBtn" onclick="submitRequest()">Submit Request</button>
+          <span class="submit-note">You will receive a confirmation email. Standard turnaround is 10 business days per A.R.S. 33-1260.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PAST REQUESTS -->
+    <div class="requests-section">
+      <div class="section-label">Your Requests</div>
+      <div id="requestsList">
+        <div style="padding:16px 0; color:var(--muted); font-size:0.85rem;">Loading your requests…</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Scottsdale Park Place Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251<br>
+  <span style="margin-top:6px;display:block;color:#4a5060;">For urgent matters, use the <a href="contact.html">Contact page</a></span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL   = 'https://hmjypvnbbmyzmutmuxpj.supabase.co';
+const SUPABASE_ANON  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtanlwdm5iYm15em11dG11eHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzEzMjQsImV4cCI6MjA4OTM0NzMyNH0.hZNbLus9qjwni5Du8UeFJGK7xXQMtqMAr6URs75aZP8';
+const CONTACT_WORKER = 'https://spp-contact.aaroncrandal.workers.dev';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+let currentUser = null;
+
+(async()=>{
+  const {data:{session}} = await sb.auth.getSession();
+  if (session?.user) await handleUser(session.user);
+  else show('authGate');
+})();
+
+async function handleUser(user) {
+  const meta = user.user_metadata||{};
+  const role = meta.role||'pending';
+  currentUser = { id:user.id, name:meta.name||user.email.split('@')[0], role, email:user.email,
+    brokerage:meta.brokerage||'', license:meta.license||'' };
+  if (role==='pending') { showPending(); return; }
+  if (role==='realtor') { showPortal(); return; }
+  // Board/admin can also access
+  if (['board','president','treasurer','secretary','manager'].includes(role)) { showPortal(); return; }
+  showPending();
+}
+
+function show(id){ document.getElementById(id).style.display='block'; }
+function hide(id){ document.getElementById(id).style.display='none'; }
+
+function showPending(){
+  hide('authGate'); show('pendingState'); hide('realtorPortal');
+  document.getElementById('pendingMsg').textContent = `Hi ${currentUser.name} — your realtor account is pending board verification. You will be notified by email once access is granted.`;
+}
+function showPortal(){
+  hide('authGate'); hide('pendingState'); show('realtorPortal');
+  document.getElementById('badgeName').textContent = currentUser.name;
+  loadRequests();
+}
+
+/* ── AUTH ── */
+function switchTab(tab){
+  document.querySelectorAll('.auth-tabs .auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0)===(tab==='signin')));
+  document.getElementById('signinForm').style.display   = tab==='signin'   ? 'block':'none';
+  document.getElementById('registerForm').style.display = tab==='register' ? 'block':'none';
+  document.getElementById('authMsg').classList.remove('show');
+}
+
+async function signIn(){
+  const email=document.getElementById('siEmail').value.trim(), pw=document.getElementById('siPassword').value;
+  if (!email||!pw){showAuthMsg('Please enter your email and password.','error');return;}
+  const btn=document.getElementById('siBtn'); btn.disabled=true; btn.textContent='Signing in…';
+  const {data,error}=await sb.auth.signInWithPassword({email,password:pw});
+  if (error){showAuthMsg(error.message,'error');btn.disabled=false;btn.textContent='Sign In';return;}
+  await handleUser(data.user);
+}
+
+async function register(){
+  const name=document.getElementById('regName').value.trim();
+  const brokerage=document.getElementById('regBrokerage').value.trim();
+  const license=document.getElementById('regLicense').value.trim();
+  const phone=document.getElementById('regPhone').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pw=document.getElementById('regPassword').value;
+  if (!name||!email||!pw){showAuthMsg('Please fill in all required fields.','error');return;}
+  if (pw.length<8){showAuthMsg('Password must be at least 8 characters.','error');return;}
+  const btn=document.getElementById('regBtn'); btn.disabled=true; btn.textContent='Creating account…';
+  const {error}=await sb.auth.signUp({email,password:pw,options:{data:{name,brokerage,license,phone,role:'pending'}}});
+  if (error){showAuthMsg(error.message,'error');btn.disabled=false;btn.textContent='Create Account';return;}
+  try {
+    await fetch(CONTACT_WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      category:'New Realtor Account Pending Approval',name,email,
+      description:`New realtor account pending verification.\n\nName: ${name}\nBrokerage: ${brokerage}\nLicense: ${license}\nPhone: ${phone}\nEmail: ${email}\n\nVisit scottsdaleparkplace.com/admin.html to grant realtor access.`,
+      _notification:true
+    })});
+  } catch(e){}
+  showAuthMsg('Account created! Check your email to confirm. The board will verify your license and grant access.','success');
+  btn.disabled=false; btn.textContent='Create Account';
+}
+
+async function forgotPw(){
+  const email=document.getElementById('siEmail').value.trim();
+  if (!email){showAuthMsg('Enter your email above first.','error');return;}
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://scottsdaleparkplace.com'});
+  if (error){showAuthMsg(error.message,'error');return;}
+  showAuthMsg('Password reset email sent.','success');
+}
+
+async function signOut(){await sb.auth.signOut();currentUser=null;hide('realtorPortal');hide('pendingState');show('authGate');}
+function showAuthMsg(msg,type){const el=document.getElementById('authMsg');el.textContent=msg;el.className=`auth-msg ${type} show`;}
+
+/* ── SUBMIT REQUEST ── */
+async function submitRequest(){
+  const unit=document.getElementById('reqUnit').value.trim();
+  const txType=document.getElementById('reqTxType').value;
+  if (!unit||!txType){showReqStatus('error','Please fill in the unit number and transaction type.');return;}
+
+  const btn=document.getElementById('reqSubmitBtn'); btn.disabled=true; btn.textContent='Submitting…';
+  const recorderUrl=`https://recorder.maricopa.gov/recording/document-search.html`;
+
+  const record = {
+    unit, requester_name:currentUser.name, requester_email:currentUser.email,
+    requester_license:currentUser.license||'',
+    transaction_type:txType,
+    buyer_name:document.getElementById('reqBuyer').value.trim(),
+    seller_name:document.getElementById('reqSeller').value.trim(),
+    escrow_company:document.getElementById('reqEscrow').value.trim(),
+    escrow_officer:document.getElementById('reqEscrowOfficer').value.trim(),
+    escrow_email:document.getElementById('reqEscrowEmail').value.trim(),
+    target_close_date:document.getElementById('reqCloseDate').value||null,
+    notes:document.getElementById('reqNotes').value.trim(),
+    status:'pending'
+  };
+
+  try {
+    const {error}=await sb.from('document_requests').insert(record);
+    if (error) throw new Error(error.message);
+
+    // Notify board
+    try {
+      await fetch(CONTACT_WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+        category:'Realtor Document Request',
+        name:currentUser.name, email:currentUser.email, unit,
+        description:`New resale document request.\n\nUnit: ${unit}\nRealtor: ${currentUser.name}\nEmail: ${currentUser.email}\nTransaction: ${txType}\nSeller: ${record.seller_name||'—'}\nBuyer: ${record.buyer_name||'—'}\nClose date: ${record.target_close_date||'—'}\nEscrow: ${record.escrow_company||'—'}\n\nVisit board.html → Document Requests to review.`,
+        _notification:true
+      })});
+    } catch(e){}
+
+    showReqStatus('success',`✓ Request submitted for Unit ${unit}. You will receive updates as documents are prepared. Standard turnaround is 10 business days per A.R.S. 33-1260. Maricopa County Recorder recorded documents: ${recorderUrl}`);
+    document.getElementById('reqUnit').value='';
+    document.getElementById('reqTxType').value='';
+    document.getElementById('reqBuyer').value='';
+    document.getElementById('reqSeller').value='';
+    document.getElementById('reqEscrow').value='';
+    document.getElementById('reqEscrowOfficer').value='';
+    document.getElementById('reqEscrowEmail').value='';
+    document.getElementById('reqCloseDate').value='';
+    document.getElementById('reqNotes').value='';
+    loadRequests();
+  } catch(e){
+    showReqStatus('error','Submission failed: '+e.message);
+  }
+  btn.disabled=false; btn.textContent='Submit Request';
+}
+
+function showReqStatus(type,msg){
+  const el=document.getElementById('reqStatus');
+  el.className='form-status '+type; el.textContent=msg;
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* ── LOAD REQUESTS ── */
+async function loadRequests(){
+  const list=document.getElementById('requestsList');
+  const {data,error}=await sb.from('document_requests')
+    .select('*').eq('requester_email',currentUser.email)
+    .order('created_at',{ascending:false});
+  if (error||!data){list.innerHTML='<div style="color:var(--muted);font-size:0.85rem;padding:12px 0;">Unable to load requests.</div>';return;}
+  if (!data.length){list.innerHTML='<div style="color:var(--muted);font-size:0.85rem;padding:12px 0;">No requests yet.</div>';return;}
+  list.innerHTML=data.map(r=>{
+    const statusCls = r.status==='fulfilled'?'req-fulfilled':r.status==='in-review'?'req-review':'req-pending';
+    const statusLabel = r.status==='fulfilled'?'Fulfilled':r.status==='in-review'?'In Review':'Pending';
+    const date=new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    return `<div class="request-row">
+      <div class="req-info">
+        <div class="req-unit">Unit ${esc(r.unit)} &nbsp;·&nbsp; ${esc(r.transaction_type)}</div>
+        <div class="req-meta">Submitted ${date}${r.seller_name?' &nbsp;·&nbsp; Seller: '+esc(r.seller_name):''}${r.target_close_date?' &nbsp;·&nbsp; Close: '+r.target_close_date:''}</div>
+        ${r.board_notes?`<div style="font-size:0.78rem;color:var(--blue);margin-top:4px;">Board note: ${esc(r.board_notes)}</div>`:''}
+      </div>
+      <span class="req-status-badge ${statusCls}">${statusLabel}</span>
+    </div>`;
+  }).join('');
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+</script>
+</body>
+</html>
