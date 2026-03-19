@@ -204,6 +204,7 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
   <button class="tab-btn active" onclick="switchTab('discuss',this)">Discussion Board</button>
   <button class="tab-btn" onclick="switchTab('ops',this)">Operations Manual</button>
   <button class="tab-btn" onclick="switchTab('arc',this)">ARC Requests</button>
+  <button class="tab-btn" onclick="switchTab('docreq',this)">Document Requests</button>
 </div>
 
 <!-- ===== DISCUSSION BOARD ===== -->
@@ -557,7 +558,61 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
   </div>
 </div>
 
-<!-- NEW ENTRY MODAL -->
+<!-- ===== DOCUMENT REQUESTS ===== -->
+<div class="tab-panel" id="tab-docreq">
+<div class="container">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+    <div class="page-header" style="margin-bottom:0;">
+      <h1>Document Requests</h1>
+      <p>Realtor resale disclosure package requests. Fulfill each request within 10 days per A.R.S. 33-1260.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="arc-filter active" onclick="setDocFilter('all',this)">All</button>
+      <button class="arc-filter" onclick="setDocFilter('pending',this)">Pending</button>
+      <button class="arc-filter" onclick="setDocFilter('in-review',this)">In Review</button>
+      <button class="arc-filter" onclick="setDocFilter('fulfilled',this)">Fulfilled</button>
+    </div>
+  </div>
+
+  <div id="docReqStats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:24px;"></div>
+
+  <div id="docReqLoading" style="text-align:center;padding:40px;color:var(--muted);font-size:0.85rem;">
+    <div class="dot-pulse"><span></span><span></span><span></span></div>
+    <div style="margin-top:10px;">Loading requests…</div>
+  </div>
+  <div style="overflow-x:auto;">
+    <table id="docReqTable" style="display:none;width:100%;border-collapse:collapse;font-size:0.84rem;">
+      <thead><tr>
+        <th style="padding:10px 14px;color:var(--muted);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;text-align:left;">Submitted</th>
+        <th style="padding:10px 14px;color:var(--muted);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;text-align:left;">Unit</th>
+        <th style="padding:10px 14px;color:var(--muted);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;text-align:left;">Realtor</th>
+        <th style="padding:10px 14px;color:var(--muted);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;text-align:left;">Type</th>
+        <th style="padding:10px 14px;color:var(--muted);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;text-align:left;">Close Date</th>
+        <th style="padding:10px 14px;color:var(--muted);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;text-align:left;">Status</th>
+        <th style="padding:10px 14px;color:var(--muted);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;text-align:left;">Actions</th>
+      </tr></thead>
+      <tbody id="docReqTableBody"></tbody>
+    </table>
+  </div>
+  <div id="docReqEmpty" class="empty-state" style="display:none;"><span class="ei">📋</span>No requests found.</div>
+</div>
+</div>
+
+<!-- DOCUMENT REQUEST DETAIL MODAL -->
+<div class="modal-overlay" id="docReqModal">
+  <div class="modal detail-modal">
+    <button class="modal-close" onclick="closeModal('docReqModal')">&times;</button>
+    <div id="docReqModalContent"></div>
+    <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:18px;">
+      <div style="font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Update Status</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <button class="action-btn" onclick="updateDocStatus('in-review')" style="color:var(--blue);border-color:rgba(90,138,176,0.3);">→ In Review</button>
+        <button class="action-btn resolve" onclick="updateDocStatus('fulfilled')">✓ Fulfilled</button>
+      </div>
+      <textarea id="docBoardNotes" placeholder="Notes to realtor (visible in their portal)…" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.84rem;resize:vertical;min-height:70px;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" id="newIssueModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('newIssueModal')">&times;</button>
@@ -645,6 +700,7 @@ function switchTab(id, btn) {
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
   if (id === 'arc') loadArcRequests();
+  if (id === 'docreq') loadDocRequests();
 }
 
 function copyVal(text) { navigator.clipboard.writeText(text).then(() => showToast('Copied')); }
@@ -1033,8 +1089,95 @@ async function updateArcStatus(newStatus) {
 }
 
 loadIssues();
+
+/* ── DOCUMENT REQUESTS TAB ── */
+let docFilter = 'all', allDocRequests = [], currentDocId = null;
+const docStatusConfig = {
+  pending:    {label:'Pending',   color:'var(--orange)',bg:'rgba(200,120,64,0.12)',  border:'rgba(200,120,64,0.3)'},
+  'in-review':{label:'In Review', color:'var(--blue)',  bg:'rgba(90,138,176,0.12)', border:'rgba(90,138,176,0.3)'},
+  fulfilled:  {label:'Fulfilled', color:'var(--green)', bg:'var(--green-dim)',        border:'rgba(90,158,122,0.3)'},
+};
+
+async function loadDocRequests() {
+  document.getElementById('docReqLoading').style.display='block';
+  document.getElementById('docReqTable').style.display='none';
+  document.getElementById('docReqEmpty').style.display='none';
+  document.getElementById('docReqStats').innerHTML='';
+  let path='document_requests?order=created_at.desc';
+  if (docFilter!=='all') path+=`&status=eq.${docFilter}`;
+  try {
+    const data=await sbFetch(path,{method:'GET'});
+    allDocRequests=data||[];
+    document.getElementById('docReqLoading').style.display='none';
+    if (docFilter==='all') {
+      const c={pending:0,'in-review':0,fulfilled:0};
+      allDocRequests.forEach(r=>{if(c[r.status]!==undefined)c[r.status]++;});
+      document.getElementById('docReqStats').innerHTML=[
+        {label:'Pending',val:c.pending,color:'var(--orange)'},
+        {label:'In Review',val:c['in-review'],color:'var(--blue)'},
+        {label:'Fulfilled',val:c.fulfilled,color:'var(--green)'},
+        {label:'Total',val:allDocRequests.length,color:'var(--accent)'},
+      ].map(s=>`<div class="arc-stat-card"><div class="arc-stat-num" style="color:${s.color}">${s.val}</div><div class="arc-stat-label">${s.label}</div></div>`).join('');
+    }
+    if (!allDocRequests.length){document.getElementById('docReqEmpty').style.display='block';return;}
+    document.getElementById('docReqTable').style.display='table';
+    document.getElementById('docReqTableBody').innerHTML=allDocRequests.map(r=>{
+      const sc=docStatusConfig[r.status]||docStatusConfig.pending;
+      const submitted=new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      const closeDate=r.target_close_date?new Date(r.target_close_date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—';
+      const badge=`<span style="background:${sc.bg};border:1px solid ${sc.border};color:${sc.color};border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">${sc.label}</span>`;
+      return `<tr>
+        <td style="color:var(--muted);font-size:0.8rem;">${submitted}</td>
+        <td style="font-weight:600;">${esc(r.unit)}</td>
+        <td><div>${esc(r.requester_name)}</div><div style="font-size:0.74rem;color:var(--muted);">${esc(r.requester_email)}</div></td>
+        <td style="color:var(--muted);font-size:0.82rem;">${esc(r.transaction_type)}</td>
+        <td style="color:var(--muted);font-size:0.82rem;">${closeDate}</td>
+        <td>${badge}</td>
+        <td><button onclick="openDocModal('${r.id}')" style="background:none;border:1px solid var(--border);border-radius:4px;padding:5px 12px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;">Review →</button></td>
+      </tr>`;
+    }).join('');
+  } catch(e){
+    document.getElementById('docReqLoading').style.display='none';
+    document.getElementById('docReqEmpty').style.display='block';
+  }
+}
+
+function setDocFilter(filter,btn){
+  docFilter=filter;
+  document.querySelectorAll('#tab-docreq .arc-filter').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  loadDocRequests();
+}
+
+function openDocModal(id){
+  const r=allDocRequests.find(x=>x.id===id); if(!r) return;
+  currentDocId=id;
+  document.getElementById('docBoardNotes').value=r.board_notes||'';
+  const sc=docStatusConfig[r.status]||docStatusConfig.pending;
+  document.getElementById('docReqModalContent').innerHTML=`
+    <div class="modal-title" style="margin-bottom:16px;">Document Request — Unit ${esc(r.unit)}</div>
+    <div class="arc-detail-grid">
+      ${[['Unit',r.unit],['Transaction',r.transaction_type],['Realtor',r.requester_name],['Email',r.requester_email],
+         ['License',r.requester_license||'—'],['Submitted',new Date(r.created_at).toLocaleString()],
+         ['Seller',r.seller_name||'—'],['Buyer',r.buyer_name||'—'],
+         ['Escrow',r.escrow_company||'—'],['Escrow Officer',r.escrow_officer||'—'],
+         ['Escrow Email',r.escrow_email||'—'],['Close Date',r.target_close_date||'—'],
+         ['Status',`<span style="color:${sc.color}">${sc.label}</span>`]]
+        .map(([l,v])=>`<div class="arc-detail-field"><div class="arc-detail-label">${l}</div><div class="arc-detail-value">${v||'—'}</div></div>`).join('')}
+      ${r.notes?`<div class="arc-detail-field arc-detail-full"><div class="arc-detail-label">Realtor Notes</div><div class="arc-detail-value" style="color:#c0c8d4;line-height:1.6;">${esc(r.notes)}</div></div>`:''}
+    </div>`;
+  document.getElementById('docReqModal').classList.add('open');
+}
+
+async function updateDocStatus(newStatus){
+  if(!currentDocId) return;
+  const notes=document.getElementById('docBoardNotes').value.trim();
+  try {
+    await sbFetch(`document_requests?id=eq.${currentDocId}`,{method:'PATCH',prefer:'return=minimal',
+      body:JSON.stringify({status:newStatus,board_notes:notes,...(newStatus==='fulfilled'?{fulfilled_at:new Date().toISOString()}:{})})});
+    closeModal('docReqModal'); showToast('Status updated'); loadDocRequests();
+  } catch(e){showToast('Update failed','var(--red)');}
+}
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth-guard.js"></script>
-<script>guardPage('board');</script></body>
+</body>
 </html>
