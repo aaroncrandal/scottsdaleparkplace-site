@@ -296,12 +296,20 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
         <div class="form-field"><label>Full Name</label><input type="text" id="gregName" placeholder="First and last name"></div>
         <div class="form-field"><label>Unit Number</label><input type="text" id="gregUnit" placeholder="e.g. 142"></div>
         <div class="form-field"><label>I am a…</label>
-          <select id="gregRole"><option value="owner">Owner</option><option value="renter">Renter</option></select>
+          <select id="gregRole" onchange="toggleRealtorFields('gate')">
+            <option value="owner">Owner</option>
+            <option value="renter">Renter</option>
+            <option value="realtor">Licensed Realtor / Agent</option>
+          </select>
+        </div>
+        <div id="gateRealtorFields" style="display:none;">
+          <div class="form-field"><label>Brokerage</label><input type="text" id="gregBrokerage" placeholder="Brokerage or firm name"></div>
+          <div class="form-field"><label>AZ License #</label><input type="text" id="gregLicense" placeholder="SA or BR number"></div>
         </div>
         <div class="form-field"><label>Email</label><input type="email" id="gregEmail" placeholder="you@email.com" autocomplete="email"></div>
         <div class="form-field"><label>Password</label><input type="password" id="gregPassword" placeholder="At least 8 characters" autocomplete="new-password"></div>
         <button class="auth-submit" id="gregBtn" onclick="register()">Create Account</button>
-        <div class="auth-note">Your account will be reviewed before access is granted.</div>
+        <div class="auth-note" id="gateRegNote">Your account will be reviewed before access is granted.</div>
       </div>
     </div>
   </div>
@@ -561,17 +569,41 @@ async function signIn() {
   await handleUser(data.user);
 }
 
+function toggleRealtorFields(source) {
+  const role = document.getElementById(source==='gate'?'gregRole':'mregRole').value;
+  const fields = document.getElementById(source==='gate'?'gateRealtorFields':'modalRealtorFields');
+  const note = document.getElementById(source==='gate'?'gateRegNote':'modalRegNote');
+  if (fields) fields.style.display = role==='realtor' ? 'block' : 'none';
+  if (note) note.textContent = role==='realtor'
+    ? 'Realtor accounts require license verification by the board before access is granted.'
+    : 'Your account will be reviewed before access is granted.';
+}
+
 async function register() {
   const name=document.getElementById('gregName').value.trim(), unit=document.getElementById('gregUnit').value.trim();
   const role=document.getElementById('gregRole').value, email=document.getElementById('gregEmail').value.trim();
   const pw=document.getElementById('gregPassword').value;
-  if (!name||!unit||!email||!pw){showMsg('gateAuthMsg','Please fill in all fields.','error');return;}
+  if (!name||!email||!pw){showMsg('gateAuthMsg','Please fill in all fields.','error');return;}
+  if (role!=='realtor'&&!unit){showMsg('gateAuthMsg','Please enter your unit number.','error');return;}
   if (pw.length<8){showMsg('gateAuthMsg','Password must be at least 8 characters.','error');return;}
   const btn=document.getElementById('gregBtn'); btn.disabled=true; btn.textContent='Creating account…';
-  const {error}=await sb.auth.signUp({email,password:pw,options:{data:{name,unit,role:'pending'}}});
+  const brokerage=document.getElementById('gregBrokerage')?.value.trim()||'';
+  const license=document.getElementById('gregLicense')?.value.trim()||'';
+  const {error}=await sb.auth.signUp({email,password:pw,options:{data:{name,unit:unit||'',role:'pending',brokerage,license}}});
   if (error){showMsg('gateAuthMsg',error.message,'error');btn.disabled=false;btn.textContent='Create Account';return;}
-  try { await fetch(CONTACT_WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({category:'New Account Pending Approval',name,email,unit,description:`New resident account pending approval.\n\nName: ${name}\nUnit: ${unit}\nEmail: ${email}\nRequested role: ${role}\n\nVisit scottsdaleparkplace.com/admin.html to grant access.`,_notification:true})}); } catch(e){}
-  showMsg('gateAuthMsg','Account created! Check your email to confirm — the board will review your access.','success');
+  const isRealtor = role==='realtor';
+  try { await fetch(CONTACT_WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    category: isRealtor ? 'New Realtor Account Pending Approval' : 'New Account Pending Approval',
+    name,email,unit:unit||'',
+    description: isRealtor
+      ? `New realtor account pending verification.\n\nName: ${name}\nBrokerage: ${brokerage}\nLicense: ${license}\nEmail: ${email}\n\nVisit scottsdaleparkplace.com/admin.html to grant realtor access.`
+      : `New resident account pending approval.\n\nName: ${name}\nUnit: ${unit}\nEmail: ${email}\nRequested role: ${role}\n\nVisit scottsdaleparkplace.com/admin.html to grant access.`,
+    _notification:true})}); } catch(e){}
+  showMsg('gateAuthMsg',
+    isRealtor
+      ? 'Account created! Check your email to confirm. The board will verify your license and grant realtor access.'
+      : 'Account created! Check your email to confirm — the board will review your access.',
+    'success');
   btn.disabled=false; btn.textContent='Create Account';
 }
 
