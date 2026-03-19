@@ -465,6 +465,53 @@ function fmt(ts){
   if (diff<604800) return Math.floor(diff/86400)+'d ago';
   return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
 }
+
+/* ── PASSWORD RESET HANDLER ── */
+(async () => {
+  const hash = window.location.hash;
+  if (!hash.includes('type=recovery')) return;
+
+  // Show reset form immediately
+  document.getElementById('signinGate').style.display   = 'none';
+  document.getElementById('pendingState').style.display  = 'none';
+  document.getElementById('loggedInContent').style.display = 'none';
+  document.getElementById('headerSigninBtn').style.display = 'none';
+
+  const resetDiv = document.createElement('div');
+  resetDiv.style.cssText = 'max-width:380px;margin:80px auto 0;';
+  resetDiv.innerHTML = `
+    <div class="auth-card">
+      <h3 style="font-family:'DM Serif Display',serif;font-size:1.2rem;margin-bottom:18px;">Set New Password</h3>
+      <div id="resetMsg" class="auth-msg"></div>
+      <div class="form-field"><label>New Password</label><input type="password" id="resetPw" placeholder="At least 8 characters" autocomplete="new-password"></div>
+      <div class="form-field"><label>Confirm Password</label><input type="password" id="resetPwConfirm" placeholder="Repeat password"></div>
+      <button class="auth-submit" id="resetBtn" onclick="submitReset()">Update Password</button>
+    </div>`;
+  document.querySelector('.main').appendChild(resetDiv);
+
+  // Exchange the recovery token for a session
+  const { error } = await sb.auth.getSessionFromUrl({ rewriteHistory: true });
+  if (error) {
+    const el = document.getElementById('resetMsg');
+    el.textContent = 'Reset link expired or already used. Request a new one.';
+    el.className = 'auth-msg error show';
+  }
+})();
+
+async function submitReset() {
+  const pw      = document.getElementById('resetPw').value;
+  const confirm = document.getElementById('resetPwConfirm').value;
+  const msgEl   = document.getElementById('resetMsg');
+  if (pw.length < 8) { msgEl.textContent='Password must be at least 8 characters.'; msgEl.className='auth-msg error show'; return; }
+  if (pw !== confirm) { msgEl.textContent='Passwords do not match.'; msgEl.className='auth-msg error show'; return; }
+  const btn = document.getElementById('resetBtn');
+  btn.disabled=true; btn.textContent='Updating…';
+  const { error } = await sb.auth.updateUser({ password: pw });
+  if (error) { msgEl.textContent=error.message; msgEl.className='auth-msg error show'; btn.disabled=false; btn.textContent='Update Password'; return; }
+  msgEl.textContent='Password updated. Redirecting…';
+  msgEl.className='auth-msg success show';
+  setTimeout(() => { window.location.href='index.html'; }, 1500);
+}
 </script>
 </body>
 </html>
