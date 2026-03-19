@@ -142,6 +142,32 @@ nav a.active { color: var(--accent); }
 .action-btn.del:hover { background: var(--red-dim); }
 .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 10px 18px; font-size: 0.82rem; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 999; }
 .toast.show { opacity: 1; }
+
+/* ── ARC TAB STYLES ── */
+.arc-filter { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 6px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--muted); cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+.arc-filter:hover { border-color: var(--accent); color: var(--accent); }
+.arc-filter.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+#arcTable { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+#arcTable thead tr { border-bottom: 2px solid var(--border); text-align: left; }
+#arcTable th { padding: 10px 14px; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+#arcTable tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+#arcTable tbody tr:hover { background: var(--surface2); }
+#arcTable td { padding: 12px 14px; vertical-align: middle; }
+.arc-stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+.arc-stat-num { font-size: 1.6rem; font-weight: 600; }
+.arc-stat-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+.arc-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.arc-detail-field { display: flex; flex-direction: column; gap: 3px; }
+.arc-detail-label { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.arc-detail-value { font-size: 0.86rem; color: var(--text); }
+.arc-detail-full { grid-column: 1 / -1; }
+.arc-status-badge { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; padding: 2px 8px; }
+.dot-pulse { display: inline-flex; gap: 4px; }
+.dot-pulse span { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; animation: arcpulse 1.2s ease-in-out infinite; }
+.dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+.dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes arcpulse { 0%,80%,100% { opacity:0.2; transform:scale(0.8); } 40% { opacity:1; transform:scale(1); } }
+
 footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 10px; }
 .footer-inner { max-width: 900px; margin: 0 auto; padding: 0 20px; }
 @media (max-width: 600px) {
@@ -150,6 +176,8 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
   .modal { padding: 22px 18px; }
   .tab-btn { padding: 12px 14px; font-size: 0.8rem; }
   .form-two-col { grid-template-columns: 1fr; }
+  .arc-detail-grid { grid-template-columns: 1fr; }
+  .arc-detail-full { grid-column: auto; }
 }
 </style>
 </head>
@@ -166,6 +194,8 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
   <a href="documents.html">Documents</a>
   <a href="board.html" class="active">Board</a>
   <a href="contact.html">Contact</a>
+  <a href="community.html">Community</a>
+  <a href="comms.html">Comms</a>
 </nav>
 
 <div class="restricted-bar">&#128274; BOARD &amp; MANAGEMENT ACCESS ONLY &mdash; Do not share this page outside of authorized personnel</div>
@@ -173,6 +203,7 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
 <div class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('discuss',this)">Discussion Board</button>
   <button class="tab-btn" onclick="switchTab('ops',this)">Operations Manual</button>
+  <button class="tab-btn" onclick="switchTab('arc',this)">ARC Requests</button>
 </div>
 
 <!-- ===== DISCUSSION BOARD ===== -->
@@ -463,7 +494,68 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
     </div>
   </div>
 </div>
-</div><!-- end ops -->
+</div>
+
+<!-- ===== ARC REQUESTS ===== -->
+<div class="tab-panel" id="tab-arc">
+<div class="container">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+    <div class="page-header" style="margin-bottom:0;">
+      <h1>ARC Requests</h1>
+      <p>Architectural modification requests submitted by residents via the Documents page.</p>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="arc-filter active" onclick="setArcFilter('all',this)">All</button>
+      <button class="arc-filter" onclick="setArcFilter('pending',this)">Pending</button>
+      <button class="arc-filter" onclick="setArcFilter('approved',this)">Approved</button>
+      <button class="arc-filter" onclick="setArcFilter('denied',this)">Denied</button>
+      <button class="arc-filter" onclick="setArcFilter('more-info',this)">Needs Info</button>
+    </div>
+  </div>
+
+  <div id="arcStats" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; margin-bottom:24px;"></div>
+
+  <div id="arcLoading" style="text-align:center; padding:40px; color:var(--muted); font-size:0.85rem;">
+    <div class="dot-pulse"><span></span><span></span><span></span></div>
+    <div style="margin-top:10px;">Loading requests…</div>
+  </div>
+  <div style="overflow-x:auto;">
+    <table id="arcTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>Submitted</th>
+          <th>Unit</th>
+          <th>Owner</th>
+          <th>Type</th>
+          <th>Start Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="arcTableBody"></tbody>
+    </table>
+  </div>
+  <div id="arcEmpty" class="empty-state" style="display:none;"><span class="ei">📋</span>No requests found.</div>
+</div>
+</div>
+
+<!-- ARC DETAIL MODAL -->
+<div class="modal-overlay" id="arcModal">
+  <div class="modal detail-modal">
+    <button class="modal-close" onclick="closeModal('arcModal')">&times;</button>
+    <div id="arcModalContent"></div>
+    <div style="margin-top:24px; border-top:1px solid var(--border); padding-top:20px;">
+      <div style="font-size:0.76rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); margin-bottom:12px;">Update Status</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+        <button class="action-btn resolve" onclick="updateArcStatus('approved')">✓ Approve</button>
+        <button class="action-btn del" onclick="updateArcStatus('denied')">✕ Deny</button>
+        <button class="action-btn" onclick="updateArcStatus('more-info')" style="color:var(--orange); border-color:rgba(200,120,64,0.3);">? Request Info</button>
+        <button class="action-btn archive" onclick="updateArcStatus('approved-stipulations')">~ Approve w/ Stipulations</button>
+      </div>
+      <textarea id="arcDrcComments" placeholder="DRC comments (required for deny, stipulations, or info requests)…" style="width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:4px; padding:9px 12px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.84rem; resize:vertical; min-height:80px; outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+    </div>
+  </div>
+</div>
 
 <!-- NEW ENTRY MODAL -->
 <div class="modal-overlay" id="newIssueModal">
@@ -532,7 +624,7 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
 
 <script>
 const SUPABASE_URL = 'https://hmjypvnbbmyzmutmuxpj.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_TNKX4dXBuDocWxpmIw1yyQ_wKnFhQVr';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtanlwdm5iYm15em11dG11eHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzEzMjQsImV4cCI6MjA4OTM0NzMyNH0.hZNbLus9qjwni5Du8UeFJGK7xXQMtqMAr6URs75aZP8';
 
 async function sbFetch(path, options = {}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
@@ -552,6 +644,7 @@ function switchTab(id, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
+  if (id === 'arc') loadArcRequests();
 }
 
 function copyVal(text) { navigator.clipboard.writeText(text).then(() => showToast('Copied')); }
@@ -796,6 +889,147 @@ async function deleteIssue(id) {
     await sbFetch(`issues?id=eq.${id}`, { method:'DELETE' });
     closeModal('detailModal'); showToast('Entry deleted'); await loadIssues();
   } catch(e) { showToast('Error deleting entry','var(--red)'); }
+}
+
+/* ── ARC REQUESTS ── */
+const arcStatusConfig = {
+  pending:                 { label:'Pending',           color:'var(--orange)', bg:'rgba(200,120,64,0.12)',  border:'rgba(200,120,64,0.3)'  },
+  approved:                { label:'Approved',          color:'var(--green)',  bg:'var(--green-dim)',        border:'rgba(90,158,122,0.3)'  },
+  'approved-stipulations': { label:'Approved w/ Stip.', color:'var(--blue)',   bg:'var(--blue-dim)',         border:'rgba(90,138,176,0.3)'  },
+  denied:                  { label:'Denied',            color:'var(--red)',    bg:'var(--red-dim)',          border:'rgba(192,80,80,0.3)'   },
+  'more-info':             { label:'Needs Info',        color:'var(--accent)', bg:'var(--accent-dim)',       border:'rgba(200,169,110,0.3)' },
+};
+const arcTypeLabels = {
+  'exterior-paint':'Exterior Paint','window-door':'Window/Door','patio-balcony':'Patio/Balcony',
+  'flooring':'Flooring','hvac':'HVAC','plumbing':'Plumbing','electrical':'Electrical',
+  'landscaping':'Landscaping','storage':'Storage','antenna-dish':'Antenna/Dish',
+  'ev-charger':'EV Charger','structural':'Structural','other':'Other'
+};
+
+let arcFilter = 'all', arcCurrentId = null, allArcRequests = [];
+
+async function loadArcRequests() {
+  document.getElementById('arcLoading').style.display = 'block';
+  document.getElementById('arcTable').style.display   = 'none';
+  document.getElementById('arcEmpty').style.display   = 'none';
+  document.getElementById('arcStats').innerHTML       = '';
+
+  let path = 'arc_requests?order=created_at.desc';
+  if (arcFilter !== 'all') path += `&status=eq.${arcFilter}`;
+
+  try {
+    const data = await sbFetch(path, { method:'GET' });
+    allArcRequests = data || [];
+    document.getElementById('arcLoading').style.display = 'none';
+    renderArcStats(allArcRequests);
+    renderArcTable(allArcRequests);
+  } catch(e) {
+    document.getElementById('arcLoading').style.display = 'none';
+    document.getElementById('arcEmpty').style.display = 'block';
+    document.getElementById('arcEmpty').innerHTML = '<span class="ei">⚠️</span>Could not load ARC requests. Check connection.';
+  }
+}
+
+function renderArcStats(data) {
+  if (arcFilter !== 'all') return;
+  const counts = { pending:0, approved:0, denied:0, 'more-info':0 };
+  data.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
+  document.getElementById('arcStats').innerHTML = [
+    { label:'Pending Review', val:counts.pending,       color:'var(--orange)' },
+    { label:'Approved',       val:counts.approved,      color:'var(--green)'  },
+    { label:'Denied',         val:counts.denied,        color:'var(--red)'    },
+    { label:'Needs Info',     val:counts['more-info'],   color:'var(--accent)' },
+  ].map(s => `
+    <div class="arc-stat-card">
+      <div class="arc-stat-num" style="color:${s.color}">${s.val}</div>
+      <div class="arc-stat-label">${s.label}</div>
+    </div>`).join('');
+}
+
+function renderArcTable(data) {
+  if (!data.length) { document.getElementById('arcEmpty').style.display = 'block'; return; }
+  document.getElementById('arcTable').style.display = 'table';
+  document.getElementById('arcTableBody').innerHTML = data.map(r => {
+    const sc = arcStatusConfig[r.status] || arcStatusConfig.pending;
+    const typeLabel = arcTypeLabels[r.project_type] || r.project_type || '—';
+    const submitted = new Date(r.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const startDate = r.start_date ? new Date(r.start_date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
+    return `<tr>
+      <td style="color:var(--muted);font-size:0.8rem;">${submitted}</td>
+      <td style="font-weight:600;">${esc(r.unit)}</td>
+      <td>${esc(r.owner_name)}</td>
+      <td style="color:var(--muted);font-size:0.82rem;">${typeLabel}</td>
+      <td style="color:var(--muted);font-size:0.82rem;">${startDate}</td>
+      <td><span class="arc-status-badge" style="background:${sc.bg};border:1px solid ${sc.border};color:${sc.color};">${sc.label}</span></td>
+      <td><button onclick="openArcModal('${r.id}')" style="background:none;border:1px solid var(--border);border-radius:4px;padding:5px 12px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;">Review →</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function setArcFilter(filter, btn) {
+  arcFilter = filter;
+  document.querySelectorAll('.arc-filter').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  loadArcRequests();
+}
+
+function openArcModal(id) {
+  const r = allArcRequests.find(x => x.id === id);
+  if (!r) return;
+  arcCurrentId = id;
+  document.getElementById('arcDrcComments').value = r.drc_comments || '';
+  const sc = arcStatusConfig[r.status] || arcStatusConfig.pending;
+  const typeLabel = arcTypeLabels[r.project_type] || r.project_type || '—';
+  const fields = [
+    ['Unit',            r.unit],
+    ['Owner',           r.owner_name],
+    ['Email',           r.email],
+    ['Phone',           r.phone || '—'],
+    ['Project Type',    typeLabel],
+    ['Start Date',      r.start_date || '—'],
+    ['End Date',        r.end_date || '—'],
+    ['Tenant Occupied', r.tenant_occupied || '—'],
+    ['Contractor',      r.contractor_name || 'None'],
+    ['License #',       r.contractor_license || '—'],
+    ['Insured',         r.insured || '—'],
+    ['Supporting Docs', r.supporting_docs || 'None'],
+    ['Submitted',       new Date(r.created_at).toLocaleString()],
+    ['Current Status',  `<span style="color:${sc.color}">${sc.label}</span>`],
+  ];
+  document.getElementById('arcModalContent').innerHTML = `
+    <div class="modal-title" style="margin-bottom:16px;">ARC Request — Unit ${esc(r.unit)}</div>
+    <div class="arc-detail-grid">
+      ${fields.map(([label, val]) => `
+        <div class="arc-detail-field">
+          <div class="arc-detail-label">${label}</div>
+          <div class="arc-detail-value">${val || '—'}</div>
+        </div>`).join('')}
+      <div class="arc-detail-field arc-detail-full">
+        <div class="arc-detail-label">Description</div>
+        <div class="arc-detail-value" style="line-height:1.6;color:#c0c8d4;white-space:pre-wrap;">${esc(r.description)}</div>
+      </div>
+      ${r.materials?`<div class="arc-detail-field arc-detail-full"><div class="arc-detail-label">Materials / Color Scheme</div><div class="arc-detail-value" style="line-height:1.6;color:#c0c8d4;">${esc(r.materials)}</div></div>`:''}
+      ${r.notes?`<div class="arc-detail-field arc-detail-full"><div class="arc-detail-label">Additional Notes</div><div class="arc-detail-value" style="line-height:1.6;color:#c0c8d4;">${esc(r.notes)}</div></div>`:''}
+      ${r.drc_comments?`<div class="arc-detail-field arc-detail-full"><div class="arc-detail-label">Previous DRC Comments</div><div class="arc-detail-value" style="line-height:1.6;color:#c0c8d4;">${esc(r.drc_comments)}</div></div>`:''}
+    </div>`;
+  document.getElementById('arcModal').classList.add('open');
+}
+
+async function updateArcStatus(newStatus) {
+  if (!arcCurrentId) return;
+  const comments = document.getElementById('arcDrcComments').value.trim();
+  try {
+    await sbFetch(`arc_requests?id=eq.${arcCurrentId}`, {
+      method: 'PATCH',
+      prefer: 'return=minimal',
+      body: JSON.stringify({ status: newStatus, drc_comments: comments, reviewed_at: new Date().toISOString() })
+    });
+    closeModal('arcModal');
+    showToast('Status updated');
+    loadArcRequests();
+  } catch(e) {
+    showToast('Update failed','var(--red)');
+  }
 }
 
 loadIssues();
