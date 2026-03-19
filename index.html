@@ -160,6 +160,7 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
         <div class="form-field"><label>Email</label><input type="email" id="gsiEmail" placeholder="you@email.com" autocomplete="email"></div>
         <div class="form-field"><label>Password</label><input type="password" id="gsiPassword" placeholder="Password" autocomplete="current-password"></div>
         <button class="auth-submit" id="gsiBtn" onclick="signIn()">Sign In</button>
+        <div style="text-align:center; margin-top:12px;"><button onclick="forgotPassword('gate')" style="background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;text-decoration:underline;">Forgot password?</button></div>
       </div>
       <div id="gateRegister" style="display:none;">
         <div class="form-field"><label>Full Name</label><input type="text" id="gregName" placeholder="First and last name"></div>
@@ -240,6 +241,7 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
       <div class="form-field"><label>Email</label><input type="email" id="msiEmail" placeholder="you@email.com" autocomplete="email"></div>
       <div class="form-field"><label>Password</label><input type="password" id="msiPassword" placeholder="Password" autocomplete="current-password"></div>
       <button class="auth-submit" id="msiBtn" onclick="signInModal()">Sign In</button>
+      <div style="text-align:center; margin-top:12px;"><button onclick="forgotPassword('modal')" style="background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;text-decoration:underline;">Forgot password?</button></div>
     </div>
     <div id="modalRegister" style="display:none;">
       <div class="form-field"><label>Full Name</label><input type="text" id="mregName" placeholder="First and last name"></div>
@@ -372,6 +374,16 @@ async function registerModal() {
 async function signOut(){await sb.auth.signOut();currentUser=null;showGate();}
 
 function showMsg(id,msg,type){const el=document.getElementById(id);el.textContent=msg;el.className=`auth-msg ${type} show`;}
+
+async function forgotPassword(source) {
+  const emailId = source==='gate' ? 'gsiEmail' : 'msiEmail';
+  const msgId   = source==='gate' ? 'gateAuthMsg' : 'modalAuthMsg';
+  const email   = document.getElementById(emailId).value.trim();
+  if (!email) { showMsg(msgId,'Enter your email address above first.','error'); return; }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo:'https://scottsdaleparkplace.com/index.html' });
+  if (error) { showMsg(msgId, error.message, 'error'); return; }
+  showMsg(msgId,'Password reset email sent. Check your inbox.','success');
+}
 
 async function loadAnnouncements() {
   const grid=document.getElementById('announceGrid');
