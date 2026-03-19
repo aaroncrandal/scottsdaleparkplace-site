@@ -377,10 +377,10 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
 
 <footer>
   Scottsdale Park Place Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251<br>
-  <span style="margin-top:6px; display:block; color:#4a5060;">For technical issues with this site, contact <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a></span>
+  <span style="margin-top:6px; display:block; color:#4a5060;">For technical issues with this site, contact <a href="/cdn-cgi/l/email-protection#96f4f9f7e4f2d6e5f5f9e2e2e5f2f7faf3e6f7e4fde6faf7f5f3b8f5f9fb"><span class="__cf_email__" data-cfemail="84e6ebe5f6e0c4f7e7ebf0f0f7e0e5e8e1f4e5f6eff4e8e5e7e1aae7ebe9">[email&#160;protected]</span></a></span>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL  = 'https://hmjypvnbbmyzmutmuxpj.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtanlwdm5iYm15em11dG11eHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzEzMjQsImV4cCI6MjA4OTM0NzMyNH0.hZNbLus9qjwni5Du8UeFJGK7xXQMtqMAr6URs75aZP8';
@@ -475,6 +475,11 @@ async function loadUserProfile(user) {
 
 /* ── SHOW BULLETIN ── */
 function showBulletin() {
+  // Block pending users
+  if (currentUser.role === 'pending' || !['owner','renter','board','president','treasurer','secretary','manager'].includes(currentUser.role)) {
+    document.body.innerHTML = `<div style="font-family:'DM Sans',sans-serif;background:#0f1115;color:#e8e4dc;display:flex;align-items:center;justify-content:center;min-height:100vh;"><div style="text-align:center;max-width:400px;padding:32px;"><div style="font-size:3rem;margin-bottom:16px;">⏳</div><div style="font-family:'DM Serif Display',serif;font-size:1.4rem;color:#c8a96e;margin-bottom:10px;">Awaiting Approval</div><p style="color:#7a8090;font-size:0.88rem;line-height:1.7;margin-bottom:20px;">Your account is pending review. You'll be notified once access is granted.</p><a href="index.html" style="color:#c8a96e;border:1px solid rgba(200,169,110,0.3);border-radius:6px;padding:8px 18px;text-decoration:none;font-size:0.84rem;">← Back to Home</a></div></div>`;
+    return;
+  }
   document.getElementById('authGate').style.display = 'none';
   document.getElementById('bulletinBoard').style.display = 'block';
 
@@ -616,7 +621,7 @@ async function loadReplies(postId, btn) {
     .select('*').eq('reply_to', postId).order('created_at', { ascending: true });
   if (error || !replies?.length) { list.innerHTML = ''; return; }
   list.innerHTML = replies.map(r => {
-    const initials = (r.author_name || '?').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+    const initials = r.unit ? String(r.unit).slice(0,4) : '?';
     const roleClass = r.posted_by_role === 'board' ? 'board' : '';
     return `
       <div class="reply-item">
@@ -680,15 +685,4 @@ function formatTime(ts) {
 
 /* ── INIT ── */
 (async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session?.user) {
-    await loadUserProfile(session.user);
-  }
-  sb.auth.onAuthStateChange((_event, session) => {
-    if (session?.user && !currentUser) loadUserProfile(session.user);
-  });
-})();
-</script>
-
-</body>
-</html>
+  const { data: { session
