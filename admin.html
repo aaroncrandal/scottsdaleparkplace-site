@@ -24,7 +24,7 @@ nav a.active { color: var(--accent); }
 .restricted-bar { background: rgba(192,80,80,0.12); border-bottom: 1px solid rgba(192,80,80,0.25); text-align: center; padding: 10px 20px; font-size: 0.78rem; color: #d08080; letter-spacing: 0.06em; }
 .main { max-width: 900px; margin: 0 auto; padding: 40px 20px 80px; }
 
-/* ── AUTH GATE ── */
+/* AUTH */
 #authGate { max-width: 400px; margin: 60px auto; text-align: center; }
 .gate-icon { font-size: 3rem; margin-bottom: 20px; }
 .gate-title { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
@@ -35,41 +35,75 @@ nav a.active { color: var(--accent); }
 .form-field label { font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 .form-field input { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; width: 100%; }
 .form-field input:focus { border-color: var(--accent); }
+.form-field input::placeholder { color: #4a5060; }
 .auth-btn { width: 100%; background: var(--accent); color: #0f1115; border: none; border-radius: 7px; padding: 12px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-top: 4px; }
 .auth-btn:hover { opacity: 0.88; }
 .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .auth-error { background: rgba(192,80,80,0.1); border: 1px solid rgba(192,80,80,0.25); border-radius: 6px; padding: 10px 14px; font-size: 0.8rem; color: var(--red); margin-bottom: 14px; display: none; }
 .auth-error.show { display: block; }
 
-/* ── ACCESS DENIED ── */
 #accessDenied { max-width: 400px; margin: 60px auto; text-align: center; display: none; }
 
-/* ── ADMIN APP ── */
+/* APP */
 #adminApp { display: none; }
-.page-header { margin-bottom: 28px; }
+.page-header { margin-bottom: 24px; }
 .page-header h1 { font-family: 'DM Serif Display', serif; font-size: 1.7rem; font-weight: 400; }
 .page-header p { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
-
-.admin-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+.admin-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
 .user-badge { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 0.8rem; }
-.user-badge-name { font-weight: 500; }
 .user-badge-role { background: var(--accent-dim); color: var(--accent); border-radius: 4px; padding: 1px 7px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
-.sign-out-btn { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.76rem; cursor: pointer; margin-left: 8px; }
+.sign-out-btn { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.76rem; cursor: pointer; margin-left: 6px; }
 .sign-out-btn:hover { color: var(--text); }
 
+/* PENDING SECTION */
+.pending-section { margin-bottom: 36px; }
+.pending-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.pending-header h2 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; font-weight: 400; }
+.pending-badge { background: rgba(200,120,64,0.15); border: 1px solid rgba(200,120,64,0.3); color: var(--orange); border-radius: 20px; padding: 2px 10px; font-size: 0.72rem; font-weight: 600; }
+.pending-cards { display: flex; flex-direction: column; gap: 10px; }
+.pending-card {
+  background: var(--surface);
+  border: 1px solid rgba(200,120,64,0.3);
+  border-left: 3px solid var(--orange);
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.pending-info { flex: 1; }
+.pending-name { font-weight: 600; font-size: 0.9rem; }
+.pending-detail { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.pending-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pending-role-select {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 5px;
+  padding: 6px 28px 6px 10px; color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; outline: none; cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a8090' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+}
+.pending-role-select:focus { border-color: var(--accent); }
+.pending-role-select option { background: #1e2330; }
+.approve-btn { background: rgba(90,158,122,0.15); border: 1px solid rgba(90,158,122,0.3); color: var(--green); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; padding: 7px 16px; border-radius: 5px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+.approve-btn:hover { background: rgba(90,158,122,0.25); }
+.approve-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.deny-btn { background: none; border: 1px solid rgba(192,80,80,0.3); color: var(--red); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; padding: 7px 12px; border-radius: 5px; cursor: pointer; transition: background 0.15s; }
+.deny-btn:hover { background: rgba(192,80,80,0.1); }
+
+/* SEARCH + STATS */
 .search-input { background: var(--surface); border: 1px solid var(--border); border-radius: 7px; padding: 9px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; width: 260px; }
 .search-input:focus { border-color: var(--accent); }
 .search-input::placeholder { color: #4a5060; }
-
-/* ── STATS ── */
-.stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-bottom: 24px; }
-.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: border-color 0.15s; }
+.stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: border-color 0.15s; }
 .stat-card:hover { border-color: #3a4050; }
 .stat-card.active { border-color: var(--accent); }
-.stat-num { font-family: 'DM Serif Display', serif; font-size: 1.8rem; line-height: 1; }
-.stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 4px; }
+.stat-num { font-family: 'DM Serif Display', serif; font-size: 1.6rem; line-height: 1; }
+.stat-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 3px; }
 
-/* ── USER TABLE ── */
+/* TABLE */
 .user-table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
 thead tr { border-bottom: 2px solid var(--border); }
@@ -77,71 +111,42 @@ th { padding: 10px 14px; color: var(--muted); font-size: 0.72rem; letter-spacing
 tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
 tbody tr:hover { background: var(--surface2); }
 td { padding: 12px 14px; vertical-align: middle; }
-.user-name { font-weight: 600; color: var(--text); }
+.user-name { font-weight: 600; }
 .user-email { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
-.user-unit { font-size: 0.82rem; color: var(--muted); }
 .confirm-badge { font-size: 0.68rem; font-weight: 600; border-radius: 4px; padding: 2px 7px; }
-.confirmed { background: rgba(90,158,122,0.12); color: var(--green); border: 1px solid rgba(90,158,122,0.3); }
+.confirmed   { background: rgba(90,158,122,0.12); color: var(--green); border: 1px solid rgba(90,158,122,0.3); }
 .unconfirmed { background: rgba(200,120,64,0.12); color: var(--orange); border: 1px solid rgba(200,120,64,0.3); }
-
 .role-select {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 6px 28px 6px 10px;
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.82rem;
-  outline: none;
-  cursor: pointer;
-  appearance: none;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 5px;
+  padding: 6px 28px 6px 10px; color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; outline: none; cursor: pointer; appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a8090' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  transition: border-color 0.2s;
+  background-repeat: no-repeat; background-position: right 8px center; transition: border-color 0.2s;
 }
 .role-select:focus { border-color: var(--accent); }
 .role-select option { background: #1e2330; }
-.role-select.role-board    { border-color: rgba(200,169,110,0.4); color: var(--accent); }
-.role-select.role-manager  { border-color: rgba(90,138,176,0.4); color: var(--blue); }
-.role-select.role-owner    { border-color: var(--border); color: var(--text); }
-.role-select.role-renter   { border-color: var(--border); color: var(--muted); }
-.role-select.role-president { border-color: rgba(200,169,110,0.6); color: var(--accent); }
-
-.save-btn {
-  background: var(--accent-dim);
-  border: 1px solid rgba(200,169,110,0.4);
-  color: var(--accent);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 6px 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.15s, opacity 0.2s;
-  white-space: nowrap;
-}
+.role-select.role-board, .role-select.role-president, .role-select.role-treasurer, .role-select.role-secretary { border-color: rgba(200,169,110,0.4); color: var(--accent); }
+.role-select.role-manager { border-color: rgba(90,138,176,0.4); color: var(--blue); }
+.save-btn { background: var(--accent-dim); border: 1px solid rgba(200,169,110,0.4); color: var(--accent); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600; padding: 6px 14px; border-radius: 5px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
 .save-btn:hover { background: rgba(200,169,110,0.25); }
 .save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .save-btn.saved { background: rgba(90,158,122,0.12); border-color: rgba(90,158,122,0.3); color: var(--green); }
-
-.empty-state { text-align: center; padding: 48px; color: var(--muted); font-size: 0.88rem; }
-.loading-state { text-align: center; padding: 48px; color: var(--muted); }
+.section-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.loading-state { text-align: center; padding: 40px; color: var(--muted); }
+.empty-state { text-align: center; padding: 40px; color: var(--muted); font-size: 0.88rem; }
 .dot-pulse { display: inline-flex; gap: 4px; }
 .dot-pulse span { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; animation: pulse 1.2s ease-in-out infinite; }
 .dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
 .dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes pulse { 0%,80%,100% { opacity:0.2; transform:scale(0.8); } 40% { opacity:1; transform:scale(1); } }
-
+@keyframes pulse { 0%,80%,100%{opacity:.2;transform:scale(.8);}40%{opacity:1;transform:scale(1);} }
 .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 10px 18px; font-size: 0.82rem; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 999; }
 .toast.show { opacity: 1; }
-
 footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 10px; }
-
 @media (max-width: 640px) {
   .main { padding: 24px 16px 48px; }
   .search-input { width: 100%; }
-  .admin-controls { flex-direction: column; align-items: flex-start; }
+  .admin-top { flex-direction: column; align-items: flex-start; }
+  .pending-card { flex-direction: column; align-items: flex-start; }
 }
 </style>
 </head>
@@ -164,7 +169,6 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
 
 <div class="main">
 
-  <!-- AUTH GATE -->
   <div id="authGate">
     <div class="gate-icon">🛡️</div>
     <div class="gate-title">Admin Access</div>
@@ -172,78 +176,72 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
     <div class="auth-card">
       <h3>Sign In</h3>
       <div id="authError" class="auth-error"></div>
-      <div class="form-field">
-        <label>Email</label>
-        <input type="email" id="siEmail" placeholder="you@email.com" autocomplete="email">
-      </div>
-      <div class="form-field">
-        <label>Password</label>
-        <input type="password" id="siPassword" placeholder="Password" autocomplete="current-password">
-      </div>
+      <div class="form-field"><label>Email</label><input type="email" id="siEmail" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="form-field"><label>Password</label><input type="password" id="siPassword" placeholder="Password" autocomplete="current-password"></div>
       <button class="auth-btn" id="signinBtn" onclick="signIn()">Sign In</button>
     </div>
   </div>
 
-  <!-- ACCESS DENIED -->
   <div id="accessDenied">
     <div class="gate-icon">🚫</div>
-    <div class="gate-title" style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--red);">Access Restricted</div>
-    <p style="color:var(--muted); font-size:0.88rem; margin-top:12px;">This area is for board members only. Contact <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a> if you need access.</p>
-    <button onclick="signOut()" style="margin-top:20px; background:none; border:1px solid var(--border); border-radius:6px; padding:8px 18px; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.82rem; cursor:pointer;">Sign Out</button>
+    <div class="gate-title" style="font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--red);">Access Restricted</div>
+    <p style="color:var(--muted);font-size:0.88rem;margin-top:12px;">Board members only. Contact <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a> if you need access.</p>
+    <button onclick="signOut()" style="margin-top:20px;background:none;border:1px solid var(--border);border-radius:6px;padding:8px 18px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;">Sign Out</button>
   </div>
 
-  <!-- ADMIN APP -->
   <div id="adminApp">
 
-    <div class="admin-controls">
+    <div class="admin-top">
       <div class="page-header" style="margin-bottom:0;">
         <h1>User Management</h1>
-        <p>Assign roles, manage access, and review registered accounts.</p>
+        <p>Approve pending accounts, assign roles, and manage access.</p>
       </div>
-      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search by name, email, or unit…" oninput="filterUsers()">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search name, email, or unit…" oninput="filterUsers()">
         <div class="user-badge">
-          <span class="user-badge-name" id="badgeName"></span>
+          <span id="badgeName" style="font-weight:500;"></span>
           <span class="user-badge-role" id="badgeRole"></span>
           <button class="sign-out-btn" onclick="signOut()">Sign out</button>
         </div>
       </div>
     </div>
 
-    <!-- STATS -->
-    <div class="stats-row" id="statsRow"></div>
+    <!-- PENDING -->
+    <div class="pending-section" id="pendingSection" style="display:none;">
+      <div class="pending-header">
+        <h2>Pending Approval</h2>
+        <span class="pending-badge" id="pendingCount">0</span>
+      </div>
+      <div class="pending-cards" id="pendingCards"></div>
+    </div>
 
-    <!-- USER TABLE -->
+    <!-- ALL USERS -->
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+      <div class="section-label" style="margin-bottom:0;">All Users</div>
+    </div>
+    <div class="stats-row" id="statsRow"></div>
     <div class="user-table-wrap">
       <div id="loadingState" class="loading-state">
         <div class="dot-pulse"><span></span><span></span><span></span></div>
         <div style="margin-top:10px;">Loading users…</div>
       </div>
       <table id="userTable" style="display:none;">
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Unit</th>
-            <th>Status</th>
-            <th>Joined</th>
-            <th>Role</th>
-            <th>Save</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>User</th><th>Unit</th><th>Status</th><th>Joined</th><th>Role</th><th>Save</th>
+        </tr></thead>
         <tbody id="userTableBody"></tbody>
       </table>
       <div id="emptyState" class="empty-state" style="display:none;">No users found.</div>
     </div>
 
   </div>
-
 </div>
 
 <div class="toast" id="toast"></div>
 
 <footer>
   Scottsdale Park Place HOA &nbsp;&bull;&nbsp; Board Administration<br>
-  <span style="margin-top:6px; display:block; color:#4a5060;"><a href="index.html">Back to Home</a></span>
+  <span style="margin-top:6px;display:block;color:#4a5060;"><a href="index.html">Back to Home</a></span>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -251,214 +249,212 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
 const SUPABASE_URL  = 'https://hmjypvnbbmyzmutmuxpj.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtanlwdm5iYm15em11dG11eHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzEzMjQsImV4cCI6MjA4OTM0NzMyNH0.hZNbLus9qjwni5Du8UeFJGK7xXQMtqMAr6URs75aZP8';
 const EDGE_URL      = 'https://hmjypvnbbmyzmutmuxpj.supabase.co/functions/v1/smooth-task';
-const ALLOWED_ROLES = ['board', 'president', 'treasurer', 'secretary', 'manager'];
+const BOARD_ROLES   = ['board','president','treasurer','secretary','manager'];
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+let currentUser = null, allUsers = [], activeFilter = 'all';
 
-let currentUser  = null;
-let allUsers     = [];
-let activeFilter = 'all';
-
-/* ── AUTH ── */
-async function signIn() {
-  const email    = document.getElementById('siEmail').value.trim();
-  const password = document.getElementById('siPassword').value;
-  if (!email || !password) { showAuthError('Please enter your email and password.'); return; }
-  const btn = document.getElementById('signinBtn');
-  btn.disabled = true; btn.textContent = 'Signing in…';
-  const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  if (error) { showAuthError(error.message); btn.disabled = false; btn.textContent = 'Sign In'; return; }
-  await handleUser(data.user);
-}
+(async()=>{
+  const {data:{session}} = await sb.auth.getSession();
+  if (session?.user) await handleUser(session.user);
+})();
 
 async function handleUser(user) {
-  const meta = user.user_metadata || {};
-  const role = meta.role || 'owner';
-  if (!ALLOWED_ROLES.includes(role)) {
-    document.getElementById('authGate').style.display = 'none';
-    document.getElementById('accessDenied').style.display = 'block';
+  const meta=user.user_metadata||{}, role=meta.role||'owner';
+  if (!BOARD_ROLES.includes(role)) {
+    document.getElementById('authGate').style.display='none';
+    document.getElementById('accessDenied').style.display='block';
     return;
   }
-  currentUser = { id: user.id, name: meta.name || user.email.split('@')[0], role, token: (await sb.auth.getSession()).data.session.access_token };
+  currentUser={id:user.id,name:meta.name||user.email.split('@')[0],role,token:(await sb.auth.getSession()).data.session.access_token};
   showApp();
 }
 
-async function signOut() {
-  await sb.auth.signOut();
-  currentUser = null;
-  document.getElementById('adminApp').style.display    = 'none';
-  document.getElementById('accessDenied').style.display = 'none';
-  document.getElementById('authGate').style.display    = 'block';
+async function signIn() {
+  const email=document.getElementById('siEmail').value.trim(), pw=document.getElementById('siPassword').value;
+  if (!email||!pw){showErr('Please enter your email and password.');return;}
+  const btn=document.getElementById('signinBtn'); btn.disabled=true; btn.textContent='Signing in…';
+  const {data,error}=await sb.auth.signInWithPassword({email,password:pw});
+  if (error){showErr(error.message);btn.disabled=false;btn.textContent='Sign In';return;}
+  await handleUser(data.user);
+}
+function showErr(msg){const el=document.getElementById('authError');el.textContent=msg;el.classList.add('show');}
+
+async function signOut(){
+  await sb.auth.signOut(); currentUser=null;
+  document.getElementById('adminApp').style.display='none';
+  document.getElementById('accessDenied').style.display='none';
+  document.getElementById('authGate').style.display='block';
 }
 
-function showAuthError(msg) {
-  const el = document.getElementById('authError');
-  el.textContent = msg; el.classList.add('show');
-}
-
-/* ── SHOW APP ── */
-function showApp() {
-  document.getElementById('authGate').style.display = 'none';
-  document.getElementById('adminApp').style.display = 'block';
-  document.getElementById('badgeName').textContent = currentUser.name;
-  document.getElementById('badgeRole').textContent = currentUser.role;
+function showApp(){
+  document.getElementById('authGate').style.display='none';
+  document.getElementById('adminApp').style.display='block';
+  document.getElementById('badgeName').textContent=currentUser.name;
+  document.getElementById('badgeRole').textContent=currentUser.role;
   loadUsers();
 }
 
-/* ── LOAD USERS ── */
 async function loadUsers() {
-  document.getElementById('loadingState').style.display = 'block';
-  document.getElementById('userTable').style.display    = 'none';
-  document.getElementById('emptyState').style.display   = 'none';
-
+  document.getElementById('loadingState').style.display='block';
+  document.getElementById('userTable').style.display='none';
+  document.getElementById('emptyState').style.display='none';
   try {
-    const res = await fetch(EDGE_URL, {
-      method: 'GET',
-      headers: { 'Authorization': `Bearer ${currentUser.token}`, 'Content-Type': 'application/json' }
-    });
+    const res=await fetch(EDGE_URL,{method:'GET',headers:{'Authorization':`Bearer ${currentUser.token}`,'Content-Type':'application/json'}});
     if (!res.ok) throw new Error(await res.text());
-    const data = await res.json();
-    allUsers = data.users || [];
+    const data=await res.json();
+    allUsers=data.users||[];
+    renderPending();
     renderStats();
-    renderTable(allUsers);
+    renderTable(allUsers.filter(u=>u.role!=='pending'));
   } catch(e) {
-    document.getElementById('loadingState').style.display = 'none';
-    document.getElementById('emptyState').style.display = 'block';
-    document.getElementById('emptyState').textContent = 'Failed to load users: ' + e.message;
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('emptyState').style.display='block';
+    document.getElementById('emptyState').textContent='Failed to load users: '+e.message;
   }
 }
 
-/* ── STATS ── */
-function renderStats() {
-  const counts = { all: allUsers.length, board: 0, manager: 0, owner: 0, renter: 0 };
-  allUsers.forEach(u => { if (counts[u.role] !== undefined) counts[u.role]++; });
-  const configs = [
-    { key: 'all',     label: 'Total',   color: 'var(--accent)' },
-    { key: 'board',   label: 'Board',   color: 'var(--accent)' },
-    { key: 'manager', label: 'Manager', color: 'var(--blue)'   },
-    { key: 'owner',   label: 'Owners',  color: 'var(--green)'  },
-    { key: 'renter',  label: 'Renters', color: 'var(--muted)'  },
-  ];
-  document.getElementById('statsRow').innerHTML = configs.map(c => `
-    <div class="stat-card ${activeFilter === c.key ? 'active' : ''}" onclick="filterByRole('${c.key}')">
-      <div class="stat-num" style="color:${c.color}">${counts[c.key] || 0}</div>
-      <div class="stat-label">${c.label}</div>
+function renderPending() {
+  const pending=allUsers.filter(u=>u.role==='pending');
+  const section=document.getElementById('pendingSection');
+  document.getElementById('pendingCount').textContent=pending.length;
+  if (!pending.length){section.style.display='none';return;}
+  section.style.display='block';
+  document.getElementById('pendingCards').innerHTML=pending.map(u=>`
+    <div class="pending-card" id="pcard-${u.id}">
+      <div class="pending-info">
+        <div class="pending-name">${esc(u.name||'—')}</div>
+        <div class="pending-detail">${esc(u.email)} &nbsp;·&nbsp; Unit ${esc(u.unit||'—')} &nbsp;·&nbsp; Registered ${new Date(u.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+      </div>
+      <div class="pending-actions">
+        <select class="pending-role-select" id="prole-${u.id}">
+          <option value="owner">Owner</option>
+          <option value="renter">Renter</option>
+          <option value="board">Board Member</option>
+          <option value="manager">Property Manager</option>
+          <option value="treasurer">Treasurer</option>
+          <option value="secretary">Secretary</option>
+        </select>
+        <button class="approve-btn" onclick="approveUser('${u.id}')">✓ Approve</button>
+        <button class="deny-btn" onclick="denyUser('${u.id}')">✕ Deny</button>
+      </div>
     </div>`).join('');
 }
 
-/* ── RENDER TABLE ── */
-function renderTable(users) {
-  document.getElementById('loadingState').style.display = 'none';
-  if (!users.length) {
-    document.getElementById('emptyState').style.display = 'block';
-    document.getElementById('userTable').style.display  = 'none';
-    return;
-  }
-  document.getElementById('emptyState').style.display = 'none';
-  document.getElementById('userTable').style.display  = 'table';
+async function approveUser(userId) {
+  const role=document.getElementById(`prole-${userId}`).value;
+  const btn=document.querySelector(`#pcard-${userId} .approve-btn`);
+  btn.disabled=true; btn.textContent='Saving…';
+  try {
+    const res=await fetch(EDGE_URL,{method:'POST',headers:{'Authorization':`Bearer ${currentUser.token}`,'Content-Type':'application/json'},body:JSON.stringify({userId,role})});
+    if (!res.ok) throw new Error(await res.text());
+    showToast(`Access granted: ${role}`);
+    loadUsers();
+  } catch(e){showToast('Failed: '+e.message,'var(--red)');btn.disabled=false;btn.textContent='✓ Approve';}
+}
 
-  document.getElementById('userTableBody').innerHTML = users.map(u => {
-    const joined = new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    const roleClass = `role-${u.role.split('-')[0]}`;
+async function denyUser(userId) {
+  if (!confirm('Delete this account? This cannot be undone.')) return;
+  // For now just set role to 'denied' — full delete requires service role
+  try {
+    const res=await fetch(EDGE_URL,{method:'POST',headers:{'Authorization':`Bearer ${currentUser.token}`,'Content-Type':'application/json'},body:JSON.stringify({userId,role:'denied'})});
+    if (!res.ok) throw new Error(await res.text());
+    showToast('Account denied');
+    loadUsers();
+  } catch(e){showToast('Failed: '+e.message,'var(--red)');}
+}
+
+function renderStats() {
+  const nonPending=allUsers.filter(u=>u.role!=='pending');
+  const counts={all:nonPending.length,board:0,manager:0,owner:0,renter:0};
+  nonPending.forEach(u=>{
+    if (u.role==='board'||u.role==='president'||u.role==='treasurer'||u.role==='secretary') counts.board++;
+    else if (counts[u.role]!==undefined) counts[u.role]++;
+  });
+  document.getElementById('statsRow').innerHTML=[
+    {key:'all',label:'Total',color:'var(--accent)'},
+    {key:'board',label:'Board',color:'var(--accent)'},
+    {key:'manager',label:'Manager',color:'var(--blue)'},
+    {key:'owner',label:'Owners',color:'var(--green)'},
+    {key:'renter',label:'Renters',color:'var(--muted)'},
+  ].map(c=>`<div class="stat-card ${activeFilter===c.key?'active':''}" onclick="filterByRole('${c.key}')">
+    <div class="stat-num" style="color:${c.color}">${counts[c.key]||0}</div>
+    <div class="stat-label">${c.label}</div>
+  </div>`).join('');
+}
+
+function renderTable(users) {
+  document.getElementById('loadingState').style.display='none';
+  if (!users.length){document.getElementById('emptyState').style.display='block';document.getElementById('userTable').style.display='none';return;}
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('userTable').style.display='table';
+  document.getElementById('userTableBody').innerHTML=users.map(u=>{
+    const joined=new Date(u.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const roleKey=u.role.split('-')[0];
     return `<tr id="row-${u.id}">
+      <td><div class="user-name">${esc(u.name||'—')}</div><div class="user-email">${esc(u.email)}</div></td>
+      <td style="color:var(--muted);font-size:0.82rem;">${esc(u.unit||'—')}</td>
+      <td><span class="confirm-badge ${u.confirmed?'confirmed':'unconfirmed'}">${u.confirmed?'Confirmed':'Pending email'}</span></td>
+      <td style="color:var(--muted);font-size:0.82rem;">${joined}</td>
       <td>
-        <div class="user-name">${esc(u.name || '—')}</div>
-        <div class="user-email">${esc(u.email)}</div>
-      </td>
-      <td class="user-unit">${esc(u.unit || '—')}</td>
-      <td><span class="confirm-badge ${u.confirmed ? 'confirmed' : 'unconfirmed'}">${u.confirmed ? 'Confirmed' : 'Pending'}</span></td>
-      <td style="color:var(--muted); font-size:0.82rem;">${joined}</td>
-      <td>
-        <select class="role-select ${roleClass}" id="role-${u.id}" onchange="markChanged('${u.id}')" data-original="${u.role}">
-          <option value="president"  ${u.role==='president'  ? 'selected':''}>President</option>
-          <option value="board"      ${u.role==='board'      ? 'selected':''}>Board Member</option>
-          <option value="treasurer"  ${u.role==='treasurer'  ? 'selected':''}>Treasurer</option>
-          <option value="secretary"  ${u.role==='secretary'  ? 'selected':''}>Secretary</option>
-          <option value="manager"    ${u.role==='manager'    ? 'selected':''}>Property Manager</option>
-          <option value="owner"      ${u.role==='owner'      ? 'selected':''}>Owner</option>
-          <option value="renter"     ${u.role==='renter'     ? 'selected':''}>Renter</option>
+        <select class="role-select role-${roleKey}" id="role-${u.id}" onchange="markChanged('${u.id}')" data-original="${u.role}">
+          <option value="president" ${u.role==='president'?'selected':''}>President</option>
+          <option value="board"     ${u.role==='board'?'selected':''}>Board Member</option>
+          <option value="treasurer" ${u.role==='treasurer'?'selected':''}>Treasurer</option>
+          <option value="secretary" ${u.role==='secretary'?'selected':''}>Secretary</option>
+          <option value="manager"   ${u.role==='manager'?'selected':''}>Property Manager</option>
+          <option value="owner"     ${u.role==='owner'?'selected':''}>Owner</option>
+          <option value="renter"    ${u.role==='renter'?'selected':''}>Renter</option>
         </select>
       </td>
-      <td>
-        <button class="save-btn" id="save-${u.id}" onclick="saveRole('${u.id}')" disabled>Save</button>
-      </td>
+      <td><button class="save-btn" id="save-${u.id}" onclick="saveRole('${u.id}')" disabled>Save</button></td>
     </tr>`;
   }).join('');
 }
 
 function markChanged(userId) {
-  const select = document.getElementById(`role-${userId}`);
-  const btn    = document.getElementById(`save-${userId}`);
-  const changed = select.value !== select.dataset.original;
-  btn.disabled = !changed;
-  btn.classList.remove('saved');
-  // Update select color class
-  select.className = `role-select role-${select.value.split('-')[0]}`;
+  const sel=document.getElementById(`role-${userId}`), btn=document.getElementById(`save-${userId}`);
+  btn.disabled=sel.value===sel.dataset.original; btn.classList.remove('saved');
+  sel.className=`role-select role-${sel.value.split('-')[0]}`;
 }
 
 async function saveRole(userId) {
-  const select = document.getElementById(`role-${userId}`);
-  const btn    = document.getElementById(`save-${userId}`);
-  const role   = select.value;
-  btn.disabled = true; btn.textContent = 'Saving…';
-
+  const sel=document.getElementById(`role-${userId}`), btn=document.getElementById(`save-${userId}`);
+  btn.disabled=true; btn.textContent='Saving…';
   try {
-    const res = await fetch(EDGE_URL, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${currentUser.token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, role })
-    });
+    const res=await fetch(EDGE_URL,{method:'POST',headers:{'Authorization':`Bearer ${currentUser.token}`,'Content-Type':'application/json'},body:JSON.stringify({userId,role:sel.value})});
     if (!res.ok) throw new Error(await res.text());
-    select.dataset.original = role;
-    btn.textContent = 'Saved ✓';
-    btn.classList.add('saved');
-    showToast(`Role updated to ${role}`);
+    sel.dataset.original=sel.value; btn.textContent='Saved ✓'; btn.classList.add('saved');
+    showToast(`Role updated to ${sel.value}`);
     renderStats();
-    setTimeout(() => { btn.textContent = 'Save'; btn.disabled = true; btn.classList.remove('saved'); }, 3000);
-  } catch(e) {
-    btn.textContent = 'Save';
-    btn.disabled = false;
-    showToast('Failed: ' + e.message, 'var(--red)');
-  }
+    setTimeout(()=>{btn.textContent='Save';btn.disabled=true;btn.classList.remove('saved');},3000);
+  } catch(e){btn.textContent='Save';btn.disabled=false;showToast('Failed: '+e.message,'var(--red)');}
 }
 
-/* ── FILTER ── */
 function filterByRole(role) {
-  activeFilter = role;
-  renderStats();
-  const filtered = role === 'all' ? allUsers : allUsers.filter(u => u.role === role);
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  renderTable(search ? filtered.filter(u => matchesSearch(u, search)) : filtered);
+  activeFilter=role; renderStats();
+  const base=allUsers.filter(u=>u.role!=='pending');
+  const filtered=role==='all'?base:base.filter(u=>{
+    if (role==='board') return ['board','president','treasurer','secretary'].includes(u.role);
+    return u.role===role;
+  });
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  renderTable(q?filtered.filter(u=>matchSearch(u,q)):filtered);
 }
 
 function filterUsers() {
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  const base   = activeFilter === 'all' ? allUsers : allUsers.filter(u => u.role === activeFilter);
-  renderTable(search ? base.filter(u => matchesSearch(u, search)) : base);
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const base=allUsers.filter(u=>u.role!=='pending');
+  const byRole=activeFilter==='all'?base:base.filter(u=>{
+    if (activeFilter==='board') return ['board','president','treasurer','secretary'].includes(u.role);
+    return u.role===activeFilter;
+  });
+  renderTable(q?byRole.filter(u=>matchSearch(u,q)):byRole);
 }
 
-function matchesSearch(u, q) {
-  return (u.name||'').toLowerCase().includes(q) ||
-         (u.email||'').toLowerCase().includes(q) ||
-         (u.unit||'').toLowerCase().includes(q);
-}
-
-/* ── HELPERS ── */
-function esc(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function showToast(msg, color) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.style.color = color || 'var(--green)';
-  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-/* ── INIT ── */
-(async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session?.user) await handleUser(session.user);
-})();
+function matchSearch(u,q){return (u.name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q)||(u.unit||'').toLowerCase().includes(q);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function showToast(msg,color){const t=document.getElementById('toast');t.textContent=msg;t.style.color=color||'var(--green)';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 </script>
-
 </body>
 </html>
