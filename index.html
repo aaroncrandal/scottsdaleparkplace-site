@@ -12,12 +12,34 @@
   --red: #c05050; --blue: #5a8ab0; --green: #5a9e7a; --orange: #c87840;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; overflow-x: hidden; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 32px 32px 24px; text-align: center; position: relative; }
-.site-title { font-family: 'DM Serif Display', serif; font-size: 2.1rem; letter-spacing: 0.02em; }
-.site-subtitle { margin-top: 5px; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; }
+
+/* ── ANIMATED BG ── */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(200,169,110,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,169,110,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: bgDrift 40s linear infinite;
+}
+@keyframes bgDrift { 0% { background-position: 0 0; } 100% { background-position: 60px 60px; } }
+
+/* ── HEADER ── */
+header {
+  background: rgba(24,28,35,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 24px 32px 18px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.site-title { font-family: 'DM Serif Display', serif; font-size: 1.9rem; letter-spacing: 0.02em; }
+.site-subtitle { margin-top: 3px; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; }
 .header-auth { position: absolute; top: 50%; right: 24px; transform: translateY(-50%); display: flex; align-items: center; gap: 10px; }
 .header-user { font-size: 0.78rem; color: var(--muted); display: none; }
 .header-user span { color: var(--accent); font-weight: 500; }
@@ -25,17 +47,61 @@ header { background: var(--surface); border-bottom: 1px solid var(--border); pad
 .signin-btn:hover { background: rgba(200,169,110,0.25); }
 .signout-btn { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; cursor: pointer; display: none; }
 .signout-btn:hover { color: var(--text); }
-nav { background: #13161d; border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
-nav a { padding: 13px 22px; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; }
+
+/* ── NAV ── */
+nav {
+  background: rgba(19,22,29,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: center; flex-wrap: wrap;
+  position: sticky; top: 73px; z-index: 99;
+}
+nav a { padding: 11px 20px; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; }
 nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); text-decoration: none; }
-.main { max-width: 960px; margin: 0 auto; padding: 48px 32px 80px; }
-.section-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
-#signinGate { max-width: 420px; margin: 80px auto 0; text-align: center; display: none; }
-.gate-hero { margin-bottom: 32px; }
-.gate-hero h2 { font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: var(--accent); margin-bottom: 10px; }
-.gate-hero p { font-size: 0.88rem; color: #b0b8c8; line-height: 1.7; }
-.auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 32px 28px; text-align: left; position: relative; overflow: hidden; }
-.auth-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.5; }
+
+/* ── MAIN ── */
+.main { max-width: 800px; margin: 0 auto; padding: 0 24px 80px; position: relative; z-index: 1; }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── SIGN IN GATE ── */
+#signinGate {
+  min-height: calc(100vh - 160px);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+}
+.gate-hero { text-align: center; margin-bottom: 36px; }
+.gate-logo { font-size: 2.8rem; margin-bottom: 16px; }
+.gate-hero h2 { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--accent); margin-bottom: 10px; }
+.gate-hero p { font-size: 0.9rem; color: #b0b8c8; line-height: 1.7; max-width: 360px; margin: 0 auto; }
+.auth-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 28px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  overflow: hidden;
+}
+.auth-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.6;
+}
 .auth-tabs { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 24px; }
 .auth-tab { flex: 1; padding: 9px; text-align: center; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: transparent; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; transition: background 0.2s, color 0.2s; }
 .auth-tab.active { background: var(--accent); color: #0f1115; }
@@ -53,80 +119,143 @@ nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); t
 .auth-msg.error { background: rgba(192,80,80,0.1); border: 1px solid rgba(192,80,80,0.25); color: var(--red); }
 .auth-msg.success { background: rgba(90,158,122,0.1); border: 1px solid rgba(90,158,122,0.25); color: var(--green); }
 .auth-note { font-size: 0.72rem; color: #4a5060; text-align: center; margin-top: 14px; line-height: 1.5; }
-#pendingState { max-width: 420px; margin: 80px auto 0; text-align: center; display: none; }
-.pending-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 36px 28px; }
+.forgot-link { text-align: center; margin-top: 10px; }
+.forgot-link button { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.76rem; cursor: pointer; text-decoration: underline; }
+.forgot-link button:hover { color: var(--text); }
+
+/* ── PENDING ── */
+#pendingState {
+  min-height: calc(100vh - 160px);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+}
+.pending-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 40px 32px; text-align: center; max-width: 400px; width: 100%; }
 .pending-icon { font-size: 2.8rem; margin-bottom: 16px; }
 .pending-title { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--accent); margin-bottom: 10px; }
 .pending-msg { font-size: 0.86rem; color: #b0b8c8; line-height: 1.7; margin-bottom: 20px; }
 .pending-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .pending-links a { color: var(--accent); font-size: 0.82rem; border: 1px solid rgba(200,169,110,0.3); border-radius: 6px; padding: 7px 16px; transition: background 0.2s; }
 .pending-links a:hover { background: var(--accent-dim); text-decoration: none; }
-#loggedInContent { display: none; }
-.announcements-section { margin-bottom: 48px; }
-.announce-compose { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; display: none; }
-.announce-compose h4 { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
-.compose-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 9px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; margin-bottom: 10px; }
+
+/* ── PASSWORD RESET ── */
+#resetState {
+  min-height: calc(100vh - 160px);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+}
+
+/* ── LOGGED IN SECTIONS ── */
+#loggedInContent { display: none; padding-top: 48px; }
+.section-wrap { margin-bottom: 56px; }
+.section-label { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── BOARD QUICK ACCESS ── */
+.quick-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.quick-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 18px;
+  text-decoration: none;
+  display: block;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.quick-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.3); text-decoration: none; }
+.quick-card-icon { font-size: 1.6rem; margin-bottom: 10px; display: block; }
+.quick-card-title { font-weight: 600; font-size: 0.9rem; color: var(--text); margin-bottom: 3px; }
+.quick-card-desc { font-size: 0.76rem; color: var(--muted); line-height: 1.4; }
+.quick-card.board-card { border-color: rgba(200,169,110,0.25); }
+.quick-card.board-card:hover { border-color: var(--accent); }
+
+/* ── ANNOUNCEMENTS ── */
+.announce-compose { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 14px; display: none; }
+.announce-compose h4 { font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+.compose-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 9px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
 .compose-input:focus { border-color: var(--accent); }
 .compose-input::placeholder { color: #4a5060; }
-.compose-textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 9px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; resize: vertical; min-height: 80px; transition: border-color 0.2s; margin-bottom: 10px; line-height: 1.6; }
+.compose-textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 9px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; resize: vertical; min-height: 80px; margin-bottom: 10px; line-height: 1.6; transition: border-color 0.2s; }
 .compose-textarea:focus { border-color: var(--accent); }
 .compose-textarea::placeholder { color: #4a5060; }
 .compose-btn { background: var(--accent); color: #0f1115; border: none; border-radius: 6px; padding: 8px 20px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
-.compose-btn:hover { opacity: 0.88; }
 .compose-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.announce-grid { display: flex; flex-direction: column; gap: 12px; }
-.announce-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; padding: 18px 22px; position: relative; }
-.announce-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 6px; }
-.announce-body { font-size: 0.86rem; color: #b0b8c8; line-height: 1.7; }
-.announce-meta { font-size: 0.74rem; color: var(--muted); margin-top: 10px; }
-.announce-delete { position: absolute; top: 12px; right: 14px; background: none; border: none; color: var(--muted); font-size: 0.75rem; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.announce-grid { display: flex; flex-direction: column; gap: 10px; }
+.announce-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 16px 20px;
+  position: relative;
+}
+.announce-title { font-weight: 600; font-size: 0.92rem; margin-bottom: 5px; }
+.announce-body { font-size: 0.85rem; color: #b0b8c8; line-height: 1.65; }
+.announce-meta { font-size: 0.72rem; color: var(--muted); margin-top: 8px; }
+.announce-delete { position: absolute; top: 12px; right: 14px; background: none; border: none; color: var(--muted); font-size: 0.74rem; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 .announce-delete:hover { color: var(--red); }
-.bulletin-section { margin-bottom: 48px; }
+
+/* ── BULLETIN ── */
 .bulletin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .bulletin-link { font-size: 0.78rem; color: var(--accent); font-weight: 500; }
-.posts-feed { display: flex; flex-direction: column; gap: 12px; }
-.post-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; transition: border-color 0.2s; text-decoration: none; display: block; }
-.post-card:hover { border-color: var(--accent); text-decoration: none; }
+.posts-feed { display: flex; flex-direction: column; gap: 10px; }
+.post-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  transition: border-color 0.2s, transform 0.15s;
+  text-decoration: none;
+  display: block;
+}
+.post-card:hover { border-color: var(--accent); transform: translateY(-1px); text-decoration: none; }
 .post-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 12px; }
 .post-author-row { display: flex; align-items: center; gap: 10px; }
-.post-avatar { width: 36px; height: 36px; border-radius: 8px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 700; color: var(--muted); flex-shrink: 0; letter-spacing: 0.02em; }
+.post-avatar { width: 34px; height: 34px; border-radius: 8px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 700; color: var(--muted); flex-shrink: 0; }
 .post-avatar.board { background: rgba(200,169,110,0.12); border-color: rgba(200,169,110,0.3); color: var(--accent); }
 .post-name { font-size: 0.84rem; font-weight: 600; color: var(--text); }
 .post-unit-time { font-size: 0.72rem; color: var(--muted); }
-.post-cat { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); border-radius: 4px; padding: 2px 7px; }
-.post-body { font-size: 0.86rem; color: #b0b8c8; line-height: 1.65; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.post-footer { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.post-cat { font-size: 0.67rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); border-radius: 4px; padding: 2px 7px; }
+.post-body { font-size: 0.85rem; color: #b0b8c8; line-height: 1.65; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.post-footer { margin-top: 10px; }
 .post-engagement { font-size: 0.76rem; color: var(--muted); }
 .engagement-hot { color: var(--orange); }
-.loading-row { display: flex; align-items: center; gap: 10px; padding: 20px 0; color: var(--muted); font-size: 0.85rem; }
-.empty-row { padding: 20px 0; color: var(--muted); font-size: 0.85rem; }
+
+.loading-row { display: flex; align-items: center; gap: 10px; padding: 16px 0; color: var(--muted); font-size: 0.85rem; }
+.empty-row { padding: 16px 0; color: var(--muted); font-size: 0.85rem; }
 .dot-pulse { display: inline-flex; gap: 4px; }
 .dot-pulse span { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; animation: pulse 1.2s ease-in-out infinite; }
 .dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
 .dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
 @keyframes pulse { 0%,80%,100%{opacity:.2;transform:scale(.8);}40%{opacity:1;transform:scale(1);} }
-.pm-strip { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 48px; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); }
+
+/* ── PM FOOTER ── */
+.pm-strip { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; font-size: 0.79rem; color: var(--muted); }
 .pm-strip a { color: var(--accent); font-weight: 500; }
+
+/* ── MODAL ── */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 300; align-items: center; justify-content: center; padding: 16px; }
 .modal-overlay.open { display: flex; }
-.modal-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 32px 28px; width: 100%; max-width: 380px; position: relative; }
+.modal-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; width: 100%; max-width: 380px; position: relative; }
 .modal-close { position: absolute; top: 14px; right: 18px; background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
-footer { border-top: 1px solid var(--border); background: var(--surface); padding: 24px 32px; text-align: center; font-size: 0.78rem; color: var(--muted); }
+
+footer { border-top: 1px solid var(--border); background: var(--surface); padding: 24px 32px; text-align: center; font-size: 0.78rem; color: var(--muted); position: relative; z-index: 1; }
+
 @media (max-width: 640px) {
-  .main { padding: 32px 16px 48px; }
-  header { padding: 24px 16px 60px; }
-  .header-auth { top: auto; bottom: 14px; right: 16px; transform: none; }
-  .site-title { font-size: 1.6rem; }
+  .main { padding: 0 16px 60px; }
+  header { padding: 20px 16px 14px; }
+  .header-auth { top: auto; bottom: 12px; right: 14px; transform: none; }
+  .site-title { font-size: 1.5rem; }
+  .quick-cards { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
 <body>
 
+<div class="bg-grid"></div>
+
 <header>
   <div class="site-title">Scottsdale Park Place</div>
   <div class="site-subtitle">Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251</div>
   <div class="header-auth">
-    <span class="header-user" id="headerUser">Signed in as <span id="headerName"></span></span>
+    <span class="header-user" id="headerUser">Hi, <span id="headerName"></span></span>
     <button class="signin-btn" id="headerSigninBtn" onclick="openSigninModal()">Sign In</button>
     <button class="signout-btn" id="headerSignoutBtn" onclick="signOut()">Sign out</button>
   </div>
@@ -145,12 +274,13 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
 <div class="main">
 
   <!-- NOT LOGGED IN -->
-  <div id="signinGate">
-    <div class="gate-hero">
+  <div id="signinGate" style="display:none; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 160px);">
+    <div class="gate-hero reveal">
+      <div class="gate-logo">🏘️</div>
       <h2>Welcome Home</h2>
       <p>Sign in to access the community bulletin, current affairs, and your resident portal.</p>
     </div>
-    <div class="auth-card">
+    <div class="auth-card reveal" style="transition-delay:0.15s;">
       <div class="auth-tabs">
         <button class="auth-tab active" onclick="switchTab('signin')">Sign In</button>
         <button class="auth-tab" onclick="switchTab('register')">Create Account</button>
@@ -160,7 +290,7 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
         <div class="form-field"><label>Email</label><input type="email" id="gsiEmail" placeholder="you@email.com" autocomplete="email"></div>
         <div class="form-field"><label>Password</label><input type="password" id="gsiPassword" placeholder="Password" autocomplete="current-password"></div>
         <button class="auth-submit" id="gsiBtn" onclick="signIn()">Sign In</button>
-        <div style="text-align:center; margin-top:12px;"><button onclick="forgotPassword('gate')" style="background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;text-decoration:underline;">Forgot password?</button></div>
+        <div class="forgot-link"><button onclick="forgotPassword('gate')">Forgot password?</button></div>
       </div>
       <div id="gateRegister" style="display:none;">
         <div class="form-field"><label>Full Name</label><input type="text" id="gregName" placeholder="First and last name"></div>
@@ -171,14 +301,14 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
         <div class="form-field"><label>Email</label><input type="email" id="gregEmail" placeholder="you@email.com" autocomplete="email"></div>
         <div class="form-field"><label>Password</label><input type="password" id="gregPassword" placeholder="At least 8 characters" autocomplete="new-password"></div>
         <button class="auth-submit" id="gregBtn" onclick="register()">Create Account</button>
-        <div class="auth-note">Your account will be reviewed by the board or property manager before access is granted.</div>
+        <div class="auth-note">Your account will be reviewed before access is granted.</div>
       </div>
     </div>
   </div>
 
   <!-- PENDING -->
-  <div id="pendingState">
-    <div class="pending-card">
+  <div id="pendingState" style="display:none; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 160px);">
+    <div class="pending-card reveal">
       <div class="pending-icon">⏳</div>
       <div class="pending-title">Awaiting Approval</div>
       <div class="pending-msg" id="pendingMsg">Your account is pending review.</div>
@@ -189,13 +319,45 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
     </div>
   </div>
 
-  <!-- LOGGED IN -->
-  <div id="loggedInContent">
+  <!-- PASSWORD RESET -->
+  <div id="resetState" style="display:none; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 160px);">
+    <div class="auth-card reveal" style="max-width:400px; width:100%;">
+      <h3 style="font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:18px;">Set New Password</h3>
+      <div id="resetMsg" class="auth-msg"></div>
+      <div class="form-field"><label>New Password</label><input type="password" id="resetPw" placeholder="At least 8 characters" autocomplete="new-password"></div>
+      <div class="form-field"><label>Confirm Password</label><input type="password" id="resetPwConfirm" placeholder="Repeat password"></div>
+      <button class="auth-submit" id="resetBtn" onclick="submitReset()">Update Password</button>
+    </div>
+  </div>
 
-    <div class="announcements-section">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-        <div class="section-label" style="margin-bottom:0;">📌 Current Affairs</div>
+  <!-- LOGGED IN -->
+  <div id="loggedInContent" style="display:none; padding-top:48px;">
+
+    <!-- BOARD QUICK ACCESS (board/manager only) -->
+    <div class="section-wrap reveal" id="boardSection" style="display:none;">
+      <div class="section-label">Board &amp; Management</div>
+      <div class="quick-cards">
+        <a href="board.html" class="quick-card board-card">
+          <span class="quick-card-icon">🛡️</span>
+          <div class="quick-card-title">Board Portal</div>
+          <div class="quick-card-desc">Discussion board, ops manual, ARC requests</div>
+        </a>
+        <a href="comms.html" class="quick-card board-card">
+          <span class="quick-card-icon">💬</span>
+          <div class="quick-card-title">Board Comms</div>
+          <div class="quick-card-desc">7-channel board &amp; manager communications</div>
+        </a>
+        <a href="admin.html" class="quick-card board-card">
+          <span class="quick-card-icon">⚙️</span>
+          <div class="quick-card-title">Admin</div>
+          <div class="quick-card-desc">Manage user accounts and access levels</div>
+        </a>
       </div>
+    </div>
+
+    <!-- ANNOUNCEMENTS -->
+    <div class="section-wrap reveal" style="transition-delay:0.1s;">
+      <div class="section-label">📌 Current Affairs</div>
       <div class="announce-compose" id="announceCompose">
         <h4>Post an Announcement</h4>
         <input type="text" class="compose-input" id="announceTitle" placeholder="Title (e.g. Landscaping Cutback — Week of March 24)">
@@ -207,9 +369,10 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
       </div>
     </div>
 
-    <div class="bulletin-section">
+    <!-- COMMUNITY BULLETIN -->
+    <div class="section-wrap reveal" style="transition-delay:0.2s;">
       <div class="bulletin-header">
-        <div class="section-label" style="margin-bottom:0;">💬 Community Bulletin</div>
+        <div class="section-label" style="margin-bottom:0; flex:1;">💬 Community Bulletin</div>
         <a href="community.html" class="bulletin-link">View all &amp; post →</a>
       </div>
       <div class="posts-feed" id="postsFeed">
@@ -217,15 +380,38 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
       </div>
     </div>
 
-    <div class="pm-strip">
+    <!-- RESIDENT RESOURCES (owners/renters) -->
+    <div class="section-wrap reveal" id="residentSection" style="display:none; transition-delay:0.3s;">
+      <div class="section-label">Community Resources</div>
+      <div class="quick-cards">
+        <a href="documents.html" class="quick-card">
+          <span class="quick-card-icon">📄</span>
+          <div class="quick-card-title">Documents</div>
+          <div class="quick-card-desc">Governing docs, CC&Rs, bylaws, ARC requests</div>
+        </a>
+        <a href="issues.html" class="quick-card">
+          <span class="quick-card-icon">🏗️</span>
+          <div class="quick-card-title">Capital Projects</div>
+          <div class="quick-card-desc">Reserve study, project timeline &amp; funding</div>
+        </a>
+        <a href="contact.html" class="quick-card">
+          <span class="quick-card-icon">✉️</span>
+          <div class="quick-card-title">Contact</div>
+          <div class="quick-card-desc">Reach the board or property manager</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="pm-strip reveal" style="transition-delay:0.4s;">
       <span>Property Manager: Madison Garrison</span>
       <span>&bull;</span>
       <span>Brown Community Management</span>
       <span>&bull;</span>
-      <a href="contact.html">Contact the board or manager →</a>
+      <a href="contact.html">Contact →</a>
     </div>
 
   </div>
+
 </div>
 
 <!-- MODAL -->
@@ -241,7 +427,7 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
       <div class="form-field"><label>Email</label><input type="email" id="msiEmail" placeholder="you@email.com" autocomplete="email"></div>
       <div class="form-field"><label>Password</label><input type="password" id="msiPassword" placeholder="Password" autocomplete="current-password"></div>
       <button class="auth-submit" id="msiBtn" onclick="signInModal()">Sign In</button>
-      <div style="text-align:center; margin-top:12px;"><button onclick="forgotPassword('modal')" style="background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;text-decoration:underline;">Forgot password?</button></div>
+      <div class="forgot-link"><button onclick="forgotPassword('modal')">Forgot password?</button></div>
     </div>
     <div id="modalRegister" style="display:none;">
       <div class="form-field"><label>Full Name</label><input type="text" id="mregName" placeholder="First and last name"></div>
@@ -274,43 +460,95 @@ const catLabels      = {general:'💬 General',question:'❓ Question',notice:'�
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 let currentUser = null;
 
-(async()=>{
-  const {data:{session}} = await sb.auth.getSession();
+/* ── SCROLL REVEAL ── */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+}, { threshold: 0.1 });
+
+function observeReveal() {
+  document.querySelectorAll('.reveal').forEach(el => {
+    if (getComputedStyle(el).display !== 'none') revealObserver.observe(el);
+  });
+}
+
+/* ── AUTH STATE LISTENER (handles password recovery) ── */
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'PASSWORD_RECOVERY') {
+    showReset();
+    return;
+  }
+  if (event === 'SIGNED_IN' && session?.user) {
+    // Only handle if we're not already showing content
+    if (document.getElementById('loggedInContent').style.display === 'none' &&
+        document.getElementById('resetState').style.display === 'none') {
+      await handleUser(session.user);
+    }
+  }
+});
+
+/* ── INIT ── */
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
   if (session?.user) await handleUser(session.user);
   else showGate();
 })();
 
 async function handleUser(user) {
-  const meta = user.user_metadata||{};
-  const role = meta.role||'pending';
-  currentUser = {id:user.id, name:meta.name||user.email.split('@')[0], unit:meta.unit||'', role, email:user.email};
-  if (role==='pending') { showPending(); return; }
+  const meta = user.user_metadata || {};
+  const role = meta.role || 'pending';
+  currentUser = { id: user.id, name: meta.name || user.email.split('@')[0], unit: meta.unit || '', role, email: user.email };
+  if (role === 'pending') { showPending(); return; }
   if (RESIDENT_ROLES.includes(role)) { showLoggedIn(); return; }
   showPending();
 }
 
-function showGate() {
-  set('signinGate','block'); set('pendingState','none'); set('loggedInContent','none');
-  set('headerSigninBtn','inline-block'); set('headerSignoutBtn','none'); set('headerUser','none');
-}
-function showPending() {
-  set('signinGate','none'); set('pendingState','block'); set('loggedInContent','none');
-  set('headerSigninBtn','none'); set('headerSignoutBtn','inline-block'); set('headerUser','none');
-  document.getElementById('pendingMsg').textContent = `Hi ${currentUser.name} — your account is pending review by the board or property manager. You'll be notified once access is granted.`;
-}
-function showLoggedIn() {
-  set('signinGate','none'); set('pendingState','none'); set('loggedInContent','block');
-  set('headerSigninBtn','none'); set('headerSignoutBtn','inline-block'); set('headerUser','inline');
-  document.getElementById('headerName').textContent = currentUser.name;
-  if (BOARD_ROLES.includes(currentUser.role)) document.getElementById('announceCompose').style.display='block';
-  loadAnnouncements(); loadBulletin();
-}
-function set(id, val) { document.getElementById(id).style.display=val; }
+/* ── UI STATES ── */
+function hide(id) { document.getElementById(id).style.display = 'none'; }
+function flex(id) { document.getElementById(id).style.display = 'flex'; }
+function block(id){ document.getElementById(id).style.display = 'block'; }
 
+function showGate() {
+  flex('signinGate'); hide('pendingState'); hide('loggedInContent'); hide('resetState');
+  block('headerSigninBtn'); hide('headerSignoutBtn'); hide('headerUser');
+  setTimeout(observeReveal, 50);
+}
+
+function showPending() {
+  hide('signinGate'); flex('pendingState'); hide('loggedInContent'); hide('resetState');
+  hide('headerSigninBtn'); block('headerSignoutBtn'); hide('headerUser');
+  document.getElementById('pendingMsg').textContent = `Hi ${currentUser.name} — your account is pending review by the board or property manager. You'll be notified once access is granted.`;
+  setTimeout(observeReveal, 50);
+}
+
+function showReset() {
+  hide('signinGate'); hide('pendingState'); hide('loggedInContent'); flex('resetState');
+  hide('headerSigninBtn'); hide('headerSignoutBtn'); hide('headerUser');
+  setTimeout(observeReveal, 50);
+}
+
+function showLoggedIn() {
+  hide('signinGate'); hide('pendingState'); block('loggedInContent'); hide('resetState');
+  hide('headerSigninBtn'); block('headerSignoutBtn'); block('headerUser');
+  document.getElementById('headerName').textContent = currentUser.name;
+
+  const isBoard = BOARD_ROLES.includes(currentUser.role);
+  if (isBoard) {
+    block('boardSection');
+    document.getElementById('announceCompose').style.display = 'block';
+  }
+  // Show resident resource cards for owners/renters (not board — they have their own section)
+  if (!isBoard) block('residentSection');
+
+  setTimeout(observeReveal, 50);
+  loadAnnouncements();
+  loadBulletin();
+}
+
+/* ── SIGN IN ── */
 function switchTab(tab) {
   document.querySelectorAll('.auth-card .auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0)===(tab==='signin')));
-  set('gateSignin', tab==='signin'?'block':'none');
-  set('gateRegister', tab==='register'?'block':'none');
+  document.getElementById('gateSignin').style.display   = tab==='signin'   ? 'block':'none';
+  document.getElementById('gateRegister').style.display = tab==='register' ? 'block':'none';
   document.getElementById('gateAuthMsg').classList.remove('show');
 }
 
@@ -333,18 +571,43 @@ async function register() {
   const {error}=await sb.auth.signUp({email,password:pw,options:{data:{name,unit,role:'pending'}}});
   if (error){showMsg('gateAuthMsg',error.message,'error');btn.disabled=false;btn.textContent='Create Account';return;}
   try { await fetch(CONTACT_WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({category:'New Account Pending Approval',name,email,unit,description:`New resident account pending approval.\n\nName: ${name}\nUnit: ${unit}\nEmail: ${email}\nRequested role: ${role}\n\nVisit scottsdaleparkplace.com/admin.html to grant access.`,_notification:true})}); } catch(e){}
-  showMsg('gateAuthMsg','Account created! Check your email to confirm — the board will review your access shortly.','success');
+  showMsg('gateAuthMsg','Account created! Check your email to confirm — the board will review your access.','success');
   btn.disabled=false; btn.textContent='Create Account';
 }
 
+async function forgotPassword(source) {
+  const emailId = source==='gate'?'gsiEmail':'msiEmail';
+  const msgId   = source==='gate'?'gateAuthMsg':'modalAuthMsg';
+  const email   = document.getElementById(emailId).value.trim();
+  if (!email){showMsg(msgId,'Enter your email address above first.','error');return;}
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://scottsdaleparkplace.com'});
+  if (error){showMsg(msgId,error.message,'error');return;}
+  showMsg(msgId,'Password reset email sent. Check your inbox.','success');
+}
+
+async function submitReset() {
+  const pw=document.getElementById('resetPw').value;
+  const confirm=document.getElementById('resetPwConfirm').value;
+  const msgEl=document.getElementById('resetMsg');
+  if (pw.length<8){msgEl.textContent='Password must be at least 8 characters.';msgEl.className='auth-msg error show';return;}
+  if (pw!==confirm){msgEl.textContent='Passwords do not match.';msgEl.className='auth-msg error show';return;}
+  const btn=document.getElementById('resetBtn'); btn.disabled=true; btn.textContent='Updating…';
+  const {error}=await sb.auth.updateUser({password:pw});
+  if (error){msgEl.textContent=error.message;msgEl.className='auth-msg error show';btn.disabled=false;btn.textContent='Update Password';return;}
+  msgEl.textContent='Password updated! Signing you in…';
+  msgEl.className='auth-msg success show';
+  setTimeout(()=>window.location.href='index.html',1500);
+}
+
+/* ── MODAL ── */
 function openSigninModal(){document.getElementById('signinModal').classList.add('open');}
 function closeSigninModal(){document.getElementById('signinModal').classList.remove('open');}
 document.getElementById('signinModal').addEventListener('click',function(e){if(e.target===this)closeSigninModal();});
 
 function switchModalTab(tab) {
   document.querySelectorAll('.modal-box .auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0)===(tab==='signin')));
-  set('modalSignin', tab==='signin'?'block':'none');
-  set('modalRegister', tab==='register'?'block':'none');
+  document.getElementById('modalSignin').style.display   = tab==='signin'   ? 'block':'none';
+  document.getElementById('modalRegister').style.display = tab==='register' ? 'block':'none';
   document.getElementById('modalAuthMsg').classList.remove('show');
 }
 
@@ -372,24 +635,14 @@ async function registerModal() {
 }
 
 async function signOut(){await sb.auth.signOut();currentUser=null;showGate();}
-
 function showMsg(id,msg,type){const el=document.getElementById(id);el.textContent=msg;el.className=`auth-msg ${type} show`;}
 
-async function forgotPassword(source) {
-  const emailId = source==='gate' ? 'gsiEmail' : 'msiEmail';
-  const msgId   = source==='gate' ? 'gateAuthMsg' : 'modalAuthMsg';
-  const email   = document.getElementById(emailId).value.trim();
-  if (!email) { showMsg(msgId,'Enter your email address above first.','error'); return; }
-  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo:'https://scottsdaleparkplace.com/index.html' });
-  if (error) { showMsg(msgId, error.message, 'error'); return; }
-  showMsg(msgId,'Password reset email sent. Check your inbox.','success');
-}
-
+/* ── ANNOUNCEMENTS ── */
 async function loadAnnouncements() {
   const grid=document.getElementById('announceGrid');
   const {data,error}=await sb.from('announcements').select('*').eq('is_active',true).order('created_at',{ascending:false}).limit(3);
   if (error||!data){grid.innerHTML='<div class="empty-row">Unable to load announcements.</div>';return;}
-  if (!data.length){grid.innerHTML='<div style="padding:16px 0;color:var(--muted);font-size:0.86rem;">No current announcements.</div>';return;}
+  if (!data.length){grid.innerHTML='<div style="padding:12px 0;color:var(--muted);font-size:0.85rem;">No current announcements.</div>';return;}
   const isBoard=BOARD_ROLES.includes(currentUser.role);
   grid.innerHTML=data.map(a=>`
     <div class="announce-card">
@@ -417,100 +670,42 @@ async function deleteAnn(id) {
   loadAnnouncements();
 }
 
+/* ── BULLETIN ── */
 async function loadBulletin() {
   const feed=document.getElementById('postsFeed');
   const {data:posts,error}=await sb.from('community_posts').select('*').is('reply_to',null).order('created_at',{ascending:false}).limit(50);
   if (error||!posts){feed.innerHTML='<div class="empty-row">Unable to load posts.</div>';return;}
-  if (!posts.length){feed.innerHTML='<div class="empty-row">No posts yet. <a href="community.html">Be the first to post →</a></div>';return;}
+  if (!posts.length){feed.innerHTML='<div class="empty-row">No posts yet. <a href="community.html">Be the first →</a></div>';return;}
   const {data:replies}=await sb.from('community_posts').select('reply_to').not('reply_to','is',null);
-  const rc={};
-  (replies||[]).forEach(r=>{rc[r.reply_to]=(rc[r.reply_to]||0)+1;});
+  const rc={};(replies||[]).forEach(r=>{rc[r.reply_to]=(rc[r.reply_to]||0)+1;});
   const now=Date.now();
-  const scored=posts.map(p=>{
-    const age=(now-new Date(p.created_at).getTime())/3600000;
-    const reps=rc[p.id]||0;
-    return{...p,replyCount:reps,score:reps*3+Math.max(0,72-age)};
-  }).sort((a,b)=>b.score-a.score).slice(0,10);
+  const scored=posts.map(p=>({...p,rc:rc[p.id]||0,score:(rc[p.id]||0)*3+Math.max(0,72-(now-new Date(p.created_at).getTime())/3600000)}))
+    .sort((a,b)=>b.score-a.score).slice(0,8);
   feed.innerHTML=scored.map(p=>{
     const unitLabel=p.unit?`Unit ${esc(p.unit)}`:'—';
     const avatarCls=BOARD_ROLES.includes(p.posted_by_role)?'board':'';
     const catLabel=catLabels[p.category]||'';
-    const isHot=p.replyCount>=3;
+    const isHot=p.rc>=3;
     return `<a href="community.html" class="post-card">
       <div class="post-header">
         <div class="post-author-row">
-          <div class="post-avatar ${avatarCls}">${p.unit?esc(p.unit):'?'}</div>
-          <div>
-            <div class="post-name">${esc(p.author_name)}</div>
-            <div class="post-unit-time">${unitLabel} &nbsp;·&nbsp; ${fmt(p.created_at)}</div>
-          </div>
+          <div class="post-avatar ${avatarCls}">${p.unit?esc(String(p.unit).slice(0,4)):'?'}</div>
+          <div><div class="post-name">${esc(p.author_name)}</div><div class="post-unit-time">${unitLabel} &nbsp;·&nbsp; ${fmt(p.created_at)}</div></div>
         </div>
         ${catLabel?`<span class="post-cat">${catLabel}</span>`:''}
       </div>
       <div class="post-body">${esc(p.body)}</div>
-      <div class="post-footer">
-        <span class="post-engagement ${isHot?'engagement-hot':''}">💬 ${p.replyCount>0?p.replyCount+(p.replyCount===1?' reply':' replies'):'No replies yet'}</span>
-      </div>
+      <div class="post-footer"><span class="post-engagement ${isHot?'engagement-hot':''}">💬 ${p.rc>0?p.rc+(p.rc===1?' reply':' replies'):'No replies yet'}</span></div>
     </a>`;
   }).join('');
 }
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmt(ts){
-  if (!ts) return '';
-  const d=new Date(ts),now=new Date(),diff=Math.floor((now-d)/1000);
-  if (diff<60) return 'just now';
-  if (diff<3600) return Math.floor(diff/60)+'m ago';
-  if (diff<86400) return Math.floor(diff/3600)+'h ago';
-  if (diff<604800) return Math.floor(diff/86400)+'d ago';
+  if(!ts)return'';const d=new Date(ts),now=new Date(),diff=Math.floor((now-d)/1000);
+  if(diff<60)return'just now';if(diff<3600)return Math.floor(diff/60)+'m ago';
+  if(diff<86400)return Math.floor(diff/3600)+'h ago';if(diff<604800)return Math.floor(diff/86400)+'d ago';
   return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-}
-
-/* ── PASSWORD RESET HANDLER ── */
-(async () => {
-  const hash = window.location.hash;
-  if (!hash.includes('type=recovery')) return;
-
-  // Show reset form immediately
-  document.getElementById('signinGate').style.display   = 'none';
-  document.getElementById('pendingState').style.display  = 'none';
-  document.getElementById('loggedInContent').style.display = 'none';
-  document.getElementById('headerSigninBtn').style.display = 'none';
-
-  const resetDiv = document.createElement('div');
-  resetDiv.style.cssText = 'max-width:380px;margin:80px auto 0;';
-  resetDiv.innerHTML = `
-    <div class="auth-card">
-      <h3 style="font-family:'DM Serif Display',serif;font-size:1.2rem;margin-bottom:18px;">Set New Password</h3>
-      <div id="resetMsg" class="auth-msg"></div>
-      <div class="form-field"><label>New Password</label><input type="password" id="resetPw" placeholder="At least 8 characters" autocomplete="new-password"></div>
-      <div class="form-field"><label>Confirm Password</label><input type="password" id="resetPwConfirm" placeholder="Repeat password"></div>
-      <button class="auth-submit" id="resetBtn" onclick="submitReset()">Update Password</button>
-    </div>`;
-  document.querySelector('.main').appendChild(resetDiv);
-
-  // Exchange the recovery token for a session
-  const { error } = await sb.auth.getSessionFromUrl({ rewriteHistory: true });
-  if (error) {
-    const el = document.getElementById('resetMsg');
-    el.textContent = 'Reset link expired or already used. Request a new one.';
-    el.className = 'auth-msg error show';
-  }
-})();
-
-async function submitReset() {
-  const pw      = document.getElementById('resetPw').value;
-  const confirm = document.getElementById('resetPwConfirm').value;
-  const msgEl   = document.getElementById('resetMsg');
-  if (pw.length < 8) { msgEl.textContent='Password must be at least 8 characters.'; msgEl.className='auth-msg error show'; return; }
-  if (pw !== confirm) { msgEl.textContent='Passwords do not match.'; msgEl.className='auth-msg error show'; return; }
-  const btn = document.getElementById('resetBtn');
-  btn.disabled=true; btn.textContent='Updating…';
-  const { error } = await sb.auth.updateUser({ password: pw });
-  if (error) { msgEl.textContent=error.message; msgEl.className='auth-msg error show'; btn.disabled=false; btn.textContent='Update Password'; return; }
-  msgEl.textContent='Password updated. Redirecting…';
-  msgEl.className='auth-msg success show';
-  setTimeout(() => { window.location.href='index.html'; }, 1500);
 }
 </script>
 </body>
