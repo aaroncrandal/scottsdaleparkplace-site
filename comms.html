@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board Communications — Scottsdale Park Place HOA</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1115;
+  --surface: #181c23;
+  --surface2: #1e2330;
+  --surface3: #232838;
+  --border: #2a2f3d;
+  --accent: #c8a96e;
+  --accent-dim: rgba(200,169,110,0.15);
+  --text: #e8e4dc;
+  --muted: #7a8090;
+  --red: #c05050;
+  --blue: #5a8ab0;
+  --green: #5a9e7a;
+  --orange: #c8825a;
+  --sidebar-w: 220px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+a { color: var(--accent); text-decoration: none; }
+
+/* ── HEADER ── */
+header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 32px 32px 24px; text-align: center; }
+.site-title { font-family: 'DM Serif Display', serif; font-size: 2.1rem; letter-spacing: 0.02em; }
+.site-subtitle { margin-top: 5px; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; }
+nav { background: #13161d; border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
+nav a { padding: 13px 22px; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; }
+nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+
+/* ── AUTH GATE ── */
+#authGate { max-width: 400px; margin: 60px auto; padding: 0 16px; text-align: center; }
+.gate-icon { font-size: 3rem; margin-bottom: 20px; }
+.gate-title { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+.gate-desc { font-size: 0.88rem; color: #b0b8c8; line-height: 1.7; margin-bottom: 32px; }
+.auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 32px 28px; text-align: left; }
+.auth-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 6px; }
+.auth-card p { font-size: 0.8rem; color: var(--muted); margin-bottom: 22px; }
+.form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.form-field label { font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.form-field input { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; width: 100%; }
+.form-field input::placeholder { color: #4a5060; }
+.form-field input:focus { border-color: var(--accent); }
+.auth-btn { width: 100%; background: var(--accent); color: #0f1115; border: none; border-radius: 7px; padding: 12px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-top: 4px; }
+.auth-btn:hover { opacity: 0.88; }
+.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.auth-error { background: rgba(192,80,80,0.1); border: 1px solid rgba(192,80,80,0.25); border-radius: 6px; padding: 10px 14px; font-size: 0.8rem; color: var(--red); margin-bottom: 14px; display: none; }
+.auth-error.show { display: block; }
+.auth-note { font-size: 0.72rem; color: #4a5060; text-align: center; margin-top: 14px; line-height: 1.5; }
+
+/* ── ACCESS DENIED ── */
+#accessDenied { max-width: 400px; margin: 60px auto; padding: 0 16px; text-align: center; display: none; }
+#accessDenied .gate-icon { font-size: 2.5rem; }
+#accessDenied p { font-size: 0.88rem; color: var(--muted); margin-top: 12px; line-height: 1.7; }
+
+/* ── COMMS APP ── */
+#commsApp { display: none; height: calc(100vh - 160px); }
+.comms-layout { display: flex; height: 100%; }
+
+/* ── SIDEBAR ── */
+.comms-sidebar {
+  width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.sidebar-header {
+  padding: 18px 16px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-org { font-weight: 600; font-size: 0.88rem; color: var(--text); }
+.sidebar-user { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+.sidebar-section-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 16px 16px 6px;
+}
+.channel-list { flex: 1; overflow-y: auto; }
+.channel-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  font-size: 0.84rem;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+  position: relative;
+}
+.channel-item:hover { background: var(--surface2); color: var(--text); }
+.channel-item.active { background: var(--accent-dim); color: var(--accent); }
+.channel-hash { font-size: 0.9rem; opacity: 0.6; }
+.channel-unread {
+  margin-left: auto;
+  background: var(--accent);
+  color: #0f1115;
+  border-radius: 10px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  min-width: 18px;
+  text-align: center;
+}
+.sidebar-footer {
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+}
+.sign-out-btn { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.78rem; cursor: pointer; padding: 0; }
+.sign-out-btn:hover { color: var(--text); }
+
+/* ── MAIN PANEL ── */
+.comms-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.channel-header {
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.channel-header-hash { font-size: 1.1rem; color: var(--muted); }
+.channel-header-name { font-weight: 600; font-size: 0.95rem; }
+.channel-header-desc { font-size: 0.78rem; color: var(--muted); margin-left: 8px; }
+
+/* ── MESSAGES ── */
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.msg-group { margin-bottom: 16px; }
+.msg-row { display: flex; gap: 12px; align-items: flex-start; }
+.msg-avatar {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.82rem; font-weight: 700;
+  flex-shrink: 0; margin-top: 2px;
+}
+.msg-avatar.board   { background: rgba(200,169,110,0.15); color: var(--accent); }
+.msg-avatar.manager { background: rgba(90,138,176,0.15); color: var(--blue); }
+.msg-avatar.default { background: var(--surface2); color: var(--muted); }
+.msg-content { flex: 1; }
+.msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 3px; flex-wrap: wrap; }
+.msg-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+.msg-role-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; padding: 1px 6px; }
+.role-board   { background: rgba(200,169,110,0.15); color: var(--accent); }
+.role-manager { background: rgba(90,138,176,0.15); color: var(--blue); }
+.msg-time { font-size: 0.72rem; color: var(--muted); }
+.msg-body { font-size: 0.88rem; color: #c8d0dc; line-height: 1.7; white-space: pre-wrap; }
+.msg-body.pinned-body { background: rgba(200,169,110,0.06); border-left: 2px solid var(--accent); padding: 8px 12px; border-radius: 0 6px 6px 0; margin-top: 4px; }
+
+/* continuation messages (same author within 5 min) */
+.msg-continuation { padding-left: 48px; font-size: 0.88rem; color: #c8d0dc; line-height: 1.7; white-space: pre-wrap; margin-bottom: 2px; }
+.msg-continuation:hover .msg-time-small { opacity: 1; }
+.msg-time-small { font-size: 0.68rem; color: var(--muted); opacity: 0; transition: opacity 0.2s; margin-right: 8px; }
+
+.date-divider {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em;
+  text-transform: uppercase; margin: 20px 0 12px;
+}
+.date-divider::before, .date-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.pinned-banner {
+  background: rgba(200,169,110,0.08);
+  border: 1px solid rgba(200,169,110,0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 0.8rem;
+  color: #b0a880;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+}
+.pinned-banner:hover { background: rgba(200,169,110,0.12); }
+
+.msgs-loading { text-align: center; padding: 48px; color: var(--muted); font-size: 0.85rem; }
+.empty-channel { text-align: center; padding: 60px 24px; color: var(--muted); }
+.empty-channel-icon { font-size: 2.4rem; margin-bottom: 14px; }
+.empty-channel h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--text); margin-bottom: 8px; }
+.empty-channel p { font-size: 0.84rem; line-height: 1.6; }
+
+/* ── COMPOSE ── */
+.compose-area {
+  padding: 14px 24px 20px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.compose-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  transition: border-color 0.2s;
+}
+.compose-box:focus-within { border-color: #3a4050; }
+.compose-textarea {
+  width: 100%; background: transparent; border: none; outline: none;
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+  resize: none; min-height: 44px; max-height: 160px; line-height: 1.6;
+}
+.compose-textarea::placeholder { color: #4a5060; }
+.compose-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.compose-hint { font-size: 0.72rem; color: #4a5060; }
+.send-btn { background: var(--accent); color: #0f1115; border: none; border-radius: 6px; padding: 7px 18px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.send-btn:hover { opacity: 0.88; }
+.send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── DOT PULSE ── */
+.dot-pulse { display: inline-flex; gap: 4px; }
+.dot-pulse span { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; animation: pulse 1.2s ease-in-out infinite; }
+.dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+.dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulse { 0%,80%,100% { opacity:0.2; transform:scale(0.8); } 40% { opacity:1; transform:scale(1); } }
+
+footer { border-top: 1px solid var(--border); background: var(--surface); padding: 24px 32px; text-align: center; font-size: 0.78rem; color: var(--muted); }
+
+@media (max-width: 640px) {
+  header { padding: 24px 16px 18px; }
+  .comms-sidebar { width: 56px; }
+  .sidebar-org, .sidebar-user, .sidebar-section-label, .channel-item span:not(.channel-hash) { display: none; }
+  .channel-item { justify-content: center; padding: 10px; }
+  .channel-header-desc { display: none; }
+  .messages-area { padding: 16px; }
+  .compose-area { padding: 12px 16px 16px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="site-title">Scottsdale Park Place</div>
+  <div class="site-subtitle">Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251</div>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="issues.html">Capital Projects</a>
+  <a href="documents.html">Documents</a>
+  <a href="contact.html">Contact</a>
+  <a href="board.html">Board Portal</a>
+  <a href="community.html">Community</a>
+  <a href="comms.html" class="active">Comms</a>
+</nav>
+
+<!-- AUTH GATE -->
+<div id="authGate">
+  <div class="gate-icon">🛡️</div>
+  <div class="gate-title">Board Communications</div>
+  <div class="gate-desc">This area is restricted to board members and property management. Sign in to continue.</div>
+  <div class="auth-card">
+    <h3>Sign In</h3>
+    <p>Use your board account credentials.</p>
+    <div id="authError" class="auth-error"></div>
+    <div class="form-field">
+      <label>Email</label>
+      <input type="email" id="siEmail" placeholder="you@email.com" autocomplete="email">
+    </div>
+    <div class="form-field">
+      <label>Password</label>
+      <input type="password" id="siPassword" placeholder="Password" autocomplete="current-password">
+    </div>
+    <button class="auth-btn" id="signinBtn" onclick="signIn()">Sign In</button>
+    <div class="auth-note">Access is limited to board members and Brown Community Management. Contact <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a> if you need access.</div>
+  </div>
+</div>
+
+<!-- ACCESS DENIED -->
+<div id="accessDenied">
+  <div class="gate-icon">🚫</div>
+  <div class="gate-title" style="font-family:'DM Serif Display',serif; font-size:1.4rem; color:var(--red);">Access Restricted</div>
+  <p>This area is for board members and property management only. If you believe this is an error, contact <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a>.</p>
+  <button onclick="signOut()" style="margin-top:20px; background:none; border:1px solid var(--border); border-radius:6px; padding:8px 18px; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.82rem; cursor:pointer;">Sign Out</button>
+</div>
+
+<!-- COMMS APP -->
+<div id="commsApp">
+  <div class="comms-layout">
+
+    <!-- SIDEBAR -->
+    <div class="comms-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-org">SPP HOA</div>
+        <div class="sidebar-user" id="sidebarUser"></div>
+      </div>
+      <div class="sidebar-section-label">Channels</div>
+      <div class="channel-list" id="channelList"></div>
+      <div class="sidebar-footer">
+        <button class="sign-out-btn" onclick="signOut()">← Sign out</button>
+      </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="comms-main">
+      <div class="channel-header">
+        <span class="channel-header-hash">#</span>
+        <span class="channel-header-name" id="channelHeaderName">general</span>
+        <span class="channel-header-desc" id="channelHeaderDesc"></span>
+      </div>
+
+      <div class="messages-area" id="messagesArea">
+        <div class="msgs-loading">
+          <div class="dot-pulse"><span></span><span></span><span></span></div>
+          <div style="margin-top:10px;">Loading messages…</div>
+        </div>
+      </div>
+
+      <div class="compose-area">
+        <div class="compose-box">
+          <textarea class="compose-textarea" id="composeText" placeholder="Message #general…" rows="2" maxlength="4000"></textarea>
+          <div class="compose-actions">
+            <span class="compose-hint">Enter to send &nbsp;·&nbsp; Shift+Enter for new line</span>
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Scottsdale Park Place Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251<br>
+  <span style="margin-top:6px; display:block; color:#4a5060;">For technical issues, contact <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a></span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL  = 'https://hmjypvnbbmyzmutmuxpj.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtanlwdm5iYm15em11dG11eHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzEzMjQsImV4cCI6MjA4OTM0NzMyNH0.hZNbLus9qjwni5Du8UeFJGK7xXQMtqMAr6URs75aZP8';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+/* ── BOARD-ONLY ROLES ── */
+const ALLOWED_ROLES = ['board', 'manager', 'president', 'treasurer', 'secretary'];
+
+/* ── CHANNELS ── */
+const CHANNELS = [
+  { id: 'general',          label: 'General',           desc: 'Day-to-day board discussion' },
+  { id: 'capital-projects', label: 'Capital Projects',  desc: 'Reserve study, vendors, timelines' },
+  { id: 'vendors',          label: 'Vendors',           desc: 'Contractor bids and coordination' },
+  { id: 'brown-mgmt',       label: 'Brown Management',  desc: 'Madison and BCM coordination' },
+  { id: 'legal',            label: 'Legal',             desc: 'HOA counsel, violations, disputes' },
+  { id: 'arc',              label: 'ARC Review',        desc: 'Architectural request discussion' },
+  { id: 'financials',       label: 'Financials',        desc: 'Budget, assessments, reserves' },
+];
+
+let currentUser    = null;
+let currentChannel = 'general';
+let realtimeSub    = null;
+
+/* ── AUTH ── */
+function showAuthError(msg) {
+  const el = document.getElementById('authError');
+  el.textContent = msg; el.classList.add('show');
+}
+
+async function signIn() {
+  const email    = document.getElementById('siEmail').value.trim();
+  const password = document.getElementById('siPassword').value;
+  if (!email || !password) { showAuthError('Please enter your email and password.'); return; }
+  const btn = document.getElementById('signinBtn');
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) { showAuthError(error.message); btn.disabled = false; btn.textContent = 'Sign In'; return; }
+  await handleUser(data.user);
+}
+
+async function handleUser(user) {
+  const meta = user.user_metadata || {};
+  const role = meta.role || 'owner';
+  if (!ALLOWED_ROLES.includes(role)) {
+    document.getElementById('authGate').style.display = 'none';
+    document.getElementById('accessDenied').style.display = 'block';
+    return;
+  }
+  currentUser = {
+    id: user.id,
+    name: meta.name || user.email.split('@')[0],
+    unit: meta.unit || '—',
+    role,
+    email: user.email
+  };
+  showApp();
+}
+
+async function signOut() {
+  if (realtimeSub) sb.removeChannel(realtimeSub);
+  await sb.auth.signOut();
+  currentUser = null;
+  document.getElementById('commsApp').style.display = 'none';
+  document.getElementById('accessDenied').style.display = 'none';
+  document.getElementById('authGate').style.display = 'block';
+}
+
+/* ── SHOW APP ── */
+function showApp() {
+  document.getElementById('authGate').style.display = 'none';
+  document.getElementById('commsApp').style.display = 'block';
+  document.getElementById('sidebarUser').textContent = currentUser.name;
+  buildChannelList();
+  switchChannel('general');
+  subscribeRealtime();
+}
+
+/* ── SIDEBAR ── */
+function buildChannelList() {
+  const list = document.getElementById('channelList');
+  list.innerHTML = CHANNELS.map(ch => `
+    <div class="channel-item ${ch.id === currentChannel ? 'active' : ''}" id="ch-${ch.id}" onclick="switchChannel('${ch.id}')">
+      <span class="channel-hash">#</span>
+      <span>${ch.label}</span>
+    </div>
+  `).join('');
+}
+
+function switchChannel(channelId) {
+  currentChannel = channelId;
+  const ch = CHANNELS.find(c => c.id === channelId);
+  document.getElementById('channelHeaderName').textContent = ch?.label || channelId;
+  document.getElementById('channelHeaderDesc').textContent = ch?.desc || '';
+  document.querySelector('.compose-textarea').placeholder = `Message #${ch?.label || channelId}…`;
+  document.querySelectorAll('.channel-item').forEach(el => {
+    el.classList.toggle('active', el.id === `ch-${channelId}`);
+  });
+  loadMessages();
+}
+
+/* ── LOAD MESSAGES ── */
+async function loadMessages() {
+  const area = document.getElementById('messagesArea');
+  area.innerHTML = `<div class="msgs-loading"><div class="dot-pulse"><span></span><span></span><span></span></div><div style="margin-top:10px;">Loading…</div></div>`;
+
+  const { data: msgs, error } = await sb.from('comms_messages')
+    .select('*')
+    .eq('channel', currentChannel)
+    .is('reply_to', null)
+    .order('created_at', { ascending: true })
+    .limit(200);
+
+  if (error) {
+    area.innerHTML = `<div class="msgs-loading">Unable to load messages.</div>`;
+    return;
+  }
+
+  if (!msgs || msgs.length === 0) {
+    const ch = CHANNELS.find(c => c.id === currentChannel);
+    area.innerHTML = `
+      <div class="empty-channel">
+        <div class="empty-channel-icon">#</div>
+        <h3>Welcome to #${ch?.label || currentChannel}</h3>
+        <p>${ch?.desc || 'Start the conversation below.'}</p>
+      </div>`;
+    return;
+  }
+
+  renderMessages(msgs, area);
+  area.scrollTop = area.scrollHeight;
+}
+
+/* ── RENDER MESSAGES ── */
+function renderMessages(msgs, container) {
+  container.innerHTML = '';
+  let lastDate = null;
+  let lastAuthor = null;
+  let lastTime = null;
+
+  // Pinned messages
+  const pinned = msgs.filter(m => m.is_pinned);
+  if (pinned.length > 0) {
+    pinned.forEach(m => {
+      const banner = document.createElement('div');
+      banner.className = 'pinned-banner';
+      banner.innerHTML = `📌 <div><strong>${escHtml(m.author_name)}</strong>: ${escHtml(m.body.slice(0, 120))}${m.body.length > 120 ? '…' : ''}</div>`;
+      container.appendChild(banner);
+    });
+  }
+
+  msgs.forEach(msg => {
+    const msgDate = new Date(msg.created_at).toDateString();
+    const msgTime = new Date(msg.created_at).getTime();
+    const isContinuation = lastAuthor === msg.author_name && lastTime && (msgTime - lastTime) < 5 * 60 * 1000;
+
+    // Date divider
+    if (msgDate !== lastDate) {
+      const div = document.createElement('div');
+      div.className = 'date-divider';
+      div.textContent = formatDate(msg.created_at);
+      container.appendChild(div);
+      lastDate = msgDate;
+    }
+
+    if (isContinuation) {
+      const cont = document.createElement('div');
+      cont.className = 'msg-continuation';
+      cont.innerHTML = `<span class="msg-time-small">${formatTime(msg.created_at)}</span>${escHtml(msg.body)}`;
+      container.appendChild(cont);
+    } else {
+      const initials = (msg.author_name || '?').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+      const avatarClass = msg.author_role === 'board' || msg.author_role === 'president' || msg.author_role === 'treasurer' || msg.author_role === 'secretary' ? 'board' : msg.author_role === 'manager' ? 'manager' : 'default';
+      const roleBadge = msg.author_role === 'manager'
+        ? `<span class="msg-role-badge role-manager">Manager</span>`
+        : (ALLOWED_ROLES.includes(msg.author_role) && msg.author_role !== 'owner' && msg.author_role !== 'renter')
+        ? `<span class="msg-role-badge role-board">Board</span>`
+        : '';
+
+      const group = document.createElement('div');
+      group.className = 'msg-group';
+      group.innerHTML = `
+        <div class="msg-row">
+          <div class="msg-avatar ${avatarClass}">${initials}</div>
+          <div class="msg-content">
+            <div class="msg-header">
+              <span class="msg-name">${escHtml(msg.author_name)}</span>
+              ${roleBadge}
+              <span class="msg-time">${formatTime(msg.created_at)}</span>
+            </div>
+            <div class="msg-body ${msg.is_pinned ? 'pinned-body' : ''}">${escHtml(msg.body)}</div>
+          </div>
+        </div>`;
+      container.appendChild(group);
+    }
+
+    lastAuthor = msg.author_name;
+    lastTime   = msgTime;
+  });
+}
+
+/* ── SEND MESSAGE ── */
+async function sendMessage() {
+  const body = document.getElementById('composeText').value.trim();
+  if (!body) return;
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true;
+
+  const { error } = await sb.from('comms_messages').insert({
+    channel:     currentChannel,
+    author_name: currentUser.name,
+    author_role: currentUser.role,
+    body
+  });
+
+  btn.disabled = false;
+  if (error) { alert('Failed to send: ' + error.message); return; }
+  document.getElementById('composeText').value = '';
+  loadMessages();
+}
+
+/* ── ENTER TO SEND ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const ta = document.getElementById('composeText');
+  if (ta) {
+    ta.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  }
+});
+
+/* ── REALTIME ── */
+function subscribeRealtime() {
+  realtimeSub = sb.channel('comms-realtime')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'comms_messages'
+    }, payload => {
+      if (payload.new.channel === currentChannel) {
+        loadMessages();
+      }
+    })
+    .subscribe();
+}
+
+/* ── HELPERS ── */
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function formatTime(ts) {
+  if (!ts) return '';
+  return new Date(ts).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+function formatDate(ts) {
+  const d = new Date(ts);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 86400000);
+  if (diff === 0) return 'Today';
+  if (diff === 1) return 'Yesterday';
+  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+}
+
+/* ── INIT ── */
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user) await handleUser(session.user);
+})();
+</script>
+
+</body>
+</html>
