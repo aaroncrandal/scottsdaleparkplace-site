@@ -686,4 +686,3 @@ function formatTime(ts) {
 /* ── INIT ── */
 (async () => {
   const { data: { session } } = await sb.auth.getSession();   if (session?.user) await loadUserProfile(session.user); })(); </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
