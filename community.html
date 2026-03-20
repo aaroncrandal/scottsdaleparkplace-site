@@ -499,7 +499,7 @@ async function loadPosts() {
 
   let query = sb.from('community_posts')
     .select('*')
-    .is('reply_to', null)
+    .is('reply_to', null)     .eq('is_archived', false)
     .order('is_pinned', { ascending: false })
     .order('created_at', { ascending: false })
     .limit(50);
