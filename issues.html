@@ -861,7 +861,7 @@ document.querySelectorAll('.project-node').forEach(node => {
     if (!popup) return;
     const rect = node.getBoundingClientRect();
     const spaceBelow = window.innerHeight - rect.bottom;
-    if (spaceBelow < 220) {
+    if (spaceBelow < 400) {
       popup.style.top = 'auto';
       popup.style.bottom = 'calc(100% + 12px)';
     } else {
