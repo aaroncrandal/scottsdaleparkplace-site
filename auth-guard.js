@@ -17,7 +17,7 @@ function guardPage(requiredLevel) {
     }
     const role = session.user.user_metadata?.role || 'pending';
     let allowed = false;
-    if (requiredLevel === 'board')    allowed = BOARD.includes(role);
+    if (requiredLevel === 'board')         allowed = BOARD.includes(role);
     else if (requiredLevel === 'owner')    allowed = OWNER.includes(role);
     else if (requiredLevel === 'resident') allowed = RESIDENT.includes(role);
     if (!allowed) { showBlocked(role); return; }
@@ -40,4 +40,7 @@ function showBlocked(role) {
     <div class="bl">
       <div class="bl-icon">${role==='pending'?'⏳':'🔒'}</div>
       <div class="bl-title">${role==='pending'?'Awaiting Approval':'Access Restricted'}</div>
-      <div class="bl-msg">${role==='pending'?"Your account is pending approval. You'll be notified once access is granted.":"Yo
+      <div class="bl-msg">${role==='pending'?"Your account is pending approval. You'll be notified once access is granted.":"You don't have permission to view this page."}</div>
+      <div class="bl-links"><a href="index.html">← Home</a><a href="contact.html">Contact the Board</a></div>
+    </div>`;
+}
