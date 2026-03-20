@@ -1,36 +1,29 @@
-/**
- * auth-guard.js
- * Scottsdale Park Place HOA — shared page protection
- * Usage: call guardPage('resident') or guardPage('board') at bottom of any page
- */
-
 function guardPage(requiredLevel) {
   document.body.style.visibility = 'hidden';
-
   const _url  = 'https://hmjypvnbbmyzmutmuxpj.supabase.co';
   const _anon = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtanlwdm5iYm15em11dG11eHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzEzMjQsImV4cCI6MjA4OTM0NzMyNH0.hZNbLus9qjwni5Du8UeFJGK7xXQMtqMAr6URs75aZP8';
-  const BOARD = ['board','president','treasurer','secretary','manager'];
-  const ALL   = ['owner','renter',...BOARD];
-
+  const BOARD    = ['board','president','treasurer','secretary','manager'];
+  const OWNER    = ['owner',...BOARD];
+  const RESIDENT = ['owner','renter',...BOARD];
   if (typeof supabase === 'undefined') {
     window.location.href = 'index.html';
     return;
   }
-
   const _client = supabase.createClient(_url, _anon);
-
   _client.auth.getSession().then(({ data: { session } }) => {
     if (!session?.user) {
       window.location.href = 'index.html';
       return;
     }
     const role = session.user.user_metadata?.role || 'pending';
-    const allowed = requiredLevel === 'board' ? BOARD.includes(role) : ALL.includes(role);
+    let allowed = false;
+    if (requiredLevel === 'board')    allowed = BOARD.includes(role);
+    else if (requiredLevel === 'owner')    allowed = OWNER.includes(role);
+    else if (requiredLevel === 'resident') allowed = RESIDENT.includes(role);
     if (!allowed) { showBlocked(role); return; }
     document.body.style.visibility = 'visible';
   });
 }
-
 function showBlocked(role) {
   document.body.style.visibility = 'visible';
   document.body.innerHTML = `
@@ -47,7 +40,4 @@ function showBlocked(role) {
     <div class="bl">
       <div class="bl-icon">${role==='pending'?'⏳':'🔒'}</div>
       <div class="bl-title">${role==='pending'?'Awaiting Approval':'Access Restricted'}</div>
-      <div class="bl-msg">${role==='pending'?"Your account is pending approval. You'll be notified once access is granted.":"You don't have permission to view this page."}</div>
-      <div class="bl-links"><a href="index.html">← Home</a><a href="contact.html">Contact the Board</a></div>
-    </div>`;
-}
+      <div class="bl-msg">${role==='pending'?"Your account is pending approval. You'll be notified once access is granted.":"Yo
