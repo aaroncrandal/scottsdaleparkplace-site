@@ -658,7 +658,11 @@ async function submitReply(postId) {
   loadReplies(postId, null);
 }
 
-/* ── FILTER ── */
+/* ── ARCHIVE ── */ async function archivePost(postId) {   const reasons = ['Inappropriate language', 'Off-topic', 'Spam', 'Duplicate', 'Other'];   const reason = prompt('Select archive reason:
+' + reasons.map((r,i) => `${i+1}. ${r}`).join('
+') + '
+
+Enter number:');   if (!reason) return;   const reasonText = reasons[parseInt(reason)-1] || 'Other';   const { error } = await sb.from('community_posts').update({     is_archived: true,     archive_reason: reasonText,     archived_by: currentUser.name,     archived_at: new Date().toISOString()   }).eq('id', postId);   if (error) { alert('Archive failed: ' + error.message); return; }   loadPosts(); }  /* ── FILTER ── */
 function setFilter(filter, btn) {
   currentFilter = filter;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
