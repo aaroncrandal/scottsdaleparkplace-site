@@ -141,10 +141,29 @@ nav a:hover, nav a.active { color: var(--accent); border-color: var(--accent); t
 .two-col-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 500px) { .two-col-fields { grid-template-columns: 1fr; } }
 
-/* dynamic extra fields */
 .extra-fields { margin-bottom: 4px; }
 
 .form-note { font-size: 0.78rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; margin-bottom: 20px; line-height: 1.5; }
+
+/* ── PHOTO UPLOAD ── */
+.photo-upload-area {
+  border: 1.5px dashed var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: var(--surface2);
+  margin-bottom: 18px;
+}
+.photo-upload-area:hover { border-color: var(--accent); background: var(--accent-dim); }
+.photo-upload-area.has-file { border-color: var(--green); background: var(--green-dim); }
+.photo-upload-area input[type="file"] { display: none; }
+.photo-upload-icon { font-size: 1.6rem; margin-bottom: 6px; }
+.photo-upload-label { font-size: 0.82rem; color: var(--muted); }
+.photo-upload-label strong { color: var(--accent); }
+.photo-upload-filename { font-size: 0.78rem; color: var(--green); margin-top: 6px; }
+.photo-upload-note { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
 
 .submit-row { display: flex; align-items: center; gap: 14px; margin-top: 24px; }
 .submit-btn {
@@ -222,15 +241,9 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
       <div class="cat-desc">CC&R or rules violations by residents or guests</div>
     </div>
 
-    <div class="cat-card" data-cat="Noise / Nuisance Complaint" onclick="selectCategory(this)">
-      <span class="cat-icon">🔊</span>
-      <div class="cat-title">Noise / Nuisance Complaint</div>
-      <div class="cat-desc">Excessive noise, odors, or disturbances</div>
-    </div>
-
-    <div class="cat-card" data-cat="Parking Complaint" onclick="selectCategory(this)">
+    <div class="cat-card" data-cat="Parking Violation" onclick="selectCategory(this)">
       <span class="cat-icon">🚗</span>
-      <div class="cat-title">Parking Complaint</div>
+      <div class="cat-title">Parking Violation</div>
       <div class="cat-desc">Unauthorized vehicles, blocked access, abandoned cars</div>
     </div>
 
@@ -335,6 +348,20 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
     <!-- Dynamic extra fields injected here -->
     <div class="extra-fields" id="extraFields"></div>
 
+    <!-- Photo upload (shown for parking violations) -->
+    <div id="photoUploadSection" style="display:none;">
+      <div class="field-group">
+        <label>Photo Evidence (optional)</label>
+      </div>
+      <div class="photo-upload-area" id="photoUploadArea" onclick="document.getElementById('photoInput').click()">
+        <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoSelect(event)">
+        <div class="photo-upload-icon">📷</div>
+        <div class="photo-upload-label">Click to attach a photo &nbsp;&mdash;&nbsp; <strong>JPG, PNG, HEIC</strong></div>
+        <div class="photo-upload-filename" id="photoFilename" style="display:none;"></div>
+        <div class="photo-upload-note">Max 10MB. Photo will be stored securely and visible to board and property manager only.</div>
+      </div>
+    </div>
+
     <!-- Message -->
     <div class="field-group">
       <label id="messageLabel">Description *</label>
@@ -357,18 +384,20 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
     <span class="back-link" onclick="resetForm()">← Submit another request</span>
   </div>
 
-</div><!-- end main -->
+</div>
 
 <footer>
   Scottsdale Park Place Homeowners Association &nbsp;&bull;&nbsp; Scottsdale, AZ 85251<br>
   <span style="margin-top:6px;display:block;color:#4a5060;">Questions? Email <a href="mailto:board@scottsdaleparkplace.com">board@scottsdaleparkplace.com</a></span>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ── REPLACE THIS with your deployed Cloudflare Worker URL ──
-const WORKER_URL = "https://spp-contact.aaroncrandal.workers.dev";
+const WORKER_URL    = "https://spp-contact.aaroncrandal.workers.dev";
+const SUPABASE_URL  = 'https://hmjypvnbbmyzmutmuxpj.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtanlwdm5iYm15em11dG11eHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzEzMjQsImV4cCI6MjA4OTM0NzMyNH0.hZNbLus9qjwni5Du8UeFJGK7xXQMtqMAr6URs75aZP8';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-// Extra fields config per category
 const CATEGORY_CONFIG = {
   "Maintenance Request": {
     note: "Maintenance requests for common areas and shared building systems are handled by the property manager. For urgent issues, contact Madison Garrison directly.",
@@ -389,27 +418,22 @@ const CATEGORY_CONFIG = {
       { id: "ongoingOrOnetime", label: "Is this ongoing?", type: "select", options: ["Ongoing / recurring", "One-time incident"] },
     ]
   },
-  "Noise / Nuisance Complaint": {
-    note: "Quiet hours at Scottsdale Park Place are 10:00 PM to 8:00 AM. For immediate disturbances during quiet hours, you may also contact Scottsdale PD non-emergency at (480) 312-5000.",
-    messageLabel: "Describe the disturbance *",
-    messagePlaceholder: "What kind of noise or nuisance? Include dates and times.",
+  "Parking Violation": {
+    note: "Unauthorized vehicles may be towed at owner's expense per community rules. Providing a photo and license plate helps the property manager verify the violation before action is taken.",
+    messageLabel: "Additional details",
+    messagePlaceholder: "Any other information — e.g. vehicle appears abandoned, blocking a fire lane, recurring issue.",
+    hasPhotoUpload: true,
     fields: [
-      { id: "noiseSource", label: "Source Unit or Area", type: "text", placeholder: "e.g. Unit 218, Parking lot near Building D" },
-      { id: "noiseTime", label: "When does it occur?", type: "text", placeholder: "e.g. Weeknights after 11 PM" },
-    ]
-  },
-  "Parking Complaint": {
-    note: "Each unit is assigned designated parking. Unauthorized vehicles in reserved spaces may be towed at owner's expense per community rules. Include as much detail as possible.",
-    messageLabel: "Describe the parking issue *",
-    messagePlaceholder: "What is the problem? Include space number or location if known.",
-    fields: [
-      { id: "vehicleDesc", label: "Vehicle Description", type: "text", placeholder: "Make, model, color, license plate if visible" },
-      { id: "parkingLocation", label: "Parking Space / Location", type: "text", placeholder: "e.g. Space 47, Guest lot near Building A" },
-      { id: "parkingDuration", label: "How long has it been there?", type: "select", options: ["Less than 24 hours", "1–3 days", "More than 3 days", "Ongoing / recurring"] },
+      { id: "plate", label: "License Plate Number *", type: "text", placeholder: "e.g. ABC1234" },
+      { id: "plateState", label: "Plate State", type: "select", options: ["AZ","CA","CO","NV","NM","TX","UT","FL","NY","Other"] },
+      { id: "vehicleDesc", label: "Vehicle Make / Model / Color", type: "text", placeholder: "e.g. Red Toyota Camry" },
+      { id: "parkingLocation", label: "Parking Location *", type: "text", placeholder: "e.g. Space 47, Guest lot near Building A, Fire lane" },
+      { id: "blockingAccess", label: "Is it blocking access?", type: "select", options: ["No", "Yes — blocking a unit space", "Yes — blocking fire lane or exit", "Yes — blocking pedestrian access"] },
+      { id: "duration", label: "How long has it been there?", type: "select", options: ["Less than 24 hours", "1–3 days", "More than 3 days", "Ongoing / recurring"] },
     ]
   },
   "Move-In / Move-Out Notice": {
-    note: "Arizona law and HOA rules require advance notice of unit transfers and new tenants. Please notify the board at least 5 business days before a move when possible. Elevator and loading dock scheduling may apply.",
+    note: "Arizona law and HOA rules require advance notice of unit transfers and new tenants. Please notify the board at least 5 business days before a move when possible.",
     messageLabel: "Additional notes",
     messagePlaceholder: "Any other details the board or property manager should know.",
     fields: [
@@ -419,7 +443,7 @@ const CATEGORY_CONFIG = {
     ]
   },
   "Pet Registration": {
-    note: "The CC&Rs require all pets to be registered with the HOA. Approved pets must be leashed in common areas. Weight and breed restrictions apply per community rules. Registration is required within 30 days of acquiring a pet.",
+    note: "The CC&Rs require all pets to be registered with the HOA. Approved pets must be leashed in common areas. Weight and breed restrictions apply. Registration required within 30 days of acquiring a pet.",
     messageLabel: "Additional notes",
     messagePlaceholder: "Any additional information about your pet.",
     fields: [
@@ -450,16 +474,26 @@ const CATEGORY_CONFIG = {
 };
 
 let currentCategory = null;
+let selectedPhotoFile = null;
+
+function handlePhotoSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  selectedPhotoFile = file;
+  const area = document.getElementById('photoUploadArea');
+  const filename = document.getElementById('photoFilename');
+  area.classList.add('has-file');
+  filename.textContent = '📎 ' + file.name + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)';
+  filename.style.display = 'block';
+}
 
 function selectCategory(card) {
-  // Deselect all
   document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
   card.classList.add('selected');
 
   const cat = card.dataset.cat;
   currentCategory = cat;
 
-  // Hide all panels
   document.getElementById('emergencyPanel').classList.remove('visible');
   document.getElementById('arcPanel').classList.remove('visible');
   document.getElementById('formPanel').classList.remove('visible');
@@ -477,7 +511,6 @@ function selectCategory(card) {
     return;
   }
 
-  // Build the form for this category
   buildForm(cat);
   document.getElementById('formPanel').classList.add('visible');
   scrollToPanel('formPanel');
@@ -496,6 +529,14 @@ function buildForm(cat) {
   } else {
     noteEl.style.display = 'none';
   }
+
+  // Photo upload section
+  const photoSection = document.getElementById('photoUploadSection');
+  photoSection.style.display = config.hasPhotoUpload ? 'block' : 'none';
+  selectedPhotoFile = null;
+  document.getElementById('photoUploadArea').classList.remove('has-file');
+  document.getElementById('photoFilename').style.display = 'none';
+  document.getElementById('photoInput').value = '';
 
   // Build extra fields
   const container = document.getElementById('extraFields');
@@ -533,7 +574,6 @@ function buildForm(cat) {
     container.appendChild(group);
   });
 
-  // Reset fields
   document.getElementById('fieldName').value = '';
   document.getElementById('fieldUnit').value = '';
   document.getElementById('fieldEmail').value = '';
@@ -549,15 +589,26 @@ function scrollToPanel(id) {
   }, 80);
 }
 
+async function uploadPhoto(file) {
+  const ext = file.name.split('.').pop();
+  const filename = `violation-${Date.now()}.${ext}`;
+  const { data, error } = await sb.storage
+    .from('violation-photos')
+    .upload(filename, file, { contentType: file.type, upsert: false });
+  if (error) throw new Error('Photo upload failed: ' + error.message);
+  const { data: urlData } = sb.storage.from('violation-photos').getPublicUrl(filename);
+  return urlData.publicUrl;
+}
+
 async function submitForm() {
-  const name = document.getElementById('fieldName').value.trim();
-  const unit = document.getElementById('fieldUnit').value.trim();
-  const email = document.getElementById('fieldEmail').value.trim();
-  const phone = document.getElementById('fieldPhone').value.trim();
+  const name    = document.getElementById('fieldName').value.trim();
+  const unit    = document.getElementById('fieldUnit').value.trim();
+  const email   = document.getElementById('fieldEmail').value.trim();
+  const phone   = document.getElementById('fieldPhone').value.trim();
   const message = document.getElementById('fieldMessage').value.trim();
 
   const statusEl = document.getElementById('submitStatus');
-  const btn = document.getElementById('submitBtn');
+  const btn      = document.getElementById('submitBtn');
 
   if (!name || !email || !message) {
     statusEl.textContent = 'Please fill in all required fields.';
@@ -582,11 +633,29 @@ async function submitForm() {
   statusEl.textContent = 'Sending…';
   statusEl.className = 'submit-status';
 
+  // Upload photo if present
+  let photoUrl = null;
+  if (selectedPhotoFile) {
+    statusEl.textContent = 'Uploading photo…';
+    try {
+      photoUrl = await uploadPhoto(selectedPhotoFile);
+    } catch(e) {
+      statusEl.textContent = 'Photo upload failed. Please try again or submit without a photo.';
+      statusEl.className = 'submit-status error';
+      btn.disabled = false;
+      return;
+    }
+  }
+
+  statusEl.textContent = 'Submitting…';
+
   try {
+    const payload = { category: currentCategory, name, email, unit, phone, message, fields, photo_url: photoUrl };
+
     const res = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ category: currentCategory, name, email, unit, phone, message, fields }),
+      body: JSON.stringify(payload),
     });
     const data = await res.json();
     if (data.ok) {
