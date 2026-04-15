@@ -142,8 +142,6 @@ nav a.active { color: var(--accent); }
 .action-btn.del:hover { background: var(--red-dim); }
 .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 10px 18px; font-size: 0.82rem; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 999; }
 .toast.show { opacity: 1; }
-
-/* ── ARC TAB STYLES ── */
 .arc-filter { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 6px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--muted); cursor: pointer; transition: border-color 0.2s, color 0.2s; }
 .arc-filter:hover { border-color: var(--accent); color: var(--accent); }
 .arc-filter.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
@@ -168,6 +166,17 @@ nav a.active { color: var(--accent); }
 .dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
 @keyframes arcpulse { 0%,80%,100% { opacity:0.2; transform:scale(0.8); } 40% { opacity:1; transform:scale(1); } }
 
+/* ── SUBMISSIONS TAB ── */
+.sub-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.sub-table thead tr { border-bottom: 2px solid var(--border); text-align: left; }
+.sub-table th { padding: 10px 14px; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+.sub-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; cursor: pointer; }
+.sub-table tbody tr:hover { background: var(--surface2); }
+.sub-table td { padding: 12px 14px; vertical-align: middle; }
+.sub-new    { border-left: 3px solid var(--orange); }
+.sub-reviewed { border-left: 3px solid var(--blue); }
+.sub-closed { border-left: 3px solid var(--green); opacity: 0.75; }
+
 footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 10px; }
 .footer-inner { max-width: 900px; margin: 0 auto; padding: 0 20px; }
 @media (max-width: 600px) {
@@ -180,7 +189,9 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
   .arc-detail-full { grid-column: auto; }
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> <script src="auth-guard.js"></script> </head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth-guard.js"></script>
+</head>
 <body>
 
 <header>
@@ -198,13 +209,12 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
   <a href="comms.html">Comms</a>
 </nav>
 
-
-
 <div class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('discuss',this)">Discussion Board</button>
   <button class="tab-btn" onclick="switchTab('ops',this)">Operations Manual</button>
   <button class="tab-btn" onclick="switchTab('arc',this)">ARC Requests</button>
   <button class="tab-btn" onclick="switchTab('docreq',this)">Document Requests</button>
+  <button class="tab-btn" onclick="switchTab('submissions',this)">Submissions</button>
 </div>
 
 <!-- ===== DISCUSSION BOARD ===== -->
@@ -513,26 +523,16 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
       <button class="arc-filter" onclick="setArcFilter('more-info',this)">Needs Info</button>
     </div>
   </div>
-
   <div id="arcStats" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; margin-bottom:24px;"></div>
-
   <div id="arcLoading" style="text-align:center; padding:40px; color:var(--muted); font-size:0.85rem;">
     <div class="dot-pulse"><span></span><span></span><span></span></div>
     <div style="margin-top:10px;">Loading requests…</div>
   </div>
   <div style="overflow-x:auto;">
     <table id="arcTable" style="display:none;">
-      <thead>
-        <tr>
-          <th>Submitted</th>
-          <th>Unit</th>
-          <th>Owner</th>
-          <th>Type</th>
-          <th>Start Date</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+      <thead><tr>
+        <th>Submitted</th><th>Unit</th><th>Owner</th><th>Type</th><th>Start Date</th><th>Status</th><th>Actions</th>
+      </tr></thead>
       <tbody id="arcTableBody"></tbody>
     </table>
   </div>
@@ -573,9 +573,7 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
       <button class="arc-filter" onclick="setDocFilter('fulfilled',this)">Fulfilled</button>
     </div>
   </div>
-
   <div id="docReqStats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:24px;"></div>
-
   <div id="docReqLoading" style="text-align:center;padding:40px;color:var(--muted);font-size:0.85rem;">
     <div class="dot-pulse"><span></span><span></span><span></span></div>
     <div style="margin-top:10px;">Loading requests…</div>
@@ -613,6 +611,64 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
     </div>
   </div>
 </div>
+
+<!-- ===== SUBMISSIONS TAB ===== -->
+<div class="tab-panel" id="tab-submissions">
+<div class="container">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+    <div class="page-header" style="margin-bottom:0;">
+      <h1>Contact Submissions</h1>
+      <p>All submissions from the contact form. New submissions appear here automatically.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="arc-filter active" onclick="setSubFilter('all',this)">All</button>
+      <button class="arc-filter" onclick="setSubFilter('new',this)">New</button>
+      <button class="arc-filter" onclick="setSubFilter('reviewed',this)">Reviewed</button>
+      <button class="arc-filter" onclick="setSubFilter('closed',this)">Closed</button>
+    </div>
+  </div>
+
+  <div id="subStats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:24px;"></div>
+
+  <div id="subLoading" style="text-align:center;padding:40px;color:var(--muted);font-size:0.85rem;">
+    <div class="dot-pulse"><span></span><span></span><span></span></div>
+    <div style="margin-top:10px;">Loading submissions…</div>
+  </div>
+
+  <div style="overflow-x:auto;">
+    <table class="sub-table" id="subTable" style="display:none;">
+      <thead><tr>
+        <th>Submitted</th>
+        <th>Category</th>
+        <th>Name</th>
+        <th>Unit</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr></thead>
+      <tbody id="subTableBody"></tbody>
+    </table>
+  </div>
+  <div id="subEmpty" class="empty-state" style="display:none;"><span class="ei">📬</span>No submissions found.</div>
+</div>
+</div>
+
+<!-- SUBMISSION DETAIL MODAL -->
+<div class="modal-overlay" id="subModal">
+  <div class="modal detail-modal">
+    <button class="modal-close" onclick="closeModal('subModal')">&times;</button>
+    <div id="subModalContent"></div>
+    <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:18px;">
+      <div style="font-size:0.76rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Update Status</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="action-btn" onclick="updateSubStatus('reviewed')" style="color:var(--blue);border-color:rgba(90,138,176,0.3);">→ Mark Reviewed</button>
+        <button class="action-btn resolve" onclick="updateSubStatus('closed')">✓ Close</button>
+        <button class="action-btn" onclick="updateSubStatus('new')" style="color:var(--orange);border-color:rgba(200,120,64,0.3);">↩ Reopen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEW ISSUE MODAL -->
 <div class="modal-overlay" id="newIssueModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('newIssueModal')">&times;</button>
@@ -701,6 +757,7 @@ function switchTab(id, btn) {
   btn.classList.add('active');
   if (id === 'arc') loadArcRequests();
   if (id === 'docreq') loadDocRequests();
+  if (id === 'submissions') loadSubmissions();
 }
 
 function copyVal(text) { navigator.clipboard.writeText(text).then(() => showToast('Copied')); }
@@ -969,10 +1026,8 @@ async function loadArcRequests() {
   document.getElementById('arcTable').style.display   = 'none';
   document.getElementById('arcEmpty').style.display   = 'none';
   document.getElementById('arcStats').innerHTML       = '';
-
   let path = 'arc_requests?order=created_at.desc';
   if (arcFilter !== 'all') path += `&status=eq.${arcFilter}`;
-
   try {
     const data = await sbFetch(path, { method:'GET' });
     allArcRequests = data || [];
@@ -995,11 +1050,7 @@ function renderArcStats(data) {
     { label:'Approved',       val:counts.approved,      color:'var(--green)'  },
     { label:'Denied',         val:counts.denied,        color:'var(--red)'    },
     { label:'Needs Info',     val:counts['more-info'],   color:'var(--accent)' },
-  ].map(s => `
-    <div class="arc-stat-card">
-      <div class="arc-stat-num" style="color:${s.color}">${s.val}</div>
-      <div class="arc-stat-label">${s.label}</div>
-    </div>`).join('');
+  ].map(s => `<div class="arc-stat-card"><div class="arc-stat-num" style="color:${s.color}">${s.val}</div><div class="arc-stat-label">${s.label}</div></div>`).join('');
 }
 
 function renderArcTable(data) {
@@ -1037,33 +1088,18 @@ function openArcModal(id) {
   const sc = arcStatusConfig[r.status] || arcStatusConfig.pending;
   const typeLabel = arcTypeLabels[r.project_type] || r.project_type || '—';
   const fields = [
-    ['Unit',            r.unit],
-    ['Owner',           r.owner_name],
-    ['Email',           r.email],
-    ['Phone',           r.phone || '—'],
-    ['Project Type',    typeLabel],
-    ['Start Date',      r.start_date || '—'],
-    ['End Date',        r.end_date || '—'],
-    ['Tenant Occupied', r.tenant_occupied || '—'],
-    ['Contractor',      r.contractor_name || 'None'],
-    ['License #',       r.contractor_license || '—'],
-    ['Insured',         r.insured || '—'],
-    ['Supporting Docs', r.supporting_docs || 'None'],
-    ['Submitted',       new Date(r.created_at).toLocaleString()],
-    ['Current Status',  `<span style="color:${sc.color}">${sc.label}</span>`],
+    ['Unit',r.unit],['Owner',r.owner_name],['Email',r.email],['Phone',r.phone||'—'],
+    ['Project Type',typeLabel],['Start Date',r.start_date||'—'],['End Date',r.end_date||'—'],
+    ['Tenant Occupied',r.tenant_occupied||'—'],['Contractor',r.contractor_name||'None'],
+    ['License #',r.contractor_license||'—'],['Insured',r.insured||'—'],
+    ['Supporting Docs',r.supporting_docs||'None'],['Submitted',new Date(r.created_at).toLocaleString()],
+    ['Current Status',`<span style="color:${sc.color}">${sc.label}</span>`],
   ];
   document.getElementById('arcModalContent').innerHTML = `
     <div class="modal-title" style="margin-bottom:16px;">ARC Request — Unit ${esc(r.unit)}</div>
     <div class="arc-detail-grid">
-      ${fields.map(([label, val]) => `
-        <div class="arc-detail-field">
-          <div class="arc-detail-label">${label}</div>
-          <div class="arc-detail-value">${val || '—'}</div>
-        </div>`).join('')}
-      <div class="arc-detail-field arc-detail-full">
-        <div class="arc-detail-label">Description</div>
-        <div class="arc-detail-value" style="line-height:1.6;color:#c0c8d4;white-space:pre-wrap;">${esc(r.description)}</div>
-      </div>
+      ${fields.map(([label,val])=>`<div class="arc-detail-field"><div class="arc-detail-label">${label}</div><div class="arc-detail-value">${val||'—'}</div></div>`).join('')}
+      <div class="arc-detail-field arc-detail-full"><div class="arc-detail-label">Description</div><div class="arc-detail-value" style="line-height:1.6;color:#c0c8d4;white-space:pre-wrap;">${esc(r.description)}</div></div>
       ${r.materials?`<div class="arc-detail-field arc-detail-full"><div class="arc-detail-label">Materials / Color Scheme</div><div class="arc-detail-value" style="line-height:1.6;color:#c0c8d4;">${esc(r.materials)}</div></div>`:''}
       ${r.notes?`<div class="arc-detail-field arc-detail-full"><div class="arc-detail-label">Additional Notes</div><div class="arc-detail-value" style="line-height:1.6;color:#c0c8d4;">${esc(r.notes)}</div></div>`:''}
       ${r.drc_comments?`<div class="arc-detail-field arc-detail-full"><div class="arc-detail-label">Previous DRC Comments</div><div class="arc-detail-value" style="line-height:1.6;color:#c0c8d4;">${esc(r.drc_comments)}</div></div>`:''}
@@ -1076,21 +1112,16 @@ async function updateArcStatus(newStatus) {
   const comments = document.getElementById('arcDrcComments').value.trim();
   try {
     await sbFetch(`arc_requests?id=eq.${arcCurrentId}`, {
-      method: 'PATCH',
-      prefer: 'return=minimal',
-      body: JSON.stringify({ status: newStatus, drc_comments: comments, reviewed_at: new Date().toISOString() })
+      method:'PATCH', prefer:'return=minimal',
+      body: JSON.stringify({ status:newStatus, drc_comments:comments, reviewed_at:new Date().toISOString() })
     });
-    closeModal('arcModal');
-    showToast('Status updated');
-    loadArcRequests();
-  } catch(e) {
-    showToast('Update failed','var(--red)');
-  }
+    closeModal('arcModal'); showToast('Status updated'); loadArcRequests();
+  } catch(e) { showToast('Update failed','var(--red)'); }
 }
 
 loadIssues();
 
-/* ── DOCUMENT REQUESTS TAB ── */
+/* ── DOCUMENT REQUESTS ── */
 let docFilter = 'all', allDocRequests = [], currentDocId = null;
 const docStatusConfig = {
   pending:    {label:'Pending',   color:'var(--orange)',bg:'rgba(200,120,64,0.12)',  border:'rgba(200,120,64,0.3)'},
@@ -1178,6 +1209,116 @@ async function updateDocStatus(newStatus){
     closeModal('docReqModal'); showToast('Status updated'); loadDocRequests();
   } catch(e){showToast('Update failed','var(--red)');}
 }
+
+/* ── SUBMISSIONS ── */
+const subStatusConfig = {
+  new:      { label:'New',      color:'var(--orange)', bg:'rgba(200,120,64,0.12)', border:'rgba(200,120,64,0.3)',  cls:'sub-new' },
+  reviewed: { label:'Reviewed', color:'var(--blue)',   bg:'rgba(90,138,176,0.12)', border:'rgba(90,138,176,0.3)', cls:'sub-reviewed' },
+  closed:   { label:'Closed',   color:'var(--green)',  bg:'var(--green-dim)',       border:'rgba(90,158,122,0.3)', cls:'sub-closed' },
+};
+
+let subFilter = 'all', allSubmissions = [], currentSubId = null;
+
+async function loadSubmissions() {
+  document.getElementById('subLoading').style.display = 'block';
+  document.getElementById('subTable').style.display   = 'none';
+  document.getElementById('subEmpty').style.display   = 'none';
+  document.getElementById('subStats').innerHTML       = '';
+  let path = 'contact_submissions?order=submitted_at.desc';
+  if (subFilter !== 'all') path += `&status=eq.${subFilter}`;
+  try {
+    const data = await sbFetch(path, { method:'GET' });
+    allSubmissions = data || [];
+    document.getElementById('subLoading').style.display = 'none';
+    if (subFilter === 'all') {
+      const c = { new:0, reviewed:0, closed:0 };
+      allSubmissions.forEach(r => { if (c[r.status] !== undefined) c[r.status]++; });
+      document.getElementById('subStats').innerHTML = [
+        { label:'New',      val:c.new,      color:'var(--orange)' },
+        { label:'Reviewed', val:c.reviewed, color:'var(--blue)'   },
+        { label:'Closed',   val:c.closed,   color:'var(--green)'  },
+        { label:'Total',    val:allSubmissions.length, color:'var(--accent)' },
+      ].map(s => `<div class="arc-stat-card"><div class="arc-stat-num" style="color:${s.color}">${s.val}</div><div class="arc-stat-label">${s.label}</div></div>`).join('');
+    }
+    if (!allSubmissions.length) { document.getElementById('subEmpty').style.display = 'block'; return; }
+    document.getElementById('subTable').style.display = 'table';
+    document.getElementById('subTableBody').innerHTML = allSubmissions.map(r => {
+      const sc = subStatusConfig[r.status] || subStatusConfig.new;
+      const submitted = new Date(r.submitted_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      const badge = `<span style="background:${sc.bg};border:1px solid ${sc.border};color:${sc.color};border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">${sc.label}</span>`;
+      return `<tr class="${sc.cls}" onclick="openSubModal(${r.id})">
+        <td style="color:var(--muted);font-size:0.8rem;">${submitted}</td>
+        <td style="font-weight:600;">${esc(r.category)}</td>
+        <td>${esc(r.name||'—')}</td>
+        <td style="color:var(--muted);">${esc(r.unit||'—')}</td>
+        <td>${badge}</td>
+        <td><button onclick="event.stopPropagation();openSubModal(${r.id})" style="background:none;border:1px solid var(--border);border-radius:4px;padding:5px 12px;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;">View →</button></td>
+      </tr>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('subLoading').style.display = 'none';
+    document.getElementById('subEmpty').style.display = 'block';
+    document.getElementById('subEmpty').innerHTML = '<span class="ei">⚠️</span>Could not load submissions.';
+  }
+}
+
+function setSubFilter(filter, btn) {
+  subFilter = filter;
+  document.querySelectorAll('#tab-submissions .arc-filter').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  loadSubmissions();
+}
+
+function openSubModal(id) {
+  const r = allSubmissions.find(x => x.id === id);
+  if (!r) return;
+  currentSubId = id;
+  const sc = subStatusConfig[r.status] || subStatusConfig.new;
+  const submitted = new Date(r.submitted_at).toLocaleString('en-US',{timeZone:'America/Phoenix',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true});
+
+  // Build extra fields from the fields jsonb column
+  let extraFieldsHtml = '';
+  if (r.fields && typeof r.fields === 'object') {
+    const entries = Object.entries(r.fields).filter(([,v]) => v);
+    if (entries.length) {
+      extraFieldsHtml = entries.map(([k,v]) => `
+        <div class="arc-detail-field">
+          <div class="arc-detail-label">${esc(k)}</div>
+          <div class="arc-detail-value">${esc(v)}</div>
+        </div>`).join('');
+    }
+  }
+
+  document.getElementById('subModalContent').innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+      <span style="background:${sc.bg};border:1px solid ${sc.border};color:${sc.color};border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:600;text-transform:uppercase;">${sc.label}</span>
+      <span class="cat-pill">${esc(r.category)}</span>
+    </div>
+    <div class="modal-title" style="margin-bottom:16px;">${esc(r.category)} — Unit ${esc(r.unit||'?')}</div>
+    <div class="arc-detail-grid">
+      <div class="arc-detail-field"><div class="arc-detail-label">Submitted</div><div class="arc-detail-value">${submitted} MST</div></div>
+      <div class="arc-detail-field"><div class="arc-detail-label">Name</div><div class="arc-detail-value">${esc(r.name||'—')}</div></div>
+      <div class="arc-detail-field"><div class="arc-detail-label">Unit</div><div class="arc-detail-value">${esc(r.unit||'—')}</div></div>
+      <div class="arc-detail-field"><div class="arc-detail-label">Email</div><div class="arc-detail-value"><a href="mailto:${esc(r.email)}" style="color:var(--accent);">${esc(r.email||'—')}</a></div></div>
+      ${r.phone?`<div class="arc-detail-field"><div class="arc-detail-label">Phone</div><div class="arc-detail-value">${esc(r.phone)}</div></div>`:''}
+      ${extraFieldsHtml}
+      ${r.photo_url?`<div class="arc-detail-field arc-detail-full"><div class="arc-detail-label">Photo Evidence</div><div class="arc-detail-value"><a href="${esc(r.photo_url)}" target="_blank" style="color:var(--accent);">View attached photo →</a></div></div>`:''}
+      ${r.message?`<div class="arc-detail-field arc-detail-full"><div class="arc-detail-label">Message</div><div class="arc-detail-value" style="line-height:1.6;color:#c0c8d4;white-space:pre-wrap;">${esc(r.message)}</div></div>`:''}
+    </div>`;
+  document.getElementById('subModal').classList.add('open');
+}
+
+async function updateSubStatus(newStatus) {
+  if (!currentSubId) return;
+  try {
+    await sbFetch(`contact_submissions?id=eq.${currentSubId}`, {
+      method:'PATCH', prefer:'return=minimal',
+      body: JSON.stringify({ status: newStatus })
+    });
+    closeModal('subModal'); showToast('Status updated'); loadSubmissions();
+  } catch(e) { showToast('Update failed','var(--red)'); }
+}
 </script>
-<script>guardPage("board");</script> </body>
+<script>guardPage("board");</script>
+</body>
 </html>
