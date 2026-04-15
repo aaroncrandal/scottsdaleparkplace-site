@@ -141,12 +141,29 @@ td { padding: 12px 14px; vertical-align: middle; }
 @keyframes pulse { 0%,80%,100%{opacity:.2;transform:scale(.8);}40%{opacity:1;transform:scale(1);} }
 .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 10px 18px; font-size: 0.82rem; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 999; }
 .toast.show { opacity: 1; }
+
+/* SITE SETTINGS */
+.settings-section { margin-top: 48px; padding-top: 36px; border-top: 1px solid var(--border); }
+.settings-section h2 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; font-weight: 400; margin-bottom: 6px; }
+.settings-section p { font-size: 0.82rem; color: var(--muted); margin-bottom: 20px; }
+.settings-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px 24px; display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; }
+.settings-field { flex: 1; min-width: 240px; display: flex; flex-direction: column; gap: 6px; }
+.settings-field label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.settings-field input { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; width: 100%; }
+.settings-field input:focus { border-color: var(--accent); }
+.settings-field input::placeholder { color: #4a5060; }
+.settings-save-btn { background: var(--accent); color: #0f1115; border: none; border-radius: 7px; padding: 10px 22px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; white-space: nowrap; }
+.settings-save-btn:hover { opacity: 0.88; }
+.settings-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.settings-note { font-size: 0.76rem; color: var(--muted); margin-top: 10px; width: 100%; }
+
 footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 10px; }
 @media (max-width: 640px) {
   .main { padding: 24px 16px 48px; }
   .search-input { width: 100%; }
   .admin-top { flex-direction: column; align-items: flex-start; }
   .pending-card { flex-direction: column; align-items: flex-start; }
+  .settings-card { flex-direction: column; align-items: stretch; }
 }
 </style>
 </head>
@@ -234,6 +251,20 @@ footer { text-align: center; padding: 36px 0 48px; color: var(--muted); font-siz
       <div id="emptyState" class="empty-state" style="display:none;">No users found.</div>
     </div>
 
+    <!-- SITE SETTINGS -->
+    <div class="settings-section">
+      <h2>Site Settings</h2>
+      <p>Contact form submissions are routed to the address below. Update this when the property manager changes — no code required.</p>
+      <div class="settings-card">
+        <div class="settings-field">
+          <label>Contact Routing Email</label>
+          <input type="email" id="routingEmailInput" placeholder="Loading…" autocomplete="off">
+        </div>
+        <button class="settings-save-btn" id="routingSaveBtn" onclick="saveRoutingEmail()">Save</button>
+        <div class="settings-note" id="routingNote"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -293,6 +324,7 @@ function showApp(){
   document.getElementById('badgeName').textContent=currentUser.name;
   document.getElementById('badgeRole').textContent=currentUser.role;
   loadUsers();
+  loadRoutingEmail();
 }
 
 async function loadUsers() {
@@ -311,6 +343,53 @@ async function loadUsers() {
     document.getElementById('loadingState').style.display='none';
     document.getElementById('emptyState').style.display='block';
     document.getElementById('emptyState').textContent='Failed to load users: '+e.message;
+  }
+}
+
+async function loadRoutingEmail() {
+  const input = document.getElementById('routingEmailInput');
+  const note = document.getElementById('routingNote');
+  try {
+    const { data, error } = await sb
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'contact_routing_email')
+      .single();
+    if (error) throw error;
+    input.value = data.value;
+    note.textContent = 'Currently routing contact form submissions to this address.';
+    note.style.color = 'var(--muted)';
+  } catch(e) {
+    input.placeholder = 'Could not load — check Supabase';
+    note.textContent = 'Error loading setting: ' + e.message;
+    note.style.color = 'var(--red)';
+  }
+}
+
+async function saveRoutingEmail() {
+  const input = document.getElementById('routingEmailInput');
+  const btn = document.getElementById('routingSaveBtn');
+  const note = document.getElementById('routingNote');
+  const email = input.value.trim();
+  if (!email || !email.includes('@')) {
+    note.textContent = 'Please enter a valid email address.';
+    note.style.color = 'var(--red)';
+    return;
+  }
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const { error } = await sb
+      .from('site_settings')
+      .upsert({ key: 'contact_routing_email', value: email, updated_at: new Date().toISOString() });
+    if (error) throw error;
+    note.textContent = 'Saved. Contact form will now route to ' + email;
+    note.style.color = 'var(--green)';
+    showToast('Routing email updated');
+  } catch(e) {
+    note.textContent = 'Failed to save: ' + e.message;
+    note.style.color = 'var(--red)';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Save';
   }
 }
 
@@ -356,7 +435,6 @@ async function approveUser(userId) {
 
 async function denyUser(userId) {
   if (!confirm('Delete this account? This cannot be undone.')) return;
-  // For now just set role to 'denied' — full delete requires service role
   try {
     const res=await fetch(EDGE_URL,{method:'POST',headers:{'Authorization':`Bearer ${currentUser.token}`,'Content-Type':'application/json'},body:JSON.stringify({userId,role:'denied'})});
     if (!res.ok) throw new Error(await res.text());
