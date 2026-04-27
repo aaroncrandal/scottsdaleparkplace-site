@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Board Dashboard — Scottsdale Park Place</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --bg: #0f0f0d;
+    --bg2: #161613;
+    --bg3: #1e1e1a;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(255,255,255,0.14);
+    --text: #f0ede6;
+    --text2: #9c9890;
+    --text3: #5a5852;
+    --accent: #c8a96e;
+    --accent2: #8fb89a;
+    --danger: #d4655a;
+    --danger-bg: rgba(212,101,90,0.12);
+    --warn: #c9944a;
+    --warn-bg: rgba(201,148,74,0.12);
+    --info: #5b8fbd;
+    --info-bg: rgba(91,143,189,0.12);
+    --success: #6aab7a;
+    --success-bg: rgba(106,171,122,0.12);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    background: rgba(15,15,13,0.95);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+
+  .header-left { display: flex; align-items: center; gap: 1rem; }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 15px;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+  }
+
+  .header-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+  }
+
+  .page-title {
+    font-size: 13px;
+    color: var(--text2);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .header-right { display: flex; align-items: center; gap: 12px; }
+
+  .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  .user-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+  }
+
+  .btn-nav {
+    font-size: 12px;
+    color: var(--text2);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    transition: color 0.2s, background 0.2s;
+  }
+  .btn-nav:hover { color: var(--text); background: var(--bg3); }
+
+  /* Layout */
+  .main { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+  /* Tally row */
+  .tally {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+
+  .tally-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+    transition: border-color 0.2s;
+  }
+  .tally-card:hover { border-color: var(--border-hover); }
+
+  .tally-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .tally-lbl { font-size: 11px; color: var(--text3); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .tally-num.danger { color: var(--danger); }
+  .tally-num.warn { color: var(--warn); }
+  .tally-num.info { color: var(--info); }
+  .tally-num.neutral { color: var(--text2); }
+
+  /* Section headers */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    margin-top: 2rem;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Cards */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+    animation: fadeUp 0.3s ease both;
+  }
+  .card:hover { border-color: var(--border-hover); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .card-meta {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .card-meta strong { color: var(--warn); font-weight: 500; }
+  .card-meta strong.danger { color: var(--danger); }
+  .card-meta strong.info { color: var(--info); }
+
+  /* Badges */
+  .badge {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .badge-danger { background: var(--danger-bg); color: var(--danger); }
+  .badge-warn { background: var(--warn-bg); color: var(--warn); }
+  .badge-info { background: var(--info-bg); color: var(--info); }
+  .badge-success { background: var(--success-bg); color: var(--success); }
+  .badge-neutral { background: var(--bg3); color: var(--text3); border: 1px solid var(--border); }
+  .badge-vote { background: rgba(200,169,110,0.15); color: var(--accent); }
+
+  /* Thread */
+  .thread {
+    border-left: 1px solid var(--border);
+    margin: 10px 0 0 8px;
+    padding-left: 14px;
+  }
+
+  .thread-msg {
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text2);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .thread-msg:last-child { border-bottom: none; }
+
+  .thread-who { font-weight: 500; color: var(--text); margin-right: 6px; }
+  .thread-time { font-size: 10px; color: var(--text3); white-space: nowrap; margin-top: 2px; }
+
+  .thread-empty { font-size: 11px; color: var(--text3); padding: 6px 0; font-style: italic; }
+
+  /* Project progress */
+  .progress-wrap { margin-top: 10px; }
+  .progress-bg {
+    background: var(--bg3);
+    border-radius: 99px;
+    height: 3px;
+    width: 100%;
+  }
+  .progress-fill { height: 3px; border-radius: 99px; transition: width 0.6s ease; }
+
+  .proj-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .proj-footer span.linked { margin-left: auto; color: var(--info); font-size: 11px; }
+
+  /* Vote banner */
+  .vote-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: rgba(200,169,110,0.08);
+    border: 1px solid rgba(200,169,110,0.2);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    color: var(--accent);
+    flex-wrap: wrap;
+  }
+
+  .vote-banner strong { font-weight: 500; }
+
+  .btn-vote {
+    margin-left: auto;
+    padding: 4px 14px;
+    border-radius: 99px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    font-size: 11px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-vote:hover { background: var(--accent); color: var(--bg); }
+
+  /* Vote modal */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-backdrop.open { display: flex; }
+
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border-hover);
+    border-radius: 14px;
+    padding: 2rem;
+    width: 480px;
+    max-width: 95vw;
+    animation: fadeUp 0.25s ease;
+  }
+
+  .modal h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .modal-sub { font-size: 12px; color: var(--text3); margin-bottom: 1.5rem; }
+
+  .vote-options { display: flex; gap: 10px; margin-bottom: 1rem; }
+
+  .vote-option {
+    flex: 1;
+    padding: 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    cursor: pointer;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text2);
+    transition: all 0.2s;
+  }
+  .vote-option:hover { border-color: var(--border-hover); color: var(--text); }
+  .vote-option.selected-approve { border-color: var(--success); background: var(--success-bg); color: var(--success); }
+  .vote-option.selected-deny { border-color: var(--danger); background: var(--danger-bg); color: var(--danger); }
+
+  .vote-icon { font-size: 22px; margin-bottom: 6px; }
+
+  textarea {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 10px 12px;
+    resize: vertical;
+    min-height: 80px;
+    margin-bottom: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  textarea:focus { border-color: var(--border-hover); }
+  textarea::placeholder { color: var(--text3); }
+
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+  .btn-cancel {
+    padding: 8px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-cancel:hover { border-color: var(--border-hover); color: var(--text); }
+
+  .btn-submit {
+    padding: 8px 20px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-submit:hover { opacity: 0.85; }
+  .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* PM activation banner */
+  .pm-banner {
+    background: rgba(91,143,189,0.08);
+    border: 1px solid rgba(91,143,189,0.2);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--info);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn-activate {
+    margin-left: auto;
+    padding: 4px 14px;
+    border-radius: 99px;
+    border: 1px solid var(--info);
+    background: transparent;
+    color: var(--info);
+    font-size: 11px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-activate:hover { background: var(--info); color: var(--bg); }
+
+  /* PM acknowledge modal */
+  .ack-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+    padding: 12px;
+    background: var(--bg3);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+  .ack-check input[type="checkbox"] { margin-top: 2px; accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; }
+  .ack-check label { font-size: 13px; color: var(--text2); cursor: pointer; line-height: 1.5; }
+
+  /* Empty states */
+  .empty { font-size: 12px; color: var(--text3); padding: 1.5rem; text-align: center; font-style: italic; border: 1px dashed var(--border); border-radius: var(--radius); }
+
+  /* Loading */
+  .loading { font-size: 12px; color: var(--text3); padding: 1rem; text-align: center; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    z-index: 300;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.success { background: var(--success-bg); border: 1px solid var(--success); color: var(--success); }
+  .toast.error { background: var(--danger-bg); border: 1px solid var(--danger); color: var(--danger); }
+
+  /* Link tag */
+  .linked-tag { font-size: 11px; color: var(--info); margin-top: 6px; display: inline-block; }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .tally { grid-template-columns: repeat(2, 1fr); }
+    .main { padding: 1rem; }
+    .header { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <span class="logo">Scottsdale Park Place</span>
+    <div class="header-divider"></div>
+    <span class="page-title">Board Dashboard</span>
+  </div>
+  <div class="header-right">
+    <a href="index.html" class="btn-nav">Home</a>
+    <a href="board.html" class="btn-nav">Board</a>
+    <div class="user-pill">
+      <div class="user-dot"></div>
+      <span id="user-label">Loading...</span>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- Tally row -->
+  <div class="tally">
+    <div class="tally-card">
+      <div class="tally-num danger" id="t-open-issues">—</div>
+      <div class="tally-lbl">Open issues</div>
+    </div>
+    <div class="tally-card">
+      <div class="tally-num warn" id="t-decisions">—</div>
+      <div class="tally-lbl">Decisions needed</div>
+    </div>
+    <div class="tally-card">
+      <div class="tally-num info" id="t-projects">—</div>
+      <div class="tally-lbl">Active projects</div>
+    </div>
+    <div class="tally-card">
+      <div class="tally-num neutral" id="t-votes">—</div>
+      <div class="tally-lbl">Open votes</div>
+    </div>
+  </div>
+
+  <!-- Issues -->
+  <div class="section-head">
+    <span class="section-label">Open issues — board action required</span>
+    <div class="section-line"></div>
+  </div>
+  <div id="issues-container"><div class="loading">Loading issues...</div></div>
+
+  <!-- Capital Projects -->
+  <div class="section-head">
+    <span class="section-label">Capital projects — by timeline proximity</span>
+    <div class="section-line"></div>
+  </div>
+  <div id="projects-container"><div class="loading">Loading projects...</div></div>
+
+  <!-- Recent Conversations -->
+  <div class="section-head">
+    <span class="section-label">Recent board conversations</span>
+    <div class="section-line"></div>
+  </div>
+  <div id="comms-container"><div class="loading">Loading conversations...</div></div>
+
+</main>
+
+<!-- Vote modal -->
+<div class="modal-backdrop" id="vote-modal">
+  <div class="modal">
+    <h3 id="vote-modal-title">Cast your vote</h3>
+    <div class="modal-sub" id="vote-modal-sub">Review the issue and cast your official vote below.</div>
+    <div class="vote-options">
+      <div class="vote-option" id="opt-approve" onclick="selectVote('approve')">
+        <div class="vote-icon">✓</div>
+        <div>Approve</div>
+      </div>
+      <div class="vote-option" id="opt-deny" onclick="selectVote('deny')">
+        <div class="vote-icon">✗</div>
+        <div>Deny</div>
+      </div>
+    </div>
+    <textarea id="vote-justification" placeholder="Optional: add your voting justification..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeVoteModal()">Cancel</button>
+      <button class="btn-submit" id="btn-submit-vote" onclick="submitVote()" disabled>Submit vote</button>
+    </div>
+  </div>
+</div>
+
+<!-- PM acknowledge modal -->
+<div class="modal-backdrop" id="pm-modal">
+  <div class="modal">
+    <h3>Activate voting session</h3>
+    <div class="modal-sub" id="pm-modal-sub">You are about to open a formal vote on this issue.</div>
+    <div class="ack-check" onclick="toggleAck()">
+      <input type="checkbox" id="pm-ack-check">
+      <label for="pm-ack-check">I confirm that this issue has been properly reviewed and is ready for a formal board vote. All relevant information has been shared with board members.</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closePmModal()">Cancel</button>
+      <button class="btn-submit" id="btn-activate-vote" onclick="activateVote()" disabled>Activate voting</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://hmjypvnbbmyzmutmuxpj.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhtanlwdm5iYm15em11dG11eHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzEzMjQsImV4cCI6MjA4OTM0NzMyNH0.hZNbLus9qjwni5Du8UeFJGK7xXQMtqMAr6URs75aZP8';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentUserRole = null;
+let activeVoteSessionId = null;
+let activeVoteIssueId = null;
+let selectedVote = null;
+let activePmIssueId = null;
+
+// Auth check
+async function initAuth() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) {
+    document.getElementById('user-label').textContent = 'Not signed in';
+    window.location.href = 'index.html';
+    return;
+  }
+  currentUser = session.user;
+  const meta = currentUser.user_metadata || {};
+  currentUserRole = meta.role || 'owner';
+  const name = meta.name || currentUser.email;
+  document.getElementById('user-label').textContent = name + ' · ' + currentUserRole;
+  loadAll();
+}
+
+async function loadAll() {
+  await Promise.all([loadIssues(), loadProjects(), loadComms()]);
+}
+
+// Format date
+function fmtDate(d) {
+  if (!d) return '';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function daysUntil(d) {
+  if (!d) return null;
+  const diff = new Date(d) - new Date();
+  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+}
+
+function priorityBadge(p) {
+  if (p === 'urgent') return '<span class="badge badge-danger">Urgent</span>';
+  if (p === 'high') return '<span class="badge badge-warn">High</span>';
+  if (p === 'in_progress') return '<span class="badge badge-info">In progress</span>';
+  return '<span class="badge badge-neutral">Normal</span>';
+}
+
+function statusBadge(s) {
+  if (!s) return '';
+  const map = {
+    open: '<span class="badge badge-danger">Open</span>',
+    in_progress: '<span class="badge badge-info">In progress</span>',
+    resolved: '<span class="badge badge-success">Resolved</span>',
+    pending: '<span class="badge badge-warn">Pending</span>',
+  };
+  return map[s] || `<span class="badge badge-neutral">${s}</span>`;
+}
+
+// Load issues
+async function loadIssues() {
+  const { data: issues, error } = await db
+    .from('issues')
+    .select('*')
+    .neq('status', 'resolved')
+    .order('created_at', { ascending: false });
+
+  const { data: sessions } = await db
+    .from('vote_sessions')
+    .select('*')
+    .eq('status', 'open');
+
+  const openVotes = {};
+  if (sessions) sessions.forEach(s => { openVotes[s.issue_id] = s; });
+
+  document.getElementById('t-open-issues').textContent = issues ? issues.length : 0;
+  document.getElementById('t-decisions').textContent = issues ? issues.filter(i => i.decision_required).length : 0;
+  document.getElementById('t-votes').textContent = sessions ? sessions.length : 0;
+
+  const container = document.getElementById('issues-container');
+  if (error || !issues || issues.length === 0) {
+    container.innerHTML = '<div class="empty">No open issues. Things are running smoothly.</div>';
+    return;
+  }
+
+  // Sort: decision_required first, then by priority
+  const sorted = [...issues].sort((a, b) => {
+    if (b.decision_required !== a.decision_required) return b.decision_required ? 1 : -1;
+    const pOrder = { urgent: 0, high: 1, normal: 2 };
+    return (pOrder[a.priority] ?? 2) - (pOrder[b.priority] ?? 2);
+  });
+
+  const { data: msgs } = await db
+    .from('comms_messages')
+    .select('*')
+    .in('issue_id', sorted.map(i => i.id))
+    .order('created_at', { ascending: false });
+
+  const msgsByIssue = {};
+  if (msgs) msgs.forEach(m => {
+    if (!msgsByIssue[m.issue_id]) msgsByIssue[m.issue_id] = [];
+    if (msgsByIssue[m.issue_id].length < 2) msgsByIssue[m.issue_id].push(m);
+  });
+
+  container.innerHTML = sorted.map((issue, idx) => {
+    const session = openVotes[issue.id];
+    const thread = msgsByIssue[issue.id] || [];
+    const delay = idx * 0.05;
+
+    let decisionMeta = '';
+    if (issue.decision_required) {
+      decisionMeta = session
+        ? `<strong class="info">Vote open</strong>`
+        : `<strong>Board vote required</strong>`;
+    }
+
+    let voteBanner = '';
+    if (issue.decision_required && !session && (currentUserRole === 'property_manager' || currentUserRole === 'board')) {
+      voteBanner = `<div class="pm-banner">
+        This issue is marked decision-ready. Activate a formal vote when all board members have been briefed.
+        <button class="btn-activate" onclick="openPmModal(${issue.id}, '${escHtml(issue.title)}')">Activate voting</button>
+      </div>`;
+    }
+
+    if (session) {
+      voteBanner = `<div class="vote-banner">
+        <strong>Vote open</strong> — Activated ${fmtDate(session.activated_at)} · Quorum required: ${session.quorum_required}
+        <button class="btn-vote" onclick="openVoteModal('${session.id}', ${issue.id}, '${escHtml(issue.title)}')">Cast your vote</button>
+      </div>`;
+    }
+
+    const threadHtml = thread.length ? thread.map(m => `
+      <div class="thread-msg">
+        <div><span class="thread-who">${escHtml(m.author_name)}</span>${escHtml(m.body ? m.body.slice(0, 120) : '')}</div>
+        <div class="thread-time">${fmtDate(m.created_at)}</div>
+      </div>`).join('') : `<div class="thread-empty">No messages yet on this issue.</div>`;
+
+    return `<div class="card" style="animation-delay:${delay}s">
+      <div class="card-row">
+        ${priorityBadge(issue.priority)}
+        <span class="card-title">${escHtml(issue.title)}</span>
+        ${issue.tag ? `<span class="badge badge-neutral">${escHtml(issue.tag)}</span>` : ''}
+      </div>
+      <div class="card-meta">
+        <span>Opened ${fmtDate(issue.created_at)}</span>
+        ${issue.author ? `<span>Author: ${escHtml(issue.author)}</span>` : ''}
+        ${decisionMeta}
+        ${statusBadge(issue.status)}
+      </div>
+      ${voteBanner}
+      <div class="thread">${threadHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+// Load projects
+async function loadProjects() {
+  const { data: projects, error } = await db
+    .from('capital_projects')
+    .select('*')
+    .order('due_date', { ascending: true });
+
+  document.getElementById('t-projects').textContent = projects ? projects.filter(p => p.status !== 'complete').length : 0;
+
+  const container = document.getElementById('projects-container');
+  if (error || !projects || projects.length === 0) {
+    container.innerHTML = '<div class="empty">No capital projects on record yet.</div>';
+    return;
+  }
+
+  container.innerHTML = projects.map((p, idx) => {
+    const days = daysUntil(p.due_date);
+    const delay = idx * 0.05;
+    let dueBadge = '';
+    let fillColor = '#6aab7a';
+
+    if (days !== null) {
+      if (days < 0) { dueBadge = `<span class="badge badge-danger">Overdue</span>`; fillColor = '#d4655a'; }
+      else if (days <= 60) { dueBadge = `<span class="badge badge-danger">Due in ${days}d</span>`; fillColor = '#d4655a'; }
+      else if (days <= 120) { dueBadge = `<span class="badge badge-warn">Due in ${days}d</span>`; fillColor = '#c9944a'; }
+      else { dueBadge = `<span class="badge badge-neutral">${p.due_date ? fmtDate(p.due_date) : 'No deadline'}</span>`; }
+    }
+
+    const pct = p.progress_pct || 0;
+    let statusBadgeHtml = '';
+    if (p.status === 'on_track') statusBadgeHtml = `<span class="badge badge-success">On track</span>`;
+    else if (p.status === 'behind') statusBadgeHtml = `<span class="badge badge-warn">Behind</span>`;
+    else if (p.status === 'complete') statusBadgeHtml = `<span class="badge badge-success">Complete</span>`;
+    else statusBadgeHtml = `<span class="badge badge-neutral">${p.status || 'Planning'}</span>`;
+
+    const budget = p.budget ? '$' + Number(p.budget).toLocaleString() : 'TBD';
+    const committed = p.committed ? '$' + Number(p.committed).toLocaleString() : '$0';
+
+    return `<div class="card" style="animation-delay:${delay}s">
+      <div class="card-row">
+        ${dueBadge}
+        <span class="card-title">${escHtml(p.title)}</span>
+        ${statusBadgeHtml}
+      </div>
+      <div class="card-meta">
+        <span>Budget: ${budget}</span>
+        <span>Committed: ${committed}</span>
+        ${p.vendor ? `<span>Vendor: ${escHtml(p.vendor)}</span>` : ''}
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bg">
+          <div class="progress-fill" style="width:${pct}%; background:${fillColor};"></div>
+        </div>
+      </div>
+      <div class="proj-footer">
+        <span>${pct}% complete</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Load comms
+async function loadComms() {
+  const { data: msgs, error } = await db
+    .from('comms_messages')
+    .select('*')
+    .is('issue_id', null)
+    .order('created_at', { ascending: false })
+    .limit(10);
+
+  const container = document.getElementById('comms-container');
+  if (error || !msgs || msgs.length === 0) {
+    container.innerHTML = '<div class="empty">No board conversations yet. Messages linked to issues appear in the issues section above.</div>';
+    return;
+  }
+
+  // Group by channel
+  const byChannel = {};
+  msgs.forEach(m => {
+    const ch = m.channel || 'general';
+    if (!byChannel[ch]) byChannel[ch] = [];
+    byChannel[ch].push(m);
+  });
+
+  container.innerHTML = Object.entries(byChannel).map(([channel, messages], idx) => {
+    const latest = messages[0];
+    const delay = idx * 0.05;
+    return `<div class="card" style="animation-delay:${delay}s">
+      <div class="card-row">
+        <span class="card-title">${channel.charAt(0).toUpperCase() + channel.slice(1)} channel</span>
+        <span class="badge badge-neutral">${messages.length} message${messages.length !== 1 ? 's' : ''}</span>
+      </div>
+      <div class="card-meta">
+        <span>Last activity: ${fmtDate(latest.created_at)}</span>
+        <span>${escHtml(latest.author_name)} (${escHtml(latest.author_role)})</span>
+      </div>
+      <div class="thread">
+        ${messages.slice(0, 2).map(m => `
+          <div class="thread-msg">
+            <div><span class="thread-who">${escHtml(m.author_name)}</span>${escHtml(m.body ? m.body.slice(0, 100) : '')}</div>
+            <div class="thread-time">${fmtDate(m.created_at)}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Vote modal
+function openVoteModal(sessionId, issueId, title) {
+  activeVoteSessionId = sessionId;
+  activeVoteIssueId = issueId;
+  selectedVote = null;
+  document.getElementById('vote-modal-title').textContent = 'Cast your vote';
+  document.getElementById('vote-modal-sub').textContent = title;
+  document.getElementById('vote-justification').value = '';
+  document.getElementById('opt-approve').className = 'vote-option';
+  document.getElementById('opt-deny').className = 'vote-option';
+  document.getElementById('btn-submit-vote').disabled = true;
+  document.getElementById('vote-modal').classList.add('open');
+}
+
+function closeVoteModal() {
+  document.getElementById('vote-modal').classList.remove('open');
+}
+
+function selectVote(val) {
+  selectedVote = val;
+  document.getElementById('opt-approve').className = 'vote-option' + (val === 'approve' ? ' selected-approve' : '');
+  document.getElementById('opt-deny').className = 'vote-option' + (val === 'deny' ? ' selected-deny' : '');
+  document.getElementById('btn-submit-vote').disabled = false;
+}
+
+async function submitVote() {
+  if (!selectedVote || !activeVoteSessionId) return;
+  const justification = document.getElementById('vote-justification').value.trim();
+  const meta = currentUser.user_metadata || {};
+  const name = meta.name || currentUser.email;
+  const role = currentUserRole;
+
+  const { error } = await db.from('votes').insert({
+    session_id: activeVoteSessionId,
+    issue_id: activeVoteIssueId,
+    voter_id: currentUser.id,
+    voter_name: name,
+    voter_role: role,
+    vote: selectedVote,
+    justification: justification || null
+  });
+
+  if (error) {
+    if (error.code === '23505') showToast('You have already voted on this issue.', 'error');
+    else showToast('Error submitting vote. Please try again.', 'error');
+    return;
+  }
+
+  closeVoteModal();
+  showToast('Your vote has been recorded.', 'success');
+  loadIssues();
+}
+
+// PM modal
+function openPmModal(issueId, title) {
+  activePmIssueId = issueId;
+  document.getElementById('pm-modal-sub').textContent = `Issue: ${title}`;
+  document.getElementById('pm-ack-check').checked = false;
+  document.getElementById('btn-activate-vote').disabled = true;
+  document.getElementById('pm-modal').classList.add('open');
+}
+
+function closePmModal() {
+  document.getElementById('pm-modal').classList.remove('open');
+}
+
+function toggleAck() {
+  const chk = document.getElementById('pm-ack-check');
+  chk.checked = !chk.checked;
+  document.getElementById('btn-activate-vote').disabled = !chk.checked;
+}
+
+async function activateVote() {
+  if (!activePmIssueId) return;
+  const meta = currentUser.user_metadata || {};
+  const name = meta.name || currentUser.email;
+
+  const { error } = await db.from('vote_sessions').insert({
+    issue_id: activePmIssueId,
+    activated_by: name,
+    pm_acknowledged: true,
+    pm_acknowledged_at: new Date().toISOString(),
+    status: 'open',
+    quorum_required: 2
+  });
+
+  if (error) {
+    showToast('Error activating vote. Please try again.', 'error');
+    return;
+  }
+
+  closePmModal();
+  showToast('Voting session activated. Board members will see the vote prompt.', 'success');
+  loadIssues();
+}
+
+// Toast
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => { t.className = 'toast'; }, 3500);
+}
+
+// Escape HTML
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Close modals on backdrop click
+document.getElementById('vote-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeVoteModal();
+});
+document.getElementById('pm-modal').addEventListener('click', function(e) {
+  if (e.target === this) closePmModal();
+});
+
+initAuth();
+</script>
+</body>
+</html>
