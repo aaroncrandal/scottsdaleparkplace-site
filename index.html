@@ -269,6 +269,7 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
   <a href="board.html">Board Portal</a>
   <a href="community.html">Community</a>
   <a href="comms.html">Comms</a>
+  <a href="dashboard.html" id="navDashboard" style="display:none;">Dashboard</a>
 </nav>
 
 <div class="main">
@@ -349,6 +350,11 @@ footer { border-top: 1px solid var(--border); background: var(--surface); paddin
           <span class="quick-card-icon">🛡️</span>
           <div class="quick-card-title">Board Portal</div>
           <div class="quick-card-desc">Discussion board, ops manual, ARC requests</div>
+        </a>
+        <a href="dashboard.html" class="quick-card board-card">
+          <span class="quick-card-icon">📊</span>
+          <div class="quick-card-title">Board Dashboard</div>
+          <div class="quick-card-desc">Issues, votes, capital projects, and board comms</div>
         </a>
         <a href="comms.html" class="quick-card board-card">
           <span class="quick-card-icon">💬</span>
@@ -479,14 +485,13 @@ function observeReveal() {
   });
 }
 
-/* ── AUTH STATE LISTENER (handles password recovery) ── */
+/* ── AUTH STATE LISTENER ── */
 sb.auth.onAuthStateChange(async (event, session) => {
   if (event === 'PASSWORD_RECOVERY') {
     showReset();
     return;
   }
   if (event === 'SIGNED_IN' && session?.user) {
-    // Only handle if we're not already showing content
     if (document.getElementById('loggedInContent').style.display === 'none' &&
         document.getElementById('resetState').style.display === 'none') {
       await handleUser(session.user);
@@ -543,8 +548,8 @@ function showLoggedIn() {
   if (isBoard) {
     block('boardSection');
     document.getElementById('announceCompose').style.display = 'block';
+    document.getElementById('navDashboard').style.display = 'inline-block';
   }
-  // Show resident resource cards for owners/renters (not board — they have their own section)
   if (!isBoard) block('residentSection');
 
   setTimeout(observeReveal, 50);
